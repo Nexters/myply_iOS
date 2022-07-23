@@ -3,13 +3,13 @@ import ProjectDescriptionHelpers
 import MyPlugin
 
 /*
-                +-------------+
-                |             |
-                |     App     | Contains MyPly App target and MyPly unit-test target
-                |             |
-         +------+-------------+-------+
-         |         depends on         |
-         |                            |
+ +-------------+
+ |             |
+ |     App     | Contains MyPly App target and MyPly unit-test target
+ |             |
+ +------+-------------+-------+
+ |         depends on         |
+ |                            |
  +----v-----+                   +-----v-----+
  |          |                   |           |
  |   Kit    |                   |     UI    |   Two independent frameworks to share code and start modularising your app
