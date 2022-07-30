@@ -11,17 +11,12 @@ import ProjectDescriptionHelpers
 private let projectName = "App"
 private let iOSTargetVersion = "14.0"
 
-let infoPlist: [String: InfoPlist.Value] = [
-    "CFBundleShortVersionString": "1.0",
-    "CFBundleVersion": "1",
-    "CFBundleDisplayName": "마이플리",
-    "UILaunchStoryboardName": "LaunchScreen"
-]
+let infoPlistPath: String = "Resources/App.plist"
 
 let project = Project.app(name: projectName,
                           platform: .iOS,
                           iOSTargetVersion: iOSTargetVersion,
-                          infoPlist: infoPlist,
+                          infoPlist: infoPlistPath,
                           dependencies: [.external(name: "Alamofire"),
                                          .project(target: "Home", path: .relativeToCurrentFile("../Home")),
                                          .project(target: "Library", path: .relativeToCurrentFile("../Library")),
