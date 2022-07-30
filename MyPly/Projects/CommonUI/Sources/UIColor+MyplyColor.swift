@@ -10,5 +10,5 @@ import UIKit
 
 extension UIColor {
     static let textColor = UIColor.darkGray
-    static let gray80 = UIColor(named: "Gray80")
+    static var gray80: UIColor? { return UIColor(named: "gray80") }
 }
