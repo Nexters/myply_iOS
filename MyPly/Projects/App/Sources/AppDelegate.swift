@@ -43,5 +43,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         return true
     }
+}
 
+extension AppDelegate {
+    func applicationDidFinishLaunching(_ application: UIApplication) {
+        UILabel.appearance(whenContainedInInstancesOf: [UIView.self]).textColor = UIColor.gray80
+    }
 }
