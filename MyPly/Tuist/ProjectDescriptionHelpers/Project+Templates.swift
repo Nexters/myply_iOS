@@ -64,7 +64,7 @@ private extension Project {
                              deploymentTarget: .iOS(targetVersion: iOSTargetVersion, devices: [.iphone]),
                              infoPlist: .default,
                              sources: ["Sources/**"],
-                             resources: ["Resources/**"],
+                             resources: [],
                              dependencies: dependencies)
         let tests = Target(name: "\(name)Tests",
                            platform: platform,
