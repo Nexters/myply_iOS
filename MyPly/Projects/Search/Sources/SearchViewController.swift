@@ -19,10 +19,15 @@ open class SearchViewController: UIViewController {
     private var searchField: UITextField = {
         $0.clearButtonMode = .always
         $0.textColor = UIColor.gray50
+        $0.backgroundColor = .white
         return $0
     }(UITextField())
     
-    
+    private var bestSearchKeywordsTitle: UILabel = {
+        $0.text = "마이플리 유저의 인기 검색어"
+        $0.textColor = UIColor.gray70
+        return $0
+    }(UILabel())
     
     open override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +36,7 @@ open class SearchViewController: UIViewController {
         
         view.addSubview(titleLabel)
         view.addSubview(searchField)
+        view.addSubview(bestSearchKeywordsTitle)
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -41,6 +47,12 @@ open class SearchViewController: UIViewController {
         searchField.snp.makeConstraints { make in
             make.width.equalToSuperview().offset(-40)
             make.top.equalTo(titleLabel.snp.bottom).offset(24)
+            make.centerX.equalToSuperview()
+        }
+        
+        bestSearchKeywordsTitle.snp.makeConstraints { make in
+            make.width.equalToSuperview().offset(-40)
+            make.top.equalTo(searchField.snp.bottom).offset(24)
             make.centerX.equalToSuperview()
         }
     }
