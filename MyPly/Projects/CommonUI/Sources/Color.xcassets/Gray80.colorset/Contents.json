@@ -12,6 +12,7 @@
       },
       "idiom" : "universal"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     },
     {
@@ -50,6 +51,8 @@
       },
       "idiom" : "universal"
 >>>>>>> c84b2be (Gray80 색상 추가)
+=======
+>>>>>>> 8ee75b7 (default uilabel textcolor 적용안되는 이슈 수정)
     }
   ],
   "info" : {
