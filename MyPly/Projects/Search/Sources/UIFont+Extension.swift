@@ -12,3 +12,7 @@ import UIKit
 extension UIFont {
     static let H1Semibold = UIFont(name: "Pretendard", size: 24)
 }
+
+extension UIColor {
+    static let gray90 = UIColor(named: "Gray90")
+}
