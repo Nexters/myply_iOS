@@ -20,7 +20,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         let viewController = HomeViewController()
-        viewController.view.backgroundColor = .white
+        viewController.view.backgroundColor = .red
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
         return true
