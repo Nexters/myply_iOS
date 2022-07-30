@@ -14,5 +14,8 @@ extension UIFont {
 }
 
 extension UIColor {
-    static let gray90 = UIColor(named: "Gray90")
+    class var begie: UIColor? { return .init(named: "begie") }
+    class var gray50: UIColor? { return .init(named: "gray50") }
+    class var gray70: UIColor? { return .init(named: "gray70") }
+    class var gray90: UIColor? { return .init(named: "gray90") }
 }
