@@ -26,8 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let tabBarController = MainTabBarController()
         tabBarController.view.backgroundColor = .white
 
-        let homeVC = HomeViewController()
-        homeVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house"), selectedImage: nil)
+        let homeVC = HomeViewController.create()
+        homeVC?.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house"), selectedImage: nil)
 
         let searchVC = SearchViewController()
         searchVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "magnifyingglass"), selectedImage: nil)
@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let myPageVC = MyPageViewController()
         myPageVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "person"), selectedImage: nil)
 
-        tabBarController.setViewControllers([homeVC, searchVC, libraryVC, myPageVC], animated: false)
+        tabBarController.setViewControllers([homeVC, searchVC, libraryVC, myPageVC].compactMap { $0 }, animated: false)
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
         return true
