@@ -10,12 +10,12 @@ extension Project {
     public static func app(name: String,
                            platform: Platform,
                            iOSTargetVersion: String,
-                           infoPlist: [String: InfoPlist.Value] = [:],
+                           infoPlist: String,
                            dependencies: [TargetDependency] = []) -> Project {
         let targets = makeAppTargets(name: name,
                                      platform: platform,
                                      iOSTargetVersion: iOSTargetVersion,
-                                     infoPlist: "Resources/\(name).plist",
+                                     infoPlist: infoPlist,
                                      dependencies: dependencies)
         return Project(name: name,
                        organizationName: "cocaine.io",
@@ -34,6 +34,7 @@ extension Project {
         targets.append(contentsOf: makeAppTargets(name: "\(name)DemoApp",
                                                   platform: platform,
                                                   iOSTargetVersion: iOSTargetVersion,
+                                                  infoPlist: infoPlist,
                                                   dependencies: [.target(name: name)]))
 
         return Project(name: name,
