@@ -40,7 +40,7 @@ open class SearchViewController: UIViewController {
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.top.equalToSuperview().offset(9)
+            make.top.equalTo(view.safeAreaInsets.top).offset(9)
             make.height.equalTo(56)
         }
         
