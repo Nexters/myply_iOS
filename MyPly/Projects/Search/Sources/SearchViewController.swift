@@ -18,8 +18,14 @@ open class SearchViewController: UIViewController {
     
     private var searchField: UITextField = {
         $0.clearButtonMode = .always
-        $0.textColor = UIColor.gray50
+        $0.setPlaceHolderColor(UIColor.gray50)
         $0.backgroundColor = .white
+        $0.placeholder = "검색어를 입력해주세요."
+        
+        let leftView = UIImageView(image: UIImage.search)
+        
+        $0.leftViewMode = .always
+        $0.leftView = leftView
         return $0
     }(UITextField())
     

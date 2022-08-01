@@ -25,3 +25,7 @@ extension UIColor {
     class var red: UIColor? { return .init(named: "red") }
     class var blue: UIColor? { return .init(named: "blue") }
 }
+
+extension UIImage {
+    class var search: UIImage? { return .init(named: "search")}
+}

@@ -6,4 +6,15 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+extension UITextField {
+    func setPlaceHolderColor(_ placeHolderColor: UIColor?) {
+        attributedPlaceholder = NSAttributedString(
+            string: placeholder ?? "",
+            attributes: [
+                .foregroundColor: placeHolderColor
+            ].compactMapValues({ $0 })
+        )
+    }
+}

@@ -29,6 +29,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate {
     func applicationDidFinishLaunching(_ application: UIApplication) {
         UILabel.appearance(whenContainedInInstancesOf: [UIView.self]).textColor = UIColor.gray80
+        UITextField.appearance(whenContainedInInstancesOf: [UIView.self]).textColor = UIColor.gray80
     }
 }
 
