@@ -17,6 +17,7 @@ extension UIColor {
     class var begie: UIColor? { return .init(named: "begie") }
     class var gray50: UIColor? { return .init(named: "gray50") }
     class var gray70: UIColor? { return .init(named: "gray70") }
+    class var gray80: UIColor? { return .init(named: "gray80") }
     class var gray90: UIColor? { return .init(named: "gray90") }
     
     class var greenLight: UIColor? { return .init(named: "greenLight") }
