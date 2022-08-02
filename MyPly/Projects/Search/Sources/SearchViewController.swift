@@ -35,14 +35,37 @@ open class SearchViewController: UIViewController {
         return $0
     }(UILabel())
     
+    private var keywordCollectionView: UICollectionView!
+    private var keywordDataSource: KeywordDataSource!
+    
+    private let keywordRepository: KeywordRepository
+    
+    public required init?(coder: NSCoder) {
+        fatalError()
+    }
+    
+    init(keywordRepository: KeywordRepository) {
+        self.keywordRepository = keywordRepository
+        super.init()
+    }
+    
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        self.keywordRepository = DummyKeywordRepositoryImpl()
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
+        
+        initKeywordCollectionView()
+        initDataSource()
         
         view.backgroundColor = UIColor.begie
         
         view.addSubview(titleLabel)
         view.addSubview(searchField)
         view.addSubview(bestSearchKeywordsTitle)
+        view.addSubview(keywordCollectionView)
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -61,5 +84,49 @@ open class SearchViewController: UIViewController {
             make.top.equalTo(searchField.snp.bottom).offset(24)
             make.centerX.equalToSuperview()
         }
+        
+        keywordCollectionView.snp.makeConstraints { make in
+            make.width.equalToSuperview().offset(-40)
+            make.top.equalTo(bestSearchKeywordsTitle.snp.bottom).offset(12)
+            let height = view.bounds.height -            bestSearchKeywordsTitle.frame.origin.y
+            make.height.equalTo(height)
+            make.centerX.equalToSuperview()
+        }
     }
 }
+
+// MARK: - Init View
+extension SearchViewController {
+    private func initKeywordCollectionView() {
+        let layout = LeftAlignedCollectionViewFlowLayout()
+        keywordCollectionView = .init(frame: .zero, collectionViewLayout: layout)
+        keywordCollectionView.dataSource = keywordDataSource
+    }
+    
+    private func initDataSource() {
+        keywordDataSource = .init(collectionView: keywordCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+            return collectionView.dequeueReusableCell(withReuseIdentifier: KeywordCell.Constants.identifier, for: indexPath)
+        })
+    }
+    
+    private func refreshKeywordCollectionView(with keywords: [Keyword]) {
+        var snapShot = SnapShot()
+        snapShot.appendSections([0])
+        snapShot.appendItems(keywords.map({ $0.value }), toSection: 0)
+        keywordDataSource.apply(snapShot)
+    }
+}
+
+// MARK: - Init Data
+extension SearchViewController {
+    func initViewModel() {
+        Task(priority: .userInitiated, operation: {
+            let result = await keywordRepository.getKeywords()
+            switch result {
+            case .success(let keywords):
+                self.refreshKeywordCollectionView(with: keywords)
+            }
+        })
+    }
+}
+

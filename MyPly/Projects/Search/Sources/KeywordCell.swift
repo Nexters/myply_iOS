@@ -8,9 +8,10 @@
 
 import UIKit
 
-class KeywordView: UIView {
-    private enum Constants {
+class KeywordCell: UICollectionReusableView {
+    enum Constants {
         static let keywordFormat = "#%@"
+        static let identifier = String(describing: KeywordCell.self)
     }
     
     @IBOutlet weak var keywordLabel: UILabel!
@@ -35,9 +36,13 @@ class KeywordView: UIView {
         self.addSubview(view)
     }
     
-    func setKeyword(with content: String) {
-        let keywordLabelValue = keywordLabelValue(with: content)
+    func setKeyword(with keyword: Keyword) {
+        let keywordLabelValue = keywordLabelValue(with: keyword.value)
         keywordLabel.text = keywordLabelValue
+    }
+    
+    func setBackground(_ color: UIColor) {
+        self.backgroundColor = color
     }
     
     private func keywordLabelValue(with content: String) -> String {
