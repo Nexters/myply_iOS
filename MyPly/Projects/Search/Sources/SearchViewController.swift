@@ -11,6 +11,9 @@ import SnapKit
 import Search
 import Combine
 
+typealias KeywordDataSource = UICollectionViewDiffableDataSource<Int, String>
+typealias SnapShot = NSDiffableDataSourceSnapshot<Int, String>
+
 open class SearchViewController: UIViewController {
     private var titleLabel: UILabel = {
         $0.text = "검색"
@@ -66,7 +69,6 @@ open class SearchViewController: UIViewController {
         initDataSource()
         initView()
         initViewModel()
-        bindViewModel()
         refreshKeywordCollectionView(with: .init())
     }
 }
@@ -111,6 +113,7 @@ extension SearchViewController {
     private func initKeywordCollectionView() {
         let layout = LeftAlignedCollectionViewFlowLayout()
         keywordCollectionView = .init(frame: .zero, collectionViewLayout: layout)
+        keywordCollectionView.delegate = self
         keywordCollectionView.dataSource = keywordDataSource
         keywordCollectionView.backgroundColor = .clear
         
@@ -140,6 +143,8 @@ extension SearchViewController {
 // MARK: - Init Data
 extension SearchViewController {
     func initViewModel() {
+        bindViewModel()
+        
         Task(priority: .userInitiated, operation: {
             guard (try? await viewModel.fetchKeyword()) != nil else {
                 return
@@ -158,9 +163,13 @@ extension SearchViewController {
 
 extension SearchViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cell = KeywordCell()
-        cell.setKeyword(with: (viewModel.keywords?[indexPath.item])!)
-        return cell.frame.size
+        let label = UILabel()
+
+        label.text = viewModel.keywords?[indexPath.item].value
+        label.font = .init(name: "Pretendard", size: 14)
+        label.sizeToFit()
+        
+        return .init(width: label.frame.width, height: 50)
     }
 }
 

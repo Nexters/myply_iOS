@@ -24,6 +24,7 @@ class KeywordCell: UICollectionViewCell {
         keywordLabel.text = keyword.value
         keywordLabel.sizeToFit()
         self.sizeToFit()
+        layoutIfNeeded()
     }
     
     func setBackgroundColor(_ color: UIColor) {

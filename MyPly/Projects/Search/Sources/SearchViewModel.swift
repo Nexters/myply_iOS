@@ -25,9 +25,8 @@ protocol SearchViewModel: SearchViewModelOuput & SearchViewModelInput {}
 
 class DefaultSearchViewModel: SearchViewModel {
     // MARK: - output
-    var keywordsPublisher: Publisher<Keywords?> { $keywords }
-    
     @Published var keywords: Keywords? = nil
+    var keywordsPublisher: Publisher<Keywords?> { $keywords }
     
     private let fetchKeywordUseCase: FetchKeywordsUseCase
     
@@ -40,8 +39,4 @@ class DefaultSearchViewModel: SearchViewModel {
         let keywords = try await fetchKeywordUseCase.execute()
         self.keywords = keywords
     }
-}
-
-class DummySearchViewModel {
-
 }
