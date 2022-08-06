@@ -18,7 +18,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let viewController = SearchViewController(keywordRepository: DummyKeywordRepositoryImpl())
+        let keywordRepository: KeywordRepository = DummyKeywordRepositoryImpl()
+        let fetchKeywordUseCase = DefaultFetchKeywordsUseCase(repository: keywordRepository)
+        let viewModel: SearchViewModel = DefaultSearchViewModel(fetchKeywordUseCase: fetchKeywordUseCase)
+        let viewController = SearchViewController(viewModel: viewModel)
         viewController.view.backgroundColor = .white
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()

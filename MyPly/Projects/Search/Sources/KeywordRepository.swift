@@ -13,11 +13,11 @@ enum KeywordResponse {
 }
 
 protocol KeywordRepository {
-    func getKeywords() async -> KeywordResponse
+    func getKeywords() async throws -> Keywords
 }
 
 struct DummyKeywordRepositoryImpl: KeywordRepository {
-    func getKeywords() async -> KeywordResponse {
+    func getKeywords() async throws -> Keywords {
         let keywords: [Keyword] = .init([
             .init("케이팝"),
             .init("청량"),
@@ -26,6 +26,6 @@ struct DummyKeywordRepositoryImpl: KeywordRepository {
             .init("여름밤"),
             .init("감성")
         ])
-        return .success(keywords: keywords)
+        return keywords
     }
 }

@@ -8,6 +8,8 @@
 
 import UIKit
 import SnapKit
+import Search
+import Combine
 
 open class SearchViewController: UIViewController {
     private var titleLabel: UILabel = {
@@ -37,20 +39,23 @@ open class SearchViewController: UIViewController {
     
     private var keywordCollectionView: UICollectionView!
     private var keywordDataSource: KeywordDataSource!
+    private var cancellable: Set<AnyCancellable> = .init()
     
-    private let keywordRepository: KeywordRepository
+    private let viewModel: SearchViewModel
     
     public required init?(coder: NSCoder) {
         fatalError()
     }
     
-    init(keywordRepository: KeywordRepository) {
-        self.keywordRepository = keywordRepository
+    init(viewModel: SearchViewModel) {
+        self.viewModel = viewModel
         super.init()
     }
     
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        self.keywordRepository = DummyKeywordRepositoryImpl()
+        let repository = DummyKeywordRepositoryImpl()
+        let fetchKeywordUseCAse = DefaultFetchKeywordsUseCase(repository: repository)
+        self.viewModel = DefaultSearchViewModel(fetchKeywordUseCase: fetchKeywordUseCAse)
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -59,7 +64,16 @@ open class SearchViewController: UIViewController {
         
         initKeywordCollectionView()
         initDataSource()
-        
+        initView()
+        initViewModel()
+        bindViewModel()
+        refreshKeywordCollectionView(with: .init())
+    }
+}
+
+// MARK: - Init View
+extension SearchViewController {
+    private func initView() {
         view.backgroundColor = UIColor.begie
         
         view.addSubview(titleLabel)
@@ -93,19 +107,25 @@ open class SearchViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
     }
-}
-
-// MARK: - Init View
-extension SearchViewController {
+    
     private func initKeywordCollectionView() {
         let layout = LeftAlignedCollectionViewFlowLayout()
         keywordCollectionView = .init(frame: .zero, collectionViewLayout: layout)
         keywordCollectionView.dataSource = keywordDataSource
+        keywordCollectionView.backgroundColor = .clear
+        
+        let nibName = UINib(nibName: "KeywordCell", bundle: Bundle.main)
+        keywordCollectionView.register(nibName, forCellWithReuseIdentifier: KeywordCell.Constants.reuseIdentifier)
     }
     
     private func initDataSource() {
         keywordDataSource = .init(collectionView: keywordCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
-            return collectionView.dequeueReusableCell(withReuseIdentifier: KeywordCell.Constants.identifier, for: indexPath)
+            
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: KeywordCell.Constants.reuseIdentifier, for: indexPath)
+            let keywordCell = cell as? KeywordCell
+            
+            keywordCell?.setKeyword(with: Keyword(itemIdentifier))
+            return keywordCell
         })
     }
     
@@ -113,7 +133,7 @@ extension SearchViewController {
         var snapShot = SnapShot()
         snapShot.appendSections([0])
         snapShot.appendItems(keywords.map({ $0.value }), toSection: 0)
-        keywordDataSource.apply(snapShot)
+        keywordDataSource.apply(snapShot, animatingDifferences: false, completion: nil)
     }
 }
 
@@ -121,12 +141,26 @@ extension SearchViewController {
 extension SearchViewController {
     func initViewModel() {
         Task(priority: .userInitiated, operation: {
-            let result = await keywordRepository.getKeywords()
-            switch result {
-            case .success(let keywords):
-                self.refreshKeywordCollectionView(with: keywords)
+            guard (try? await viewModel.fetchKeyword()) != nil else {
+                return
             }
         })
+    }
+    
+    func bindViewModel() {
+        viewModel.keywordsPublisher
+            .sink { keywords in
+                guard let keywords = keywords else { return }
+                self.refreshKeywordCollectionView(with: keywords)
+            }.store(in: &cancellable)
+    }
+}
+
+extension SearchViewController: UICollectionViewDelegateFlowLayout {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let cell = KeywordCell()
+        cell.setKeyword(with: (viewModel.keywords?[indexPath.item])!)
+        return cell.frame.size
     }
 }
 
