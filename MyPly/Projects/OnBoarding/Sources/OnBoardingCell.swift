@@ -6,11 +6,7 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
-import UIKit
-import SnapKit
-import Then
-
-class OnBoardingCell: UICollectionViewCell {
+final class OnBoardingCell: UICollectionViewCell {
     
     // MARK: UI
     

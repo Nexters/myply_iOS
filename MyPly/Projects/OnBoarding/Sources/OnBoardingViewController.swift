@@ -6,11 +6,6 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
-import UIKit
-import SnapKit
-import Then
-
-
 open class OnBoardingViewController: UIViewController {
     
     // MARK: UI
@@ -22,6 +17,13 @@ open class OnBoardingViewController: UIViewController {
         $0.backgroundColor = .systemGreen
         $0.setTitleColor(.white, for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
+    }
+    
+    private let pageControl = UIPageControl().then {
+        $0.numberOfPages = 3
+        $0.currentPage = 0
+        $0.pageIndicatorTintColor = .lightGray
+        $0.currentPageIndicatorTintColor = .systemGreen
     }
     
     // MARK: Property
@@ -39,6 +41,7 @@ extension OnBoardingViewController {
     private func addViews(){
         view.addSubview(collectionView)
         view.addSubview(nextButton)
+        view.addSubview(pageControl)
     }
 
     private func initLayout(){
@@ -50,6 +53,11 @@ extension OnBoardingViewController {
             $0.leading.equalToSuperview()
             $0.trailing.equalToSuperview()
             $0.height.equalTo(455)
+        }
+        
+        pageControl.snp.makeConstraints {
+            $0.top.equalTo(collectionView.snp.bottom).offset(32)
+            $0.centerX.equalTo(collectionView.snp.centerX)
         }
 
         nextButton.snp.makeConstraints {
@@ -97,5 +105,17 @@ extension OnBoardingViewController: UICollectionViewDelegateFlowLayout {
         let width: CGFloat = UIScreen.main.bounds.size.width
         let height: CGFloat = 519
         return CGSize(width: width, height: height)
+    }
+    
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        var visibleRect = CGRect()
+        
+        visibleRect.origin = self.collectionView.contentOffset
+        visibleRect.size = self.collectionView.bounds.size
+        
+        let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
+        
+        guard let indexPath = self.collectionView.indexPathForItem(at: visiblePoint) else { return }
+        self.pageControl.currentPage = indexPath.row
     }
 }

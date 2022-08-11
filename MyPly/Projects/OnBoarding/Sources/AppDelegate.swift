@@ -6,8 +6,9 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
-import UIKit
-import OnBoarding
+@_exported import UIKit
+@_exported import SnapKit
+@_exported import Then
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
