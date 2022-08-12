@@ -11,8 +11,13 @@ import SnapKit
 import Search
 import Combine
 
+// MARK: - typealias Keyword
 typealias KeywordDataSource = UICollectionViewDiffableDataSource<Int, String>
 typealias SnapShot = NSDiffableDataSourceSnapshot<Int, String>
+
+// MARK: - typealias SearchResult
+typealias PlayList =  Video
+typealias SearchResultDatasource = UICollectionViewDiffableDataSource<Int, Int>
 
 open class SearchViewController: UIViewController {
     private var titleLabel: UILabel = {
@@ -43,6 +48,9 @@ open class SearchViewController: UIViewController {
     private var keywordCollectionView: UICollectionView!
     private var keywordDataSource: KeywordDataSource!
     
+    private var searchResultCollectionView: UICollectionView!
+    private var searchResultDataSource: SearchResultDatasource!
+    
     private var keywordColors: [UIColor] = .init()
     private let viewModel: SearchViewModel
     private var cancellable: Set<AnyCancellable> = .init()
@@ -69,6 +77,7 @@ open class SearchViewController: UIViewController {
         
         
         initKeywordCollectionView()
+        initSearchResultCollectionView()
         initView()
         fetchKeyword()
         bindViewModel()
@@ -84,6 +93,7 @@ extension SearchViewController {
         view.addSubview(searchField)
         view.addSubview(bestSearchKeywordsTitle)
         view.addSubview(keywordCollectionView)
+        view.addSubview(searchResultCollectionView)
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -110,6 +120,30 @@ extension SearchViewController {
             make.height.equalTo(height)
             make.centerX.equalToSuperview()
         }
+        
+        
+        searchResultCollectionView.snp.makeConstraints { make in
+            make.width.equalToSuperview().offset(-40)
+            make.top.equalTo(bestSearchKeywordsTitle.snp.bottom).offset(12)
+            let height = view.bounds.height -            bestSearchKeywordsTitle.frame.origin.y
+            make.height.equalTo(height)
+            make.centerX.equalToSuperview()
+        }
+    }
+    
+    private func initSearchResultCollectionView() {
+        // TODO: SearchResultCollectionView 구현
+        let layout = LeftAlignedCollectionViewFlowLayout()
+        searchResultCollectionView = .init(frame: .zero, collectionViewLayout: layout)
+        searchResultCollectionView.delegate = self
+        searchResultCollectionView.dataSource = searchResultDataSource
+        searchResultCollectionView.backgroundColor = .clear
+        
+        initSearchResultDataSource()
+    }
+    
+    private func initSearchResultDataSource() {
+        // TODO: initSearchResultDataSource() 구현
     }
     
     private func initKeywordCollectionView() {
@@ -122,10 +156,10 @@ extension SearchViewController {
         let nibName = UINib(nibName: "KeywordCell", bundle: Bundle.main)
         keywordCollectionView.register(nibName, forCellWithReuseIdentifier: KeywordCell.Constants.reuseIdentifier)
         
-        initDataSource()
+        initKeywordDataSource()
     }
     
-    private func initDataSource() {
+    private func initKeywordDataSource() {
         keywordDataSource = .init(collectionView: keywordCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: KeywordCell.Constants.reuseIdentifier, for: indexPath)
