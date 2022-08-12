@@ -12,7 +12,7 @@
         <!--Home View Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController storyboardIdentifier="HomeViewController" id="Y6W-OH-hqX" customClass="HomeViewController" customModule="HomeDemoApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HomeViewController" id="Y6W-OH-hqX" customClass="HomeViewController" customModule="Home" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -37,15 +37,39 @@
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l3z-5L-7Fz">
                                 <rect key="frame" x="0.0" y="100" width="414" height="64"/>
+                                <subviews>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Yy-F7-zix">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="200" placeholderIntrinsicHeight="64" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="kc8-0v-GD1">
+                                                <rect key="frame" x="0.0" y="0.0" width="200" height="64"/>
+                                                <edgeInsets key="layoutMargins" top="0.0" left="20" bottom="0.0" right="0.0"/>
+                                            </stackView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="kc8-0v-GD1" firstAttribute="bottom" secondItem="Dfr-Ac-hEv" secondAttribute="bottom" id="Lut-8n-fqE"/>
+                                            <constraint firstItem="kc8-0v-GD1" firstAttribute="trailing" secondItem="Dfr-Ac-hEv" secondAttribute="trailing" id="NEe-B5-U3W"/>
+                                            <constraint firstItem="kc8-0v-GD1" firstAttribute="leading" secondItem="Dfr-Ac-hEv" secondAttribute="leading" id="Txg-T1-YLU"/>
+                                            <constraint firstItem="kc8-0v-GD1" firstAttribute="top" secondItem="Dfr-Ac-hEv" secondAttribute="top" id="ppC-No-KW2"/>
+                                            <constraint firstItem="kc8-0v-GD1" firstAttribute="height" secondItem="m9E-ep-gxO" secondAttribute="height" id="ygf-Lk-zdX"/>
+                                        </constraints>
+                                        <viewLayoutGuide key="contentLayoutGuide" id="Dfr-Ac-hEv"/>
+                                        <viewLayoutGuide key="frameLayoutGuide" id="m9E-ep-gxO"/>
+                                    </scrollView>
+                                </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="5Yy-F7-zix" secondAttribute="trailing" id="0Ng-tH-5WB"/>
+                                    <constraint firstItem="5Yy-F7-zix" firstAttribute="top" secondItem="l3z-5L-7Fz" secondAttribute="top" id="9VR-cw-wNj"/>
+                                    <constraint firstAttribute="bottom" secondItem="5Yy-F7-zix" secondAttribute="bottom" id="AzY-Io-Ynb"/>
+                                    <constraint firstItem="5Yy-F7-zix" firstAttribute="leading" secondItem="l3z-5L-7Fz" secondAttribute="leading" id="LEK-DP-rox"/>
                                     <constraint firstAttribute="height" constant="64" id="RmC-Lz-nCJ"/>
                                 </constraints>
                             </view>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="PjM-ov-JmO">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="PjM-ov-JmO" customClass="TouchPassedCollectionView" customModule="CommonUI">
                                 <rect key="frame" x="20" y="180" width="374" height="682"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="C6N-MJ-9ym">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="C6N-MJ-9ym">
                                     <size key="itemSize" width="128" height="128"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -70,12 +94,13 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="categoryHeaderStackView" destination="kc8-0v-GD1" id="mX3-pr-BPc"/>
                         <outlet property="collectionView" destination="PjM-ov-JmO" id="ltv-3Z-8lb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="17" y="65"/>
+            <point key="canvasLocation" x="-812" y="-564"/>
         </scene>
     </scenes>
     <resources>
