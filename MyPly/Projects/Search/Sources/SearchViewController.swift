@@ -42,9 +42,11 @@ open class SearchViewController: UIViewController {
     
     private var keywordCollectionView: UICollectionView!
     private var keywordDataSource: KeywordDataSource!
+    
+    private var keywordColors: [UIColor] = .init()
+    private let viewModel: SearchViewModel
     private var cancellable: Set<AnyCancellable> = .init()
     
-    private let viewModel: SearchViewModel
     
     public required init?(coder: NSCoder) {
         fatalError()
@@ -133,17 +135,19 @@ extension SearchViewController {
             }
             
             let index = indexPath.row
-            guard let keyword = self.viewModel.keywords?[index] else {
-                return cell
+            if let keyword = self.viewModel.keywords?[index] {
+                keywordCell.setKeyword(with: keyword)
             }
-            keywordCell.setKeyword(with: keyword)
+            
+            if let backgroundColor = self.keywordColors[safe: index]  {
+                keywordCell.setBackgroundColor(backgroundColor)
+            }
             return keywordCell
         })
     }
     
     
     private func refreshKeywordCollectionView(with keywords: [Keyword]) {
-        print("refrsh keyword collectionview with: \(keywords)")
         var snapShot = SnapShot()
         snapShot.appendSections([0])
         snapShot.appendItems(keywords.map({ $0.value }), toSection: 0)
@@ -165,6 +169,7 @@ extension SearchViewController {
         viewModel.keywordsPublisher
             .sink { keywords in
                 guard let keywords = keywords else { return }
+                self.keywordColors = KeywordColorFactory.create(keywords: keywords)
                 self.refreshKeywordCollectionView(with: keywords)
                 self.keywordCollectionView.reloadData()
             }.store(in: &cancellable)
