@@ -182,8 +182,7 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
         label.text = KeywordText(keyword: keyword).value
         label.font = .init(name: "Pretendard", size: 14)
         label.sizeToFit()
-        
-        return label.frame.size
+        return .init(width: label.frame.width + 24, height: label.frame.height + 11)
     }
 }
 
