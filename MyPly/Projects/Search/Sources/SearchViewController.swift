@@ -65,11 +65,11 @@ open class SearchViewController: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         initKeywordCollectionView()
-        initDataSource()
         initView()
-        initViewModel()
-        refreshKeywordCollectionView(with: .init())
+        fetchKeyword()
+        bindViewModel()
     }
 }
 
@@ -119,20 +119,31 @@ extension SearchViewController {
         
         let nibName = UINib(nibName: "KeywordCell", bundle: Bundle.main)
         keywordCollectionView.register(nibName, forCellWithReuseIdentifier: KeywordCell.Constants.reuseIdentifier)
+        
+        initDataSource()
     }
     
     private func initDataSource() {
         keywordDataSource = .init(collectionView: keywordCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: KeywordCell.Constants.reuseIdentifier, for: indexPath)
-            let keywordCell = cell as? KeywordCell
             
-            keywordCell?.setKeyword(with: Keyword(itemIdentifier))
+            guard let keywordCell = cell as? KeywordCell else {
+                return cell
+            }
+            
+            let index = indexPath.row
+            guard let keyword = self.viewModel.keywords?[index] else {
+                return cell
+            }
+            keywordCell.setKeyword(with: keyword)
             return keywordCell
         })
     }
     
+    
     private func refreshKeywordCollectionView(with keywords: [Keyword]) {
+        print("refrsh keyword collectionview with: \(keywords)")
         var snapShot = SnapShot()
         snapShot.appendSections([0])
         snapShot.appendItems(keywords.map({ $0.value }), toSection: 0)
@@ -142,9 +153,7 @@ extension SearchViewController {
 
 // MARK: - Init Data
 extension SearchViewController {
-    func initViewModel() {
-        bindViewModel()
-        
+    func fetchKeyword() {
         Task(priority: .userInitiated, operation: {
             guard (try? await viewModel.fetchKeyword()) != nil else {
                 return
@@ -156,7 +165,9 @@ extension SearchViewController {
         viewModel.keywordsPublisher
             .sink { keywords in
                 guard let keywords = keywords else { return }
+                print("keywordPublisher: \(keywords)")
                 self.refreshKeywordCollectionView(with: keywords)
+                self.keywordCollectionView.reloadData()
             }.store(in: &cancellable)
     }
 }
@@ -168,7 +179,7 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
         label.text = viewModel.keywords?[indexPath.item].value
         label.font = .init(name: "Pretendard", size: 14)
         label.sizeToFit()
-        
+        print("dochoi", viewModel.keywords)
         return .init(width: label.frame.width, height: 50)
     }
 }

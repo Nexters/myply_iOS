@@ -8,12 +8,12 @@
 
 import Combine
 
-typealias Publisher<Output> = Published<Output>.Publisher
+//typealias Publisher<Output> = Published<Output>.Publisher
 typealias Keywords = [Keyword]
 
 
 protocol SearchViewModelOuput {
-    var keywordsPublisher: Publisher<Keywords?> { get }
+    var keywordsPublisher: AnyPublisher<Keywords?, Never> { get }
     var keywords: Keywords? { get }
 }
 
@@ -23,10 +23,15 @@ protocol SearchViewModelInput {
 
 protocol SearchViewModel: SearchViewModelOuput & SearchViewModelInput {}
 
-class DefaultSearchViewModel: SearchViewModel {
-    // MARK: - output
-    @Published var keywords: Keywords? = nil
-    var keywordsPublisher: Publisher<Keywords?> { $keywords }
+class DefaultSearchViewModel: SearchViewModel, ObservableObject {
+    
+    var keywordsSubject: CurrentValueSubject<Keywords?, Never> = .init(nil)
+    var keywordsPublisher: AnyPublisher<Keywords?, Never> {
+        keywordsSubject.eraseToAnyPublisher()
+    }
+    var keywords: Keywords? {
+        keywordsSubject.value
+    }
     
     private let fetchKeywordUseCase: FetchKeywordsUseCase
     
@@ -37,6 +42,6 @@ class DefaultSearchViewModel: SearchViewModel {
     // MARK: - input
     func fetchKeyword() async throws {
         let keywords = try await fetchKeywordUseCase.execute()
-        self.keywords = keywords
+        keywordsSubject.value = keywords
     }
 }
