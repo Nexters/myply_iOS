@@ -165,22 +165,25 @@ extension SearchViewController {
         viewModel.keywordsPublisher
             .sink { keywords in
                 guard let keywords = keywords else { return }
-                print("keywordPublisher: \(keywords)")
                 self.refreshKeywordCollectionView(with: keywords)
                 self.keywordCollectionView.reloadData()
             }.store(in: &cancellable)
     }
 }
 
+// MARK: - UICollectionViewDelegateFlowLayout
 extension SearchViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        guard let keyword = viewModel.keywords?[indexPath.row]
+        else { return .zero }
+        
         let label = UILabel()
-
-        label.text = viewModel.keywords?[indexPath.item].value
+        label.text = KeywordText(keyword: keyword).value
         label.font = .init(name: "Pretendard", size: 14)
         label.sizeToFit()
-        print("dochoi", viewModel.keywords)
-        return .init(width: label.frame.width, height: 50)
+        
+        return label.frame.size
     }
 }
 

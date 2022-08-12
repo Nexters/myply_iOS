@@ -21,13 +21,22 @@ class KeywordCell: UICollectionViewCell {
     }
     
     func setKeyword(with keyword: Keyword) {
-        keywordLabel.text = keyword.value
-        keywordLabel.sizeToFit()
+        keywordLabel.text = KeywordText(keyword: keyword).value
         self.sizeToFit()
         layoutIfNeeded()
     }
     
     func setBackgroundColor(_ color: UIColor) {
         keywordLabel.backgroundColor = color
+    }
+}
+
+struct KeywordText {
+    static let keywordFormat = "#%@"
+    
+    let value: String
+    
+    init(keyword: Keyword) {
+        value = String(format: Self.keywordFormat, keyword.value)
     }
 }
