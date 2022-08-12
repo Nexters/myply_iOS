@@ -10,20 +10,25 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+
         <!--My Page View Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
                 <viewController storyboardIdentifier="MyPageViewController" id="Y6W-OH-hqX" customClass="MyPageViewController" customModule="MyPage" customModuleProvider="target" sceneMemberID="viewController">
+
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="마이페이지" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1kw-nO-gTT">
+
                                 <rect key="frame" x="0.0" y="44" width="74" height="29"/>
+
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2b6-sB-Ee7">
                                 <rect key="frame" x="0.0" y="81" width="423" height="781"/>
                                 <subviews>
@@ -86,10 +91,12 @@
                                 <viewLayoutGuide key="contentLayoutGuide" id="yby-vJ-lhz"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="bxz-y7-oXA"/>
                             </scrollView>
+
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="2b6-sB-Ee7" secondAttribute="bottom" id="1TQ-Ww-XgO"/>
                             <constraint firstItem="2b6-sB-Ee7" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="35v-fz-R15"/>
                             <constraint firstItem="1kw-nO-gTT" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="Bh3-qB-rLc"/>
@@ -110,8 +117,3 @@
     </scenes>
     <resources>
         <image name="edit" width="24" height="24"/>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-    </resources>
-</document>

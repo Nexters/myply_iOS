@@ -108,7 +108,6 @@ open class MyPageViewController: UIViewController {
         return $0
     }(UIButton())
     
-    
     open override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -324,6 +323,7 @@ extension MyPageViewController {
     }
 }
 
+<<<<<<< HEAD
 extension MyPageViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
@@ -366,3 +366,17 @@ extension MyPageViewController: UICollectionViewDelegate {
 }
 
 
+=======
+extension MyPageViewController {
+    static func create() -> MyPageViewController? {
+        let storyBoard = UIStoryboard(name: "MyPage", bundle: .init(for: self))
+        return storyBoard.instantiateViewController(withIdentifier: "MyPageViewController") as? MyPageViewController
+    }
+}
+// MARK: View
+extension MyPageViewController {
+    private func initUI() {
+        
+    }
+}
+>>>>>>> daa064b (MyPageViewController titleLabel과 CollectionView를 storyboard에 배치)
