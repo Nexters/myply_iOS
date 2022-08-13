@@ -54,31 +54,18 @@ private extension HomeViewController {
 
             categoryHeaderStackView.addArrangedSubview(button)
             button.tapPublisher
+                .throttle(for: 1, scheduler: DispatchQueue.main, latest: false)
                 .sink { [weak self] in
                     self?.viewModel.currentMenu.send(menu)
                 }.store(in: &cancellables)
         }
 
-
-    }
-
-    func configurePublisher() {
         viewModel.currentMenu
-            .removeDuplicates(by: { lhs, rhs in
-                guard let lhs = lhs , let rhs = rhs else { return  false}
-                return lhs.title == rhs.title
-            })
             .sink { [weak self] currentMenu in
                 self?.categoryHeaderStackView.arrangedSubviews.forEach { view in
                     guard let menuButton = view as? HomeMenuButton, let currentMenu = currentMenu else { return }
                     menuButton.isSelected = currentMenu.title == menuButton.titleLabel?.text
                 }
-            }.store(in: &cancellables)
-
-        viewModel.playlists
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.collectionView.reloadData()
             }.store(in: &cancellables)
     }
 }
@@ -97,7 +84,7 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 
 extension HomeViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.playlists.value.count
+        return 10
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
