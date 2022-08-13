@@ -6,15 +6,10 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
-import UIKit
-import CommonUI
-import SnapKit
-import Then
-
 open class LibraryViewController: UIViewController {
     
     private let headerView = UIView().then {
-        $0.backgroundColor = CommonUIAsset.greenLight.color // TODO: 바꾸기
+        $0.backgroundColor = CommonUIAsset.begie.color
     }
     
     private let titleLabel = UILabel().then {
@@ -26,7 +21,7 @@ open class LibraryViewController: UIViewController {
     private let descLabel = UILabel().then {
         $0.text = "플레이리스트가 아직 없어요."
         $0.font = .systemFont(ofSize: 14, weight: .bold)
-        $0.textColor = CommonUIAsset.gray70.color // TODO: 바꾸기
+        $0.textColor = CommonUIAsset.gray60.color
     }
     
     private var collectionView: UICollectionView!
@@ -51,7 +46,7 @@ extension LibraryViewController {
         initCollectionView()
         addViews()
         
-        view.backgroundColor = CommonUIAsset.greenLight.color // TODO: 바꾸기
+        view.backgroundColor = CommonUIAsset.begie.color
         
         headerView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -85,7 +80,7 @@ extension LibraryViewController {
         }
         
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout).then {
-            $0.backgroundColor = CommonUIAsset.greenLight.color // TODO: 바꾸기
+            $0.backgroundColor = CommonUIAsset.begie.color
             $0.showsVerticalScrollIndicator = false
             $0.showsHorizontalScrollIndicator = false
             $0.register(LibraryCollectionCell.self, forCellWithReuseIdentifier: "libraryCell")

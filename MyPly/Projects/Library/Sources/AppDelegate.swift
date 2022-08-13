@@ -6,7 +6,10 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
-import UIKit
+@_exported import CommonUI
+@_exported import UIKit
+@_exported import SnapKit
+@_exported import Then
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,7 +22,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         let viewController = LibraryViewController()
-        viewController.view.backgroundColor = .white
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
         return true

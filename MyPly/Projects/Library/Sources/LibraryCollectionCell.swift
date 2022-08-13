@@ -3,12 +3,8 @@
 //  Library
 //
 //  Created by 최모지 on 2022/08/13.
+//  Copyright © 2022 cocaine.io. All rights reserved.
 //
-
-import UIKit
-import CommonUI
-import SnapKit
-import Then
 
 class LibraryCollectionCell: UICollectionViewCell {
     
@@ -22,12 +18,18 @@ class LibraryCollectionCell: UICollectionViewCell {
         $0.backgroundColor = .systemYellow
     }
     
+    private let likeButton = UIButton().then {
+        $0.setImage(UIImage(named: "likeSelected"), for: .normal)
+    }
+    
     private let titleLabel = UILabel().then {
         $0.text = "playlist / 꽃향기를 닮은 음악 (songs scent like flower) 두줄테슽테스트테스트테스트테스트ㅜ"
         $0.numberOfLines = 2
         $0.font = .systemFont(ofSize: 14, weight: .bold)
         $0.textColor = CommonUIAsset.gray80.color
     }
+    
+    private var collectionView: UICollectionView!
     
     private let divideView = UIView().then {
         $0.backgroundColor = CommonUIAsset.gray50.color
@@ -64,16 +66,19 @@ extension LibraryCollectionCell {
         addSubview(cellView)
         
         cellView.addSubview(imageView)
+        imageView.addSubview(likeButton)
         cellView.addSubview(titleLabel)
+        cellView.addSubview(collectionView)
         cellView.addSubview(divideView)
         cellView.addSubview(editImageView)
         cellView.addSubview(memoLabel)
     }
     
     private func initLayout(){
+        initCollectionView()
         addViews()
         
-        backgroundColor = CommonUIAsset.greenLight.color
+        backgroundColor = CommonUIAsset.begie.color
         
         cellView.snp.makeConstraints {
             $0.top.equalTo(16)
@@ -88,9 +93,21 @@ extension LibraryCollectionCell {
             $0.height.equalTo(78)
         }
         
+        likeButton.snp.makeConstraints {
+            $0.top.leading.equalTo(8)
+            $0.width.height.equalTo(24)
+        }
+        
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(16)
             $0.leading.equalTo(imageView.snp.trailing).offset(12)
+            $0.trailing.equalTo(-15)
+        }
+        
+        collectionView.snp.makeConstraints {
+            $0.bottom.equalTo(divideView.snp.top).offset(-14)
+            $0.height.equalTo(20)
+            $0.leading.equalTo(imageView.snp.trailing).offset(16)
             $0.trailing.equalTo(-15)
         }
         
@@ -112,6 +129,19 @@ extension LibraryCollectionCell {
             $0.leading.equalTo(editImageView.snp.trailing).offset(12)
             $0.trailing.equalTo(-16)
             $0.bottom.equalTo(-16)
+        }
+    }
+    
+    private func initCollectionView(){
+        let flowLayout = UICollectionViewFlowLayout().then {
+            $0.scrollDirection = .vertical
+            $0.minimumLineSpacing = 0
+            $0.minimumInteritemSpacing = 0
+        }
+        
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout).then {
+            $0.showsVerticalScrollIndicator = false
+            $0.showsHorizontalScrollIndicator = false
         }
     }
 }
