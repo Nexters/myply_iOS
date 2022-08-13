@@ -7,7 +7,6 @@
 
 import Foundation
 import UIKit
-import MyPlyAPI
 
 
 final class MainTabBarController: UITabBarController {
