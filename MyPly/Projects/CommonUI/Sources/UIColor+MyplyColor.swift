@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension UIFont {
+public extension UIFont {
     static let H1Semibold = UIFont(name: "Pretendard", size: 24)
 }
 
