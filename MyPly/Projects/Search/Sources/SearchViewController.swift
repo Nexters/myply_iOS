@@ -17,7 +17,6 @@ typealias KeywordDataSource = UICollectionViewDiffableDataSource<Int, String>
 typealias SnapShot = NSDiffableDataSourceSnapshot<Int, String>
 
 // MARK: - typealias SearchResult
-typealias PlayList =  Playlist
 typealias SearchResultDatasource = UICollectionViewDiffableDataSource<Int, Int>
 
 open class SearchViewController: UIViewController {
@@ -66,8 +65,11 @@ open class SearchViewController: UIViewController {
     
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         let repository = DummyKeywordRepositoryImpl()
-        let fetchKeywordUseCAse = DefaultFetchKeywordsUseCase(repository: repository)
-        self.viewModel = DefaultSearchViewModel(fetchKeywordUseCase: fetchKeywordUseCAse)
+        let fetchKeywordUseCase = DefaultFetchKeywordsUseCase(repository: repository)
+        
+        let playlistRepository = DummyPlaylistRepositoryImpl()
+        let searchPlaylistUseCase = DefaultSearchPlaylistUsecase(repository: playlistRepository)
+        self.viewModel = DefaultSearchViewModel(fetchKeywordUseCase: fetchKeywordUseCase, searchPlaylistUseCase: searchPlaylistUseCase)
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -208,12 +210,24 @@ extension SearchViewController {
     
     func bindViewModel() {
         viewModel.keywordsPublisher
+            .compactMap({ $0 })
             .sink { keywords in
-                guard let keywords = keywords else { return }
                 self.keywordColors = KeywordColorFactory.create(keywords: keywords)
                 self.refreshKeywordCollectionView(with: keywords)
-                self.keywordCollectionView.reloadData()
             }.store(in: &cancellable)
+        
+        searchField.textPublisher
+            .debounce(for: 0.5, scheduler: RunLoop.main)
+            .compactMap({ $0 })
+            .sink { [weak self] searchParam in
+                self?.viewModel.search(param: searchParam)
+            }.store(in: &cancellable)
+        
+        viewModel.searchResultPublisher
+            .sink { playlists in
+                
+            }
+        
     }
 }
 

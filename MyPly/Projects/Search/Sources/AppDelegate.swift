@@ -20,7 +20,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         let keywordRepository: KeywordRepository = DummyKeywordRepositoryImpl()
         let fetchKeywordUseCase = DefaultFetchKeywordsUseCase(repository: keywordRepository)
-        let viewModel: SearchViewModel = DefaultSearchViewModel(fetchKeywordUseCase: fetchKeywordUseCase)
+        
+        let playlistRepository: PlaylistRepository = DummyPlaylistRepositoryImpl()
+        let searchResultUseCase = DefaultSearchPlaylistUsecase(repository: playlistRepository)
+        
+        let viewModel: SearchViewModel = DefaultSearchViewModel(fetchKeywordUseCase: fetchKeywordUseCase, searchPlaylistUseCase: searchResultUseCase)
         let viewController = SearchViewController(viewModel: viewModel)
         viewController.view.backgroundColor = .white
         window?.rootViewController = viewController

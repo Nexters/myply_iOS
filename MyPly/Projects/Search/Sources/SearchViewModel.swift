@@ -15,10 +15,13 @@ typealias Keywords = [Keyword]
 protocol SearchViewModelOuput {
     var keywordsPublisher: AnyPublisher<Keywords?, Never> { get }
     var keywords: Keywords? { get }
+    
+    var searchResultPublisher: AnyPublisher<[Playlist]?, Never> { get }
 }
 
 protocol SearchViewModelInput {
     func fetchKeyword() async throws
+    func search(param: String)
 }
 
 protocol SearchViewModel: SearchViewModelOuput & SearchViewModelInput {}
@@ -33,15 +36,32 @@ class DefaultSearchViewModel: SearchViewModel, ObservableObject {
         keywordsSubject.value
     }
     
-    private let fetchKeywordUseCase: FetchKeywordsUseCase
+    var searchResultSubjet: CurrentValueSubject<[Playlist]?, Never> = .init(nil)
+    var searchResultPublisher: AnyPublisher<[Playlist]?, Never> {
+        searchResultSubjet.eraseToAnyPublisher()
+    }
+    var searchResults: [Playlist]? {
+        searchResultSubjet.value
+    }
     
-    init(fetchKeywordUseCase: FetchKeywordsUseCase) {
+    private let fetchKeywordUseCase: FetchKeywordsUseCase
+    private let searchPlaytlistUsecase: SearchPlaylistUseCase
+    
+    init(fetchKeywordUseCase: FetchKeywordsUseCase, searchPlaylistUseCase: SearchPlaylistUseCase) {
         self.fetchKeywordUseCase = fetchKeywordUseCase
+        self.searchPlaytlistUsecase = searchPlaylistUseCase
     }
     
     // MARK: - input
     func fetchKeyword() async throws {
         let keywords = try await fetchKeywordUseCase.execute()
         keywordsSubject.value = keywords
+    }
+    
+    func search(param: String) {
+        Task {
+            let searchResult = try await searchPlaytlistUsecase.execute(param: param)
+            searchResultSubjet.value = searchResult
+        }
     }
 }

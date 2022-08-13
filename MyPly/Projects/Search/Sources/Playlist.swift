@@ -8,4 +8,6 @@
 
 import Foundation
 
-struct Playlist {}
+struct Playlist {
+    let title: String
+}
