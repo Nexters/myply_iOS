@@ -1,14 +1,17 @@
 //
 //  AppDelegate.swift
-//  HomeDemoApp
+//  OnBoarding
 //
-//  Created by 최동규 on 2022/07/29.
+//  Created by 최모지 on 2022/07/30.
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
-import UIKit
+@_exported import UIKit
+@_exported import SnapKit
+@_exported import Then
 
-    @main class AppDelegate: UIResponder, UIApplicationDelegate {
+@main
+final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
@@ -17,10 +20,11 @@ import UIKit
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let viewController = HomeViewController.create() ?? UIViewController()
+        let viewController = OnBoardingViewController()
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
         return true
     }
 
 }
+
