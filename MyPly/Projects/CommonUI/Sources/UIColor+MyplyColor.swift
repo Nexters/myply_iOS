@@ -13,6 +13,8 @@ public extension UIFont {
 }
 
 public extension UIColor {
+    
+    static let textColor = UIColor.darkGray
     class var begie: UIColor? { return CommonUIAsset.begie.color }
     class var gray50: UIColor? { return CommonUIAsset.gray50.color }
     class var gray70: UIColor? { return CommonUIAsset.gray70.color }
