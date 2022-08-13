@@ -10,13 +10,14 @@ import UIKit
 import SnapKit
 import Search
 import Combine
+import CommonUI
 
 // MARK: - typealias Keyword
 typealias KeywordDataSource = UICollectionViewDiffableDataSource<Int, String>
 typealias SnapShot = NSDiffableDataSourceSnapshot<Int, String>
 
 // MARK: - typealias SearchResult
-typealias PlayList =  Video
+typealias PlayList =  Playlist
 typealias SearchResultDatasource = UICollectionViewDiffableDataSource<Int, Int>
 
 open class SearchViewController: UIViewController {
@@ -47,6 +48,7 @@ open class SearchViewController: UIViewController {
     
     private var searchResultCollectionView: UICollectionView!
     private var searchResultDataSource: SearchResultDatasource!
+    private var searchResultLayoutDelegate: UICollectionViewDelegateFlowLayout = SearchResultCollectionViewDelegate()
     
     private var keywordColors: [UIColor] = .init()
     private let viewModel: SearchViewModel
@@ -119,7 +121,6 @@ extension SearchViewController {
             make.centerX.equalToSuperview()
         }
         
-        
         searchResultCollectionView.snp.makeConstraints { make in
             make.width.equalToSuperview().offset(-40)
             make.top.equalTo(bestSearchKeywordsTitle.snp.bottom).offset(12)
@@ -133,15 +134,23 @@ extension SearchViewController {
         // TODO: SearchResultCollectionView 구현
         let layout = LeftAlignedCollectionViewFlowLayout()
         searchResultCollectionView = .init(frame: .zero, collectionViewLayout: layout)
-        searchResultCollectionView.delegate = self
+        searchResultCollectionView.delegate = searchResultLayoutDelegate
         searchResultCollectionView.dataSource = searchResultDataSource
         searchResultCollectionView.backgroundColor = .clear
+        
+        let xib = UINib(nibName: PlaylistCell.identifier, bundle: CommonUIResources.bundle)
+        searchResultCollectionView.register(xib, forCellWithReuseIdentifier: PlaylistCell.identifier)
         
         initSearchResultDataSource()
     }
     
     private func initSearchResultDataSource() {
         // TODO: initSearchResultDataSource() 구현
+        searchResultDataSource = .init(collectionView: searchResultCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaylistCell.identifier, for: indexPath) as? PlaylistCell else { return UICollectionViewCell() }
+            cell.backgroundColor = .white
+            return cell
+        })
     }
     
     private func initKeywordCollectionView() {
@@ -208,7 +217,7 @@ extension SearchViewController {
     }
 }
 
-// MARK: - UICollectionViewDelegateFlowLayout
+// MARK: - UICollectionViewDelegateFlowLayout : KeywordCell 크기 설정
 extension SearchViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
@@ -220,6 +229,13 @@ extension SearchViewController: UICollectionViewDelegateFlowLayout {
         label.font = .init(name: "Pretendard", size: 14)
         label.sizeToFit()
         return .init(width: label.frame.width + 24, height: label.frame.height + 11)
+    }
+}
+
+// MARK: SearchResultCollectionViewDeleate : Playlist cell 크기 설정
+class SearchResultCollectionViewDelegate: NSObject, UICollectionViewDelegateFlowLayout {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return .init(width: collectionView.bounds.width, height: 284)
     }
 }
 

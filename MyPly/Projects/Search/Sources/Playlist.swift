@@ -2,10 +2,10 @@
 //  Playlist.swift
 //  Search
 //
-//  Created by nylah.j on 2022/08/12.
+//  Created by nylah.j on 2022/08/13.
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
 import Foundation
 
-struct Video {}
+struct Playlist {}
