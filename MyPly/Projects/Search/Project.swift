@@ -24,6 +24,10 @@ let project = Project.frameworkWithDemoApp(name: projectName,
                                            dependencies: [.project(target: "CommonUI", path: .relativeToCurrentFile("../CommonUI")),
                                                           .external(name: "Alamofire"),
                                                           .external(name: "SnapKit"),
+<<<<<<< HEAD
                                                           .external(name: "CombineCocoa"),
                                                           .project(target: "Model", path: .relativeToCurrentFile("../Model"))])
+=======
+                                                          .external(name: "CombineCocoa")])
+>>>>>>> 9b472e5 (mypage: edit 아이콘 추가)
 

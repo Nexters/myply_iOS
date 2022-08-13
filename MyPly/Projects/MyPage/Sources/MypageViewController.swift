@@ -201,10 +201,6 @@ open class MyPageViewController: UIViewController {
         initKeywordCollectionView()
         initKeywordDataSource()
         keywordCollectionView.dataSource = keywordDataSource
-        
-        
-        bindViewModel()
-        viewModel.fetchKeywords()
     }
     
     private func initKeywordCollectionView() {
@@ -309,13 +305,13 @@ open class MyPageViewController: UIViewController {
 }
 
 
-
 extension MyPageViewController {
     static func create() -> MyPageViewController? {
         let storyBoard = UIStoryboard(name: "MyPage", bundle: .init(for: self))
         return storyBoard.instantiateViewController(withIdentifier: "MyPageViewController") as? MyPageViewController
     }
 }
+
 // MARK: View
 extension MyPageViewController {
     private func initUI() {
@@ -323,7 +319,6 @@ extension MyPageViewController {
     }
 }
 
-<<<<<<< HEAD
 extension MyPageViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
@@ -364,19 +359,3 @@ extension MyPageViewController: UICollectionViewDelegate {
         collectionView.layoutIfNeeded()
     }
 }
-
-
-=======
-extension MyPageViewController {
-    static func create() -> MyPageViewController? {
-        let storyBoard = UIStoryboard(name: "MyPage", bundle: .init(for: self))
-        return storyBoard.instantiateViewController(withIdentifier: "MyPageViewController") as? MyPageViewController
-    }
-}
-// MARK: View
-extension MyPageViewController {
-    private func initUI() {
-        
-    }
-}
->>>>>>> daa064b (MyPageViewController titleLabel과 CollectionView를 storyboard에 배치)
