@@ -25,5 +25,4 @@ let project = Project.app(name: projectName,
                                          .project(target: "Home", path: .relativeToCurrentFile("../Home")),
                                          .project(target: "Library", path: .relativeToCurrentFile("../Library")),
                                          .project(target: "MyPage", path: .relativeToCurrentFile("../MyPage")),
-                                         .project(target: "Search", path: .relativeToCurrentFile("../Search")),
-                                         .project(target: "MyPlyAPI", path: "../MyPlyAPI")])
+                                         .project(target: "Search", path: .relativeToCurrentFile("../Search"))])
