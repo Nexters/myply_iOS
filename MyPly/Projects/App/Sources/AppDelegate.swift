@@ -24,21 +24,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         let tabBarController = MainTabBarController()
+        tabBarController.tabBar.tintColor = .darkGray
         tabBarController.view.backgroundColor = .white
 
-        let homeVC = HomeViewController()
-        homeVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house"), selectedImage: nil)
+        let homeVC = HomeViewController.create()
+        homeVC?.tabBarItem = UITabBarItem(title: nil, image: AppAsset.home.image, selectedImage: nil)
 
         let searchVC = SearchViewController()
-        searchVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "magnifyingglass"), selectedImage: nil)
+        searchVC.tabBarItem = UITabBarItem(title: nil, image: AppAsset.search.image, selectedImage: nil)
 
         let libraryVC = LibraryViewController()
-        libraryVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "book"), selectedImage: nil)
+        libraryVC.tabBarItem = UITabBarItem(title: nil, image: AppAsset.keep.image, selectedImage: nil)
 
         let myPageVC = MyPageViewController()
-        myPageVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "person"), selectedImage: nil)
+        myPageVC.tabBarItem = UITabBarItem(title: nil, image: AppAsset.myPage.image, selectedImage: nil)
 
-        tabBarController.setViewControllers([homeVC, searchVC, libraryVC, myPageVC], animated: false)
+        tabBarController.setViewControllers([homeVC, searchVC, libraryVC, myPageVC].compactMap { $0 }, animated: false)
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
         return true

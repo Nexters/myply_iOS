@@ -7,10 +7,8 @@
 //
 
 import UIKit
-import Home
 
-@main
-final class AppDelegate: UIResponder, UIApplicationDelegate {
+    @main class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
@@ -19,8 +17,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let viewController = HomeViewController()
-        viewController.view.backgroundColor = .red
+        let viewController = HomeViewController.create() ?? UIViewController()
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
         return true

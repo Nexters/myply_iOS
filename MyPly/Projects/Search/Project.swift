@@ -13,6 +13,7 @@ private let iOSTargetVersion = "14.0"
 
 let infoPlist: [String: InfoPlist.Value] = [
     "CFBundleShortVersionString": "1.0",
-    "CFBundleVersion": "1"
+    "CFBundleVersion": "1",
+    "UILaunchStoryboardName": "LaunchScreen"
 ]
 let project = Project.frameworkWithDemoApp(name: projectName, platform: .iOS, iOSTargetVersion: iOSTargetVersion, infoPlist: infoPlist, dependencies: [.project(target: "CommonUI", path: .relativeToCurrentFile("../CommonUI")), .external(name: "Alamofire")])
