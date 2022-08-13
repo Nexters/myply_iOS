@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import MyPage
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
