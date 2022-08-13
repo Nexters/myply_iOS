@@ -10,4 +10,4 @@ import ProjectDescription
 
 private let projectName = "MyPlyAPI"
 private let iOSTargetVersion = "14.0"
-let project = Project.framework(name: projectName, platform: .iOS, iOSTargetVersion: iOSTargetVersion, dependencies: [.external(name: "Alamofire")])
+let project = Project.framework(name: projectName, platform: .iOS, iOSTargetVersion: iOSTargetVersion, dependencies: [.external(name: "Moya")])

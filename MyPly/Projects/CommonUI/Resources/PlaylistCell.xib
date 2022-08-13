@@ -31,14 +31,6 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="# 청량한" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sdT-JV-4uA">
-                        <rect key="frame" x="20" y="249" width="49" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" red="0.37254901959999998" green="0.3921568627" blue="0.43921568630000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                        <color key="textColor" red="0.96599489449999998" green="0.96611386539999999" blue="0.96596795319999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PEB-6K-uuW">
                         <rect key="frame" x="319" y="247" width="21" height="22"/>
                         <constraints>
@@ -50,11 +42,19 @@
                         <state key="normal" image="heart" catalog="system"/>
                         <state key="selected" image="heart.fill" catalog="system"/>
                     </button>
+                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N6i-4A-g1J">
+                        <rect key="frame" x="16" y="240" width="287" height="28"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="28" id="U9b-2m-ECZ"/>
+                        </constraints>
+                    </stackView>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="N6i-4A-g1J" secondAttribute="bottom" constant="16" id="5DC-bY-Jql"/>
                 <constraint firstAttribute="bottom" secondItem="PEB-6K-uuW" secondAttribute="bottom" constant="15" id="Awm-bd-QSi"/>
+                <constraint firstItem="N6i-4A-g1J" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="16" id="RHc-Ec-snD"/>
                 <constraint firstAttribute="trailing" secondItem="PEB-6K-uuW" secondAttribute="trailing" constant="15" id="UCw-cZ-adt"/>
                 <constraint firstAttribute="trailing" secondItem="Fr1-L5-QdL" secondAttribute="trailing" constant="16" id="eag-zg-8Vs"/>
                 <constraint firstItem="Fr1-L5-QdL" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="16" id="hcJ-Vp-qgf"/>
@@ -62,9 +62,16 @@
                 <constraint firstItem="Fr1-L5-QdL" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="16" id="khb-q7-tkQ"/>
                 <constraint firstAttribute="trailing" secondItem="yMj-Pg-8Q8" secondAttribute="trailing" constant="15" id="pI9-7J-wHZ"/>
                 <constraint firstItem="yMj-Pg-8Q8" firstAttribute="top" secondItem="Fr1-L5-QdL" secondAttribute="bottom" constant="15" id="wa1-jn-ews"/>
+                <constraint firstItem="PEB-6K-uuW" firstAttribute="leading" secondItem="N6i-4A-g1J" secondAttribute="trailing" constant="16" id="yaW-Xq-Mma"/>
             </constraints>
             <size key="customSize" width="559" height="322"/>
-            <point key="canvasLocation" x="246" y="51"/>
+            <connections>
+                <outlet property="imageView" destination="Fr1-L5-QdL" id="MVD-BL-xCf"/>
+                <outlet property="likeButton" destination="PEB-6K-uuW" id="hgC-jg-o2Z"/>
+                <outlet property="tagStackView" destination="N6i-4A-g1J" id="75J-bb-UWL"/>
+                <outlet property="titleLabel" destination="yMj-Pg-8Q8" id="ZIx-ns-Pzj"/>
+            </connections>
+            <point key="canvasLocation" x="245.6521739130435" y="50.892857142857139"/>
         </collectionViewCell>
     </objects>
     <resources>
