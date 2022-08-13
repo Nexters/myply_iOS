@@ -8,6 +8,8 @@
 
 import UIKit
 import CommonUI
+import Combine
+import CombineCocoa
 
 open class SignUpViewController: UIViewController {
     
@@ -47,17 +49,22 @@ open class SignUpViewController: UIViewController {
         $0.setTitle("다음", for: .normal)
         $0.titleLabel?.textColor = .white
         $0.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
-        $0.backgroundColor = .systemGreen // 변경하기
+        $0.setBackgroundColor(.systemGreen, for: .normal)
+        $0.setBackgroundColor(CommonUIAsset.gray50.color, for: .disabled)
     }
+    
+    // MARK: Property
+    
+    private let nicknameMaxCount: Int = 8
+    
+    private var cancellables = Set<AnyCancellable>()
     
     open override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
         initLayout()
-        
-        bindState()
-        bindAction()
+        bind()
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -148,11 +155,31 @@ extension SignUpViewController {
 }
 
 extension SignUpViewController {
-    private func bindState(){
-        
+    private func bind(){
+        textField.textPublisher
+            .sink(receiveValue: { text in
+                guard let text = text else { return }
+                
+                self.textField.text = "\(text.prefix(7))"
+                self.countLabel.text = "\(text.count)/8"
+                
+                self.nextButton.isEnabled = text.count > 0
+                
+            }).store(in: &cancellables)
+            
     }
-    
-    private func bindAction(){
+}
+
+extension UIButton {
+    func setBackgroundColor(_ color: UIColor, for state: UIControl.State) {
+        UIGraphicsBeginImageContext(CGSize(width: 1.0, height: 1.0))
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        context.setFillColor(color.cgColor)
+        context.fill(CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0))
         
+        let backgroundImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+         
+        self.setBackgroundImage(backgroundImage, for: state)
     }
 }
