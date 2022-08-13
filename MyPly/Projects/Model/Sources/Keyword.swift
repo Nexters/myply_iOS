@@ -8,10 +8,20 @@
 
 import Foundation
 
-struct Keyword {
-    let value: String
-    
-    init(_ value: String) {
+public struct Keyword {
+    public let value: String
+
+    public init(_ value: String) {
         self.value = value
+    }
+}
+
+public struct KeywordText {
+    static let keywordFormat = "#%@"
+
+    public let value: String
+
+    public init(keyword: Keyword) {
+        value = String(format: Self.keywordFormat, keyword.value)
     }
 }

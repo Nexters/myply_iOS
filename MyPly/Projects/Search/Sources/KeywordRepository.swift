@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Model
 
 enum KeywordResponse {
     case success(keywords: [Keyword])

@@ -8,9 +8,10 @@
 
 import UIKit
 import SnapKit
-import Search
 import Combine
 import CommonUI
+import Model
+
 
 // MARK: - typealias Keyword
 typealias KeywordDataSource = UICollectionViewDiffableDataSource<Int, String>

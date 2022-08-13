@@ -7,6 +7,7 @@
 //
 
 import Combine
+import Model
 
 //typealias Publisher<Output> = Published<Output>.Publisher
 typealias Keywords = [Keyword]

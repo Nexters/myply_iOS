@@ -37,6 +37,7 @@ open class HomeViewController: UIViewController {
         collectionView.dataSource = self
         view.backgroundColor = CommonUIAsset.begie.color
         configureMenuButtons()
+        configurePublisher()
     }
 }
 
@@ -72,6 +73,7 @@ private extension HomeViewController {
                 self?.categoryHeaderStackView.arrangedSubviews.forEach { view in
                     guard let menuButton = view as? HomeMenuButton, let currentMenu = currentMenu else { return }
                     menuButton.isSelected = currentMenu.title == menuButton.titleLabel?.text
+                    self?.viewModel.refresh.send(())
                 }
             }.store(in: &cancellables)
 
@@ -102,7 +104,7 @@ extension HomeViewController: UICollectionViewDataSource {
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaylistCell.identifier, for: indexPath) as? PlaylistCell else { return UICollectionViewCell() }
-        cell.backgroundColor = .white
+        cell.bind(to: viewModel.playlists.value[indexPath.item])
         return cell
     }
 
