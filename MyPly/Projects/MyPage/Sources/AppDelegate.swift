@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CommonUI
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {

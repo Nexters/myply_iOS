@@ -25,3 +25,4 @@ let project = Project.frameworkWithDemoApp(name: projectName,
                                                           .external(name: "Alamofire"),
                                                           .external(name: "SnapKit"),
                                                           .external(name: "CombineCocoa")])
+
