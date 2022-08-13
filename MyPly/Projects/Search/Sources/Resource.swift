@@ -8,24 +8,25 @@
 
 import Foundation
 import UIKit
+import Search
 
 extension UIFont {
     static let H1Semibold = UIFont(name: "Pretendard", size: 24)
 }
 
 extension UIColor {
-    class var begie: UIColor? { return .init(named: "begie") }
-    class var gray50: UIColor? { return .init(named: "gray50") }
-    class var gray70: UIColor? { return .init(named: "gray70") }
-    class var gray80: UIColor? { return .init(named: "gray80") }
-    class var gray90: UIColor? { return .init(named: "gray90") }
+    class var begie: UIColor? { return SearchAsset.Asset.begie.color }
+    class var gray50: UIColor? { return SearchAsset.Asset.gray50.color }
+    class var gray70: UIColor? { return SearchAsset.Asset.gray70.color }
+    class var gray80: UIColor? { return SearchAsset.Asset.gray80.color }
+    class var gray90: UIColor? { return SearchAsset.Asset.gray90.color }
     
-    class var greenLight: UIColor? { return .init(named: "greenLight") }
-    class var yellow: UIColor? { return .init(named: "yellow") }
-    class var red: UIColor? { return .init(named: "red") }
-    class var blue: UIColor? { return .init(named: "blue") }
+    class var greenLight: UIColor? { return SearchAsset.Asset.greenLight.color }
+    class var yellow: UIColor? { return SearchAsset.Asset.yellow.color }
+    class var red: UIColor? { return SearchAsset.Asset.red.color }
+    class var blue: UIColor? { return SearchAsset.Asset.blue.color }
 }
 
 extension UIImage {
-    class var search: UIImage? { return .init(named: "search")}
+    class var search: UIImage? { return SearchAsset.Image.search.image }
 }

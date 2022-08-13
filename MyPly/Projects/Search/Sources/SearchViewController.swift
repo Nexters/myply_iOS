@@ -26,18 +26,15 @@ open class SearchViewController: UIViewController {
         return $0
     }(UILabel())
     
-    private var searchField: UITextField = {
+    private var searchField: SearchField = {
         $0.clearButtonMode = .always
         $0.setPlaceHolderColor(UIColor.gray50)
         $0.backgroundColor = .white
         $0.placeholder = "검색어를 입력해주세요."
         
-        let leftView = UIImageView(image: UIImage.search)
         
-        $0.leftViewMode = .always
-        $0.leftView = leftView
         return $0
-    }(UITextField())
+    }(SearchField())
     
     private var bestSearchKeywordsTitle: UILabel = {
         $0.text = "마이플리 유저의 인기 검색어"
@@ -97,7 +94,7 @@ extension SearchViewController {
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.top.equalTo(view.safeAreaInsets.top).offset(9)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
             make.height.equalTo(56)
         }
         
@@ -106,6 +103,7 @@ extension SearchViewController {
             make.top.equalTo(titleLabel.snp.bottom).offset(24)
             make.centerX.equalToSuperview()
         }
+        
         
         bestSearchKeywordsTitle.snp.makeConstraints { make in
             make.width.equalToSuperview().offset(-40)
@@ -153,7 +151,7 @@ extension SearchViewController {
         keywordCollectionView.dataSource = keywordDataSource
         keywordCollectionView.backgroundColor = .clear
         
-        let nibName = UINib(nibName: "KeywordCell", bundle: Bundle.main)
+        let nibName = UINib(nibName: "KeywordCell", bundle: .init(for: KeywordCell.self))
         keywordCollectionView.register(nibName, forCellWithReuseIdentifier: KeywordCell.Constants.reuseIdentifier)
         
         initKeywordDataSource()
