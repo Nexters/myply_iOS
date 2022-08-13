@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Search
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
