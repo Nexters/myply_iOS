@@ -14,10 +14,11 @@ import CommonUI
 
 // MARK: - typealias Keyword
 typealias KeywordDataSource = UICollectionViewDiffableDataSource<Int, String>
-typealias SnapShot = NSDiffableDataSourceSnapshot<Int, String>
+typealias KeywordSnapShot = NSDiffableDataSourceSnapshot<Int, String>
 
 // MARK: - typealias SearchResult
-typealias SearchResultDatasource = UICollectionViewDiffableDataSource<Int, Int>
+typealias SearchResultDatasource = UICollectionViewDiffableDataSource<Int, String>
+typealias SearchResultSnapShot = NSDiffableDataSourceSnapshot<Int, String>
 
 open class SearchViewController: UIViewController {
     private var titleLabel: UILabel = {
@@ -31,8 +32,6 @@ open class SearchViewController: UIViewController {
         $0.setPlaceHolderColor(UIColor.gray50)
         $0.backgroundColor = .white
         $0.placeholder = "검색어를 입력해주세요."
-        
-        
         return $0
     }(SearchField())
     
@@ -41,6 +40,22 @@ open class SearchViewController: UIViewController {
         $0.textColor = UIColor.gray70
         return $0
     }(UILabel())
+    
+    private var emptyView: UIStackView = {
+        $0.axis = .vertical
+        $0.alignment = .fill
+        
+        let emptyImageView = UIImageView()
+        let emptyLabel = UILabel()
+        emptyLabel.text = "‘어쩔티비’ 에 대한 검색 결과가 없어요.\n다른 키워드로 검색해 보세요."
+        emptyLabel.textAlignment = .center
+        emptyLabel.numberOfLines = .zero
+        
+        $0.addArrangedSubview(emptyImageView)
+        $0.addArrangedSubview(emptyLabel)
+        $0.isHidden = true
+        return $0
+    }(UIStackView())
     
     private var keywordCollectionView: UICollectionView!
     private var keywordDataSource: KeywordDataSource!
@@ -95,6 +110,7 @@ extension SearchViewController {
         view.addSubview(bestSearchKeywordsTitle)
         view.addSubview(keywordCollectionView)
         view.addSubview(searchResultCollectionView)
+        view.addSubview(emptyView)
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -129,6 +145,11 @@ extension SearchViewController {
             let height = view.bounds.height -            bestSearchKeywordsTitle.frame.origin.y
             make.height.equalTo(height)
             make.centerX.equalToSuperview()
+        }
+        
+        emptyView.snp.makeConstraints { make in
+            make.centerY.centerX.equalToSuperview()
+            make.width.equalToSuperview()
         }
     }
     
@@ -191,10 +212,17 @@ extension SearchViewController {
     
     
     private func refreshKeywordCollectionView(with keywords: [Keyword]) {
-        var snapShot = SnapShot()
+        var snapShot = KeywordSnapShot()
         snapShot.appendSections([0])
         snapShot.appendItems(keywords.map({ $0.value }), toSection: 0)
         keywordDataSource.apply(snapShot, animatingDifferences: false, completion: nil)
+    }
+    
+    private func refreshSearchResultCollectionView(with playlists: [Playlist]) {
+        var snapShot = SearchResultSnapShot()
+        snapShot.appendSections([0])
+        snapShot.appendItems(playlists.map({ $0.youtubeVideoId }))
+        searchResultDataSource.apply(snapShot, animatingDifferences: false, completion: nil)
     }
 }
 
@@ -217,17 +245,28 @@ extension SearchViewController {
             }.store(in: &cancellable)
         
         searchField.textPublisher
-            .debounce(for: 0.5, scheduler: RunLoop.main)
+            .debounce(for: 0.3, scheduler: RunLoop.main)
             .compactMap({ $0 })
             .sink { [weak self] searchParam in
+                if searchParam.isEmptyOrBlank {
+                    self?.searchResultCollectionView.isHidden = true
+                    self?.keywordCollectionView.isHidden = false
+                    self?.emptyView.isHidden = true
+                    return
+                }
                 self?.viewModel.search(param: searchParam)
             }.store(in: &cancellable)
         
         viewModel.searchResultPublisher
-            .sink { playlists in
+            .compactMap({ $0 })
+            .receive(on: RunLoop.main)
+            .sink { [weak self] playlists in
+                self?.emptyView.isHidden = !playlists.isEmpty
+                self?.searchResultCollectionView.isHidden = false
+                self?.keywordCollectionView.isHidden = true
                 
-            }
-        
+                self?.refreshSearchResultCollectionView(with: playlists)
+            }.store(in: &cancellable)
     }
 }
 

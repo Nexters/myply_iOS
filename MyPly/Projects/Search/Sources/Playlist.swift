@@ -9,5 +9,6 @@
 import Foundation
 
 struct Playlist {
+    let youtubeVideoId: String
     let title: String
 }

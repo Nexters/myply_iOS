@@ -13,7 +13,7 @@ protocol PlaylistRepository {
 class DummyPlaylistRepositoryImpl : PlaylistRepository {
     func search(param: String) async throws -> [Playlist] {
         return [
-            .init(title: "첫번째 플레이리스트")
+            .init(youtubeVideoId: "viedo id ", title: "첫번째 플레이리스트")
         ]
     }
 }

@@ -59,9 +59,15 @@ class DefaultSearchViewModel: SearchViewModel, ObservableObject {
     }
     
     func search(param: String) {
-        Task {
-            let searchResult = try await searchPlaytlistUsecase.execute(param: param)
-            searchResultSubjet.value = searchResult
+        // TODO: isEmpty 로직 제거하기
+        if param.isEmpty {
+            searchResultSubjet.value = nil
+        }
+        else {
+            Task {
+                let searchResult = try await searchPlaytlistUsecase.execute(param: param)
+                searchResultSubjet.value = searchResult
+            }
         }
     }
 }
