@@ -12,6 +12,7 @@ private let projectName = "App"
 private let iOSTargetVersion = "14.0"
 
 let infoPlistPath = "Resources/App.plist"
+let infoPlistPath: String = "Resources/App.plist"
 
 let project = Project.app(name: projectName,
                           platform: .iOS,
@@ -19,6 +20,8 @@ let project = Project.app(name: projectName,
                           infoPlist: infoPlistPath,
                           dependencies: [.external(name: "Alamofire"),
                                          .external(name: "SnapKit"),
+                                         .external(name: "Then"),
+                                         .project(target: "OnBoarding", path: .relativeToCurrentFile("../OnBoarding")),
                                          .project(target: "Home", path: .relativeToCurrentFile("../Home")),
                                          .project(target: "Library", path: .relativeToCurrentFile("../Library")),
                                          .project(target: "MyPage", path: .relativeToCurrentFile("../MyPage")),
