@@ -16,6 +16,7 @@ let infoPlist: [String: InfoPlist.Value] = [
     "CFBundleVersion": "1",
     "UILaunchStoryboardName": "LaunchScreen"
 ]
+
 let project = Project.frameworkWithDemoApp(name: projectName,
                                            platform: .iOS,
                                            iOSTargetVersion: iOSTargetVersion,
