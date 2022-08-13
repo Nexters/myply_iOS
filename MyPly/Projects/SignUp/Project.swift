@@ -2,13 +2,13 @@
 //  Project.swift
 //  ProjectDescriptionHelpers
 //
-//  Created by 최모지 on 2022/07/30.
+//  Created by 최모지 on 2022/08/13.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-private let projectName = "OnBoarding"
+private let projectName = "SignUp"
 private let iOSTargetVersion = "14.0"
 
 let infoPlist: [String: InfoPlist.Value] = [
@@ -25,3 +25,4 @@ let project = Project.frameworkWithDemoApp(name: projectName,
                                             .external(name: "SnapKit"),
                                             .external(name: "Then")
                                            ])
+
