@@ -14,6 +14,7 @@ extension UIFont {
 
 
 public extension UIColor {
+
     static let textColor = UIColor.darkGray
     class var begie: UIColor? { return .init(named: "begie") }
     class var gray50: UIColor? { return .init(named: "gray50") }
