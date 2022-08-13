@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Model
 
 struct KeywordColorFactory {
     static let colors: [UIColor] = [
