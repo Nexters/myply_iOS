@@ -11,7 +11,6 @@ import ProjectDescriptionHelpers
 private let projectName = "App"
 private let iOSTargetVersion = "14.0"
 
-let infoPlistPath = "Resources/App.plist"
 let infoPlistPath: String = "Resources/App.plist"
 
 let project = Project.app(name: projectName,
