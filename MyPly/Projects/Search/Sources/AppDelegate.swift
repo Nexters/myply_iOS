@@ -18,11 +18,25 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let viewController = SearchViewController()
+        let keywordRepository: KeywordRepository = DummyKeywordRepositoryImpl()
+        let fetchKeywordUseCase = DefaultFetchKeywordsUseCase(repository: keywordRepository)
+        
+        let playlistRepository: PlaylistRepository = DummyPlaylistRepositoryImpl()
+        let searchResultUseCase = DefaultSearchPlaylistUsecase(repository: playlistRepository)
+        
+        let viewModel: SearchViewModel = DefaultSearchViewModel(fetchKeywordUseCase: fetchKeywordUseCase, searchPlaylistUseCase: searchResultUseCase)
+        let viewController = SearchViewController(viewModel: viewModel)
         viewController.view.backgroundColor = .white
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
         return true
     }
-
 }
+
+extension AppDelegate {
+    func applicationDidFinishLaunching(_ application: UIApplication) {
+        UILabel.appearance(whenContainedInInstancesOf: [UIView.self]).textColor = UIColor.gray80
+        UITextField.appearance(whenContainedInInstancesOf: [UIView.self]).textColor = UIColor.gray80
+    }
+}
+
