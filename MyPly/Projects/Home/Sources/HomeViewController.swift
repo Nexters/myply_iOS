@@ -8,35 +8,65 @@
 
 import CommonUI
 import UIKit
+import Combine
+import ModelIO
+import CombineCocoa
 
 open class HomeViewController: UIViewController {
 
     @IBOutlet private weak var collectionView: TouchPassedCollectionView!
     @IBOutlet private weak var categoryHeaderStackView: UIStackView!
+    private let viewModel: HomeViewModel
+    private var cancellables = Set<AnyCancellable>()
+
+    init?(coder: NSCoder, viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+        super.init(coder: coder)
+    }
+
+    required public init?(coder: NSCoder) {
+        fatalError("This viewController must be init with viewModel.")
+    }
 
     open override func viewDidLoad() {
         super.viewDidLoad()
 
         let xib = UINib(nibName: PlaylistCell.identifier, bundle: CommonUIResources.bundle)
-
         collectionView.register(xib, forCellWithReuseIdentifier: PlaylistCell.identifier)
-
         collectionView.delegate = self
         collectionView.dataSource = self
+        view.backgroundColor = CommonUIAsset.begie.color
+        configureMenuButtons()
+    }
+}
 
-
-        (1...10).forEach { int in
-            let button = UIButton()
-            button.setTitle("test\(int)", for: .normal)
-            button.backgroundColor = .systemGray
+private extension HomeViewController {
+    func configureMenuButtons() {
+        viewModel.menus.forEach { menu in
+            let button = HomeMenuButton()
+            button.setTitle(menu.title, for: .normal)
             button.contentEdgeInsets = .init(top: 0, left: 7.5, bottom: 0, right: 7.5)
             button.translatesAutoresizingMaskIntoConstraints = false
+            button.titleLabel?.font = .systemFont(ofSize: 14)
             button.heightAnchor.constraint(equalToConstant: 36).isActive = true
-            button.setTitleColor(.red, for: .highlighted)
-            button.setTitleColor(.red, for: .focused)
+            button.setTitleColor(.white, for: .selected)
+            button.setTitleColor(CommonUIAsset.gray80.color, for: .normal)
+
             categoryHeaderStackView.addArrangedSubview(button)
+            button.tapPublisher
+                .throttle(for: 1, scheduler: DispatchQueue.main, latest: false)
+                .sink { [weak self] in
+                    self?.viewModel.currentMenu.send(menu)
+                }.store(in: &cancellables)
         }
 
+        viewModel.currentMenu
+            .sink { [weak self] currentMenu in
+                self?.categoryHeaderStackView.arrangedSubviews.forEach { view in
+                    guard let menuButton = view as? HomeMenuButton, let currentMenu = currentMenu else { return }
+                    menuButton.isSelected = currentMenu.title == menuButton.titleLabel?.text
+                }
+            }.store(in: &cancellables)
     }
 }
 
@@ -75,7 +105,40 @@ extension HomeViewController: UICollectionViewDataSource {
 extension HomeViewController {
     public static func create() -> HomeViewController? {
         let storyboard = UIStoryboard(name: "Home", bundle: .init(for: self))
-        return storyboard.instantiateViewController(withIdentifier: "HomeViewController") as? HomeViewController
+        let menus: [HomeMenu] = [RecentlyHomeMenu(), PopularHomeMenu(), FavoriteHomeMenu()]
+        let viewModel = HomeViewModel(menus: menus)
+        return storyboard.instantiateViewController(identifier: "HomeViewController") { coder in
+            return HomeViewController(coder: coder, viewModel: viewModel)
+        }
 
+    }
+}
+
+
+final class HomeMenuButton: UIButton {
+    override var isSelected: Bool {
+        didSet {
+            DispatchQueue.main.async {
+                if self.isSelected {
+                    self.backgroundColor = CommonUIAsset.greenLight.color
+                } else {
+                    self.backgroundColor = CommonUIAsset.gray30.color
+                }
+            }
+        }
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setView()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setView()
+    }
+
+    func setView() {
+        backgroundColor = CommonUIAsset.gray30.color
     }
 }
