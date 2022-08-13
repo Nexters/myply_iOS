@@ -16,17 +16,17 @@ public extension UIFont {
 
 public extension UIColor {
     static let textColor = UIColor.darkGray
+    class var begie: UIColor? { return .init(named: "begie") }
+    class var gray50: UIColor? { return .init(named: "gray50") }
+    class var gray60: UIColor? { return .init(named: "gray60") }
+    class var gray70: UIColor? { return .init(named: "gray70") }
+    class var gray80: UIColor? { return .init(named: "gray80") }
+    class var gray90: UIColor? { return .init(named: "gray90") }
 
-    class var begie: UIColor? { return CommonUIAsset.begie.color }
-    class var gray50: UIColor? { return CommonUIAsset.gray50.color }
-    class var gray70: UIColor? { return CommonUIAsset.gray70.color }
-    class var gray80: UIColor? { return CommonUIAsset.gray80.color }
-    class var gray90: UIColor? { return CommonUIAsset.gray90.color }
-    
-    class var greenLight: UIColor? { return CommonUIAsset.greenLight.color }
-    class var yellow: UIColor? { return CommonUIAsset.yellow.color }
-    class var red: UIColor? { return CommonUIAsset.red.color }
-    class var blue: UIColor? { return CommonUIAsset.blue.color }
+    class var greenLight: UIColor? { return .init(named: "greenLight") }
+    class var yellow: UIColor? { return .init(named: "yellow") }
+    class var red: UIColor? { return .init(named: "red") }
+    class var blue: UIColor? { return .init(named: "blue") }
 }
 
 
