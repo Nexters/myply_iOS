@@ -8,13 +8,13 @@
 
 import UIKit
 
-extension UIFont {
+public extension UIFont {
     static let H1Semibold = UIFont(name: "Pretendard", size: 24)
 }
 
 
 
-public extension UIColor {
+public public extension UIColor {
     static let textColor = UIColor.darkGray
 
     class var begie: UIColor? { return CommonUIAsset.begie.color }
