@@ -9,13 +9,10 @@
 import Foundation
 import Moya
 
-struct MyPlyAPI {
-    
-}
-
 public enum MyPlyTarget {
     public static var deviceToken = ""
-    case search(query: String, nextToken: String, order: String)
+    case musics(nextToken: String?, order: String)
+    case search(query: String, nextToken: String?, order: String)
 }
 
 extension MyPlyTarget: TargetType {
@@ -25,18 +22,22 @@ extension MyPlyTarget: TargetType {
 
     public var path: String {
         switch self {
+        case .musics: return "/musics"
         case .search: return "/musics/search"
         }
     }
 
     public var method: Moya.Method {
         switch self {
+        case .musics: return .get
         case .search: return .get
         }
     }
 
     public var task: Task {
         switch self {
+        case .musics(nextToken: let nextToken, order: let order):
+            return .requestParameters(parameters: ["nextToken": nextToken, "order": order], encoding: URLEncoding.default)
         case .search(let query, let nextToken, let order):
             return .requestParameters(parameters: ["query": query, "nextToken": nextToken, "order": order], encoding: URLEncoding.default)
         }
@@ -44,7 +45,7 @@ extension MyPlyTarget: TargetType {
 
     public var headers: [String: String]? {
         switch self {
-        case .search:
+        default:
             return ["device-token": MyPlyTarget.deviceToken, "Content-Type": "application/json"]
         }
     }

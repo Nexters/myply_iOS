@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Alamofire
 import CommonUI
 import Home
 import Search

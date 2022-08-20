@@ -9,6 +9,9 @@
 import Foundation
 import Combine
 import CommonUI
+import Moya
+import MyPlyAPI
+import Model
 
 struct MockHomePlaylist: HomePlaylistPresentable {
     var title: String
@@ -26,9 +29,28 @@ protocol PlaylistUsecase {
     func loadPlaylist() -> AnyPublisher<[HomePlaylistPresentable], Error>
 }
 
+extension Playlist: HomePlaylistPresentable {
+
+
+}
+
+
+
 struct RecentlyPlaylistUsecase: PlaylistUsecase {
+
+    let provider = MoyaProvider<MyPlyTarget>()
     func loadPlaylist() -> AnyPublisher<[HomePlaylistPresentable], Error> {
         return Future({ promise in
+//            provider.request(.musics(nextToken: nil, order: "recent")) { result in
+//                switch result {
+//                case .success(let response):
+//                    let myplyResponse = try? response.map(APIResponse<[Playlist]>.self)
+//                    promise(.success(myplyResponse?.data ?? []))
+//
+//                    case .failure(let error):
+//                    promise(.failure(error))
+//                }
+//            }
             promise(.success([MockHomePlaylist(title: "최근 플레이리스트 1", isMemoed: false, youtubeTags: ["태그테스트 태그테스트", "태그테스트", "태그"]),
                               MockHomePlaylist(title: "최근 플레이리스트 1", isMemoed: true, youtubeTags: []),
                               MockHomePlaylist(title: "최근 플레이리스트 1", isMemoed: false, youtubeTags: [])]))
