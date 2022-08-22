@@ -9,6 +9,7 @@
 import UIKit
 
 class ServiceInfoCell: UICollectionViewCell {
+    static let cellIdentifier = String(describing: ServiceInfoCell.self)
 
     @IBOutlet weak var titleLabel: UILabel!
     override func awakeFromNib() {

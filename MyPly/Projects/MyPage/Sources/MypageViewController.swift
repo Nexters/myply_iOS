@@ -33,36 +33,50 @@ open class MyPageViewController: UIViewController {
         case customerService = 2
     }
     lazy var collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: collectionViewLayout)
-    let collectionViewLayout: UICollectionViewCompositionalLayout = .init(sectionProvider: { sectionIndex, environment in
-        
-        let section: NSCollectionLayoutSection
+    let sectionProvider =  { (sectionIndex: Int,
+                              layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
         switch Section(rawValue: sectionIndex) {
-    case .preference:
-        
-        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(28), heightDimension: .absolute(14))
-        let headerAnchor = NSCollectionLayoutAnchor(edges: [.top])
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(32))
-        let supplementaryItem = NSCollectionLayoutSupplementaryItem(layoutSize: headerSize, elementKind: Constant.preferenceHeaderElementKind, containerAnchor: headerAnchor)
-        let item = NSCollectionLayoutItem(layoutSize: itemSize  , supplementaryItems: [supplementaryItem])
+        case .preference:
             
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(18))
+            let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(28), heightDimension: .absolute(14))
+            let headerAnchor = NSCollectionLayoutAnchor(edges: [.top])
+            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(32))
+            let supplementaryItem = NSCollectionLayoutSupplementaryItem(layoutSize: headerSize, elementKind: Constant.preferenceHeaderElementKind, containerAnchor: headerAnchor)
+            let item = NSCollectionLayoutItem(layoutSize: itemSize  , supplementaryItems: [supplementaryItem])
+            
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(18))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-//        let group = NSCollectionLayoutGroup(layoutSize: groupSize)
-        let section = NSCollectionLayoutSection(group: group)
-        return section
-        
-    case .serviceInfo:
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(<#T##CGFloat#>), heightDimension: .fractionalHeight(<#T##CGFloat#>))
-        
-        let item = NSCollectionLayoutItem(layoutSize: <#T##NSCollectionLayoutSize#>, supplementaryItems: <#T##[NSCollectionLayoutSupplementaryItem]#>)
-        break
-    case .customerService:
-        break
-    case none:
-        break
+            //        let group = NSCollectionLayoutGroup(layoutSize: groupSize)
+            let section = NSCollectionLayoutSection(group: group)
+            return section
+            
+        case .serviceInfo, .customerService, .none:
+            let headerAnchor = NSCollectionLayoutAnchor(edges: [.top])
+            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(48))
+            let supplementaryItem = NSCollectionLayoutSupplementaryItem(layoutSize: headerSize, elementKind: Constant.preferenceHeaderElementKind, containerAnchor: headerAnchor)
+            
+            
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(48))
+            
+            let item = NSCollectionLayoutItem(layoutSize: itemSize , supplementaryItems: [supplementaryItem])
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(206))
+            let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+            
+            let section = NSCollectionLayoutSection(group: group)
+            return section
+        }
     }
-        
-    }, configuration: <#T##UICollectionViewCompositionalLayoutConfiguration#>)
+    
+    let config: UICollectionViewCompositionalLayoutConfiguration = {
+        $0.interSectionSpacing = 20
+        return $0
+    }(UICollectionViewCompositionalLayoutConfiguration())
+    
+    
+    private lazy var collectionViewLayout: UICollectionViewCompositionalLayout = .init(sectionProvider: sectionProvider, configuration: config)
+    
+    private var dataSource: KeywordDataSource!
+    
     let scrollView: UIScrollView = .init()
     let contentView: UIView = .init()
     
@@ -182,6 +196,30 @@ open class MyPageViewController: UIViewController {
             make.leading.equalToSuperview()
             make.top.equalTo(serviceInfoLabel.snp.bottom).offset(8)
         }
+        
+        initDataSource()
+    }
+    
+    private func initDataSource() {
+        dataSource = .init(collectionView: self.collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+            let section = MyPageSection(rawValue: indexPath.row)!
+            switch section {
+            case .preference:
+                // TODO: cell identifier 수정하기
+                return collectionView.dequeueReusableCell(withReuseIdentifier: "preference", for: indexPath)
+            case .serviceMetadata:
+                return collectionView.dequeueReusableCell(withReuseIdentifier: ServiceInfoCell.identifier, for: indexPath)
+            case .customerService:
+                // TODO: cell identifier 수정하기
+                return collectionView.dequeueReusableCell(withReuseIdentifier: "customerService", for: indexPath)
+            }
+        })
+        
+        collectionView.dataSource = dataSource
+        
+        //        dataSource.supplementaryViewProvider = { (view, kind, indexPath)
+        //            // TODO 구현하기
+        //        }
     }
 }
 
