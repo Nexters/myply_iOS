@@ -35,11 +35,11 @@ open class MyPageViewController: UIViewController {
         case customerService = 2
     }
     lazy var collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: collectionViewLayout)
+    
     let sectionProvider =  { (sectionIndex: Int,
                               layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
         switch Section(rawValue: sectionIndex) {
         case .preference:
-            
             let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(28), heightDimension: .absolute(14))
             let headerAnchor = NSCollectionLayoutAnchor(edges: [.top])
             let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(32))
@@ -141,6 +141,9 @@ open class MyPageViewController: UIViewController {
         let serviceVersionCellNib = UINib(nibName: "ServiceVersionCell", bundle: .init(for: ServiceInfoCell.self))
         collectionView.register(serviceVersionCellNib, forCellWithReuseIdentifier: ServiceVersionCell.identifier)
         
+        let keywordCellNib = UINib(nibName: KeywordCell.nibName, bundle: .init(for: KeywordCell.self))
+        collectionView.register(keywordCellNib, forCellWithReuseIdentifier: KeywordCell.identifier)
+        
         view.addSubview(scrollView)
         view.addSubview(titleLabel)
         view.addSubview(collectionView)
@@ -217,10 +220,10 @@ open class MyPageViewController: UIViewController {
         dataSource = .init(collectionView: self.collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             let section = MyPageSection(rawValue: indexPath.row)!
             switch section {
-//            case .preference:
-//                // TODO: cell identifier 수정하기
-//                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: KeywordCell.identifier, for: indexPath)
-//                return cell
+            case .preference:
+                // TODO: cell identifier 수정하기
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: KeywordCell.identifier, for: indexPath)
+                return cell
 //            case .serviceMetadata:
 //                return collectionView.dequeueReusableCell(withReuseIdentifier: ServiceInfoCell.identifier, for: indexPath)
 //            case .customerService:
