@@ -16,8 +16,10 @@ import CommonUI
 // MARK: - typealias
 typealias KeywordDataSource = UICollectionViewDiffableDataSource<Int, String>
 typealias KeywordSnapShot = NSDiffableDataSourceSnapshot<Int, String>
+typealias MyPageDataSource = UICollectionViewDiffableDataSource<Int, String>
+typealias MyPageSnapShot = NSDiffableDataSourceSnapshot<Int, String>
 
-enum MyPageSection: Int {
+enum MyPageSection: Int, CaseIterable {
     case preference = 0
     case serviceMetadata = 1
     case customerService = 2
@@ -75,7 +77,7 @@ open class MyPageViewController: UIViewController {
     
     private lazy var collectionViewLayout: UICollectionViewCompositionalLayout = .init(sectionProvider: sectionProvider, configuration: config)
     
-    private var dataSource: KeywordDataSource!
+    private var dataSource: MyPageDataSource!
     
     let scrollView: UIScrollView = .init()
     let contentView: UIView = .init()
@@ -132,10 +134,11 @@ open class MyPageViewController: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-        keywordCollectionView = .init(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView = .init(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         
         view.addSubview(scrollView)
         view.addSubview(titleLabel)
+        view.addSubview(keywordCollectionView)
         
         scrollView.addSubview(contentView)
         
@@ -145,6 +148,11 @@ open class MyPageViewController: UIViewController {
         contentView.addSubview(serviceInfoLabel)
         contentView.addSubview(firstDividerLine)
         contentView.addSubview(appVersionInfoView)
+        
+        collectionView.snp.makeConstraints { make in
+            make.width.height.equalToSuperview()
+            make.leading.top.equalToSuperview()
+        }
         
         scrollView.snp.makeConstraints { make in
             make.width.height.equalToSuperview()
@@ -217,9 +225,17 @@ open class MyPageViewController: UIViewController {
         
         collectionView.dataSource = dataSource
         
+        // TODO: supplementaryViewProvider 구현하기
         //        dataSource.supplementaryViewProvider = { (view, kind, indexPath)
-        //            // TODO 구현하기
+        //
         //        }
+        
+        var snapShot = MyPageSnapShot()
+        snapShot.appendSections(MyPageSection.allCases.map { $0.rawValue })
+        snapShot.appendItems([], toSection: MyPageSection.preference.rawValue)
+        snapShot.appendItems(ServiceInfoItems.value.map({ $0.title }), toSection: MyPageSection.serviceMetadata.rawValue)
+        snapShot.appendItems(CustomerServiceItems.value.map({ $0.title }), toSection: MyPageSection.customerService.rawValue)
+        dataSource.apply(snapShot)
     }
 }
 
