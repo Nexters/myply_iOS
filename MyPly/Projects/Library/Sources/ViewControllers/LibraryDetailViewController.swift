@@ -46,6 +46,13 @@ open class LibraryDetailViewController: UIViewController {
         initLayout()
     }
     
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        view.addGestureRecognizer(tap)
+    }
+    
 }
 
 extension LibraryDetailViewController {
@@ -67,6 +74,7 @@ extension LibraryDetailViewController {
         scrollView.addSubview(stackView)
         
         stackView.addArrangedSubview(cardView)
+        stackView.addArrangedSubview(divideView())
         stackView.addArrangedSubview(recordView)
     }
     
@@ -86,6 +94,21 @@ extension LibraryDetailViewController {
             $0.width.equalToSuperview()
             $0.height.lessThanOrEqualToSuperview().priority(.low)
         }
+    }
+    
+    private func divideView() -> UIView {
+        let view = UIView().then {
+            $0.backgroundColor = CommonUIAsset.begie.color
+        }
         
+        view.snp.makeConstraints {
+            $0.height.equalTo(18)
+        }
+        
+        return view
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }

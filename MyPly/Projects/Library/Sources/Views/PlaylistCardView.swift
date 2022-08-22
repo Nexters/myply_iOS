@@ -60,6 +60,7 @@ extension PlaylistCardView {
             $0.top.equalTo(16)
             $0.leading.equalTo(20)
             $0.trailing.equalTo(-20)
+            $0.bottom.equalToSuperview()
         }
         
         imageView.snp.makeConstraints {
