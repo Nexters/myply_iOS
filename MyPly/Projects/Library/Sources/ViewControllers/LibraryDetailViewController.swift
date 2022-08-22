@@ -23,6 +23,10 @@ open class LibraryDetailViewController: UIViewController {
         $0.axis = .vertical
     }
     
+    private let cardView = PlaylistCardView()
+    
+    private let recordView = PlaylistRecordView()
+    
     // MARK: Property
     
     private let viewModel: LibraryDetailViewModel
@@ -53,12 +57,21 @@ extension LibraryDetailViewController {
         return libraryDetailVC
     }
     
+    private func setNavigationBar(){
+        self.title = "기록 보기"
+        
+    }
+    
     private func addViews(){
         view.addSubview(scrollView)
         scrollView.addSubview(stackView)
+        
+        stackView.addArrangedSubview(cardView)
+        stackView.addArrangedSubview(recordView)
     }
     
     private func initLayout(){
+        setNavigationBar()
         addViews()
         
         view.backgroundColor = CommonUIAsset.begie.color
@@ -67,5 +80,12 @@ extension LibraryDetailViewController {
             $0.top.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(view.safeAreaLayoutGuide)
         }
+        
+        stackView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.width.equalToSuperview()
+            $0.height.lessThanOrEqualToSuperview().priority(.low)
+        }
+        
     }
 }

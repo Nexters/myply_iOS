@@ -46,6 +46,18 @@ open class LibraryViewController: UIViewController {
         
         initLayout()
     }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    open override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
 }
 
 extension LibraryViewController {
@@ -133,11 +145,7 @@ extension LibraryViewController: UICollectionViewDelegateFlowLayout {
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        // TODO: 로직 변경
-        
         let detailVC = LibraryDetailViewController.create() ?? UIViewController()
-        detailVC.modalPresentationStyle = .overFullScreen
-        present(detailVC, animated: true)
+        self.navigationController?.pushViewController(detailVC, animated: true)
     }
 }

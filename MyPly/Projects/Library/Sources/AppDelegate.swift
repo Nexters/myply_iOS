@@ -23,9 +23,18 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
+        
+        let navigationController = UINavigationController()
         let viewController = LibraryViewController.create() ?? UIViewController()
-        window?.rootViewController = viewController
+        
+        navigationController.pushViewController(viewController, animated: false)
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
+        
+        
+//        let viewController = LibraryViewController.create() ?? UIViewController()
+//        window?.rootViewController = viewController
+//        window?.makeKeyAndVisible()
         return true
     }
 
