@@ -6,9 +6,6 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
-import UIKit
-import CommonUI
-
 class PlaylistRecordView: UIView {
     
     // MARK: UI
@@ -27,9 +24,19 @@ class PlaylistRecordView: UIView {
         $0.setImage(UIImage(named: "editIcon"), for: .normal)
     }
     
-    private let textField = UITextField().then {
-        $0.placeholder = "플레이 리스트에 대한 나의 감상을 기록해 보세요."
-        $0.borderStyle = .none
+    private let memoLabel = UILabel().then {
+        $0.font = .systemFont(ofSize: 16)
+        $0.numberOfLines = 0
+    }
+    
+    // MARK: Property
+    
+    var placeholder: String = "플레이리스트에 대한 나의 감상을 기록해 보세요."
+    
+    var memo: String = "" {
+        didSet {
+            setMemo()
+        }
     }
     
     override init(frame: CGRect) {
@@ -48,7 +55,7 @@ extension PlaylistRecordView {
         addSubview(contentView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(editButton)
-        contentView.addSubview(textField)
+        contentView.addSubview(memoLabel)
     }
     
     private func initLayout(){
@@ -71,10 +78,22 @@ extension PlaylistRecordView {
             $0.width.height.equalTo(24)
         }
         
-        textField.snp.makeConstraints {
+        memoLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(8)
             $0.leading.equalTo(16)
-            $0.trailing.bottom.equalTo(-16)
+            $0.trailing.equalTo(-16)
+            $0.bottom.equalTo(-51)
+        }
+    }
+    
+    private func setMemo(){
+        let text = memo.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        memoLabel.text = text.isEmpty ? placeholder : memo
+        memoLabel.textColor = text.isEmpty ? CommonUIAsset.gray50.color : CommonUIAsset.gray80.color
+        
+        memoLabel.snp.updateConstraints {
+            $0.bottom.equalTo(text.isEmpty ? -51 : -16)
         }
     }
 }

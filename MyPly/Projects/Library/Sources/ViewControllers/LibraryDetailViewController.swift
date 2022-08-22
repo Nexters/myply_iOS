@@ -6,10 +6,6 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
-import Foundation
-import UIKit
-import CommonUI
-
 open class LibraryDetailViewController: UIViewController {
     
     // MARK: UI
@@ -44,6 +40,9 @@ open class LibraryDetailViewController: UIViewController {
         super.viewDidLoad()
         
         initLayout()
+        
+        // test
+        recordView.memo = "진짜 오아시스 정말 좋아하고.. 샴슈도 리암 보컬 노래중 손가락에 꼽는 최애곡인데 너무너무 예빛님 스타일로 잘 살리신 거 같아요... 악기도 통기타 하나에, 저 노래 안들어도 머릿속에 흐르는 그 배타고 강물을 거니는 소리(?)도 없는데 노래가 너무 담백하고 좋네요.... 원곡보다 좋다고 느낀 샴슈 커버 처음이에요!!! 노래해줘서 너무 고맙고 응원해요 :)"
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -52,11 +51,9 @@ open class LibraryDetailViewController: UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
     }
-    
 }
 
 extension LibraryDetailViewController {
-    
     public static func create() -> LibraryDetailViewController? {
         let viewModel = LibraryDetailViewModel()
         let libraryDetailVC = LibraryDetailViewController(viewModel: viewModel)
@@ -66,7 +63,6 @@ extension LibraryDetailViewController {
     
     private func setNavigationBar(){
         self.title = "기록 보기"
-        
     }
     
     private func addViews(){
@@ -85,8 +81,7 @@ extension LibraryDetailViewController {
         view.backgroundColor = CommonUIAsset.begie.color
         
         scrollView.snp.makeConstraints {
-            $0.top.leading.trailing.equalToSuperview()
-            $0.bottom.equalTo(view.safeAreaLayoutGuide)
+            $0.edges.equalToSuperview()
         }
         
         stackView.snp.makeConstraints {

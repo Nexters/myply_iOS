@@ -6,9 +6,6 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
-import UIKit
-import CommonUI
-
 class PlaylistCardView: UIView {
     
     // MARK: UI
@@ -32,6 +29,10 @@ class PlaylistCardView: UIView {
         $0.text = "그 시절 감성힙합 플레이리스트 2 l 프라이머리, 다이나믹듀오, 슈프림팀, 버벌진트테스트테텥테테ㅔ테테테테ㅔ테테ㅔ텥"
     }
     
+    private let likeButton = UIButton(type: .custom).then {
+        $0.setImage(UIImage(named: "likeSelected"), for: .normal)
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -51,6 +52,7 @@ extension PlaylistCardView {
         contentView.addSubview(imageView)
         imageView.addSubview(playImageView)
         contentView.addSubview(titleLabel)
+        contentView.addSubview(likeButton)
     }
     
     private func initLayout(){
@@ -80,7 +82,12 @@ extension PlaylistCardView {
             $0.top.equalTo(imageView.snp.bottom).offset(9)
             $0.leading.equalTo(16)
             $0.trailing.equalTo(-16)
-            $0.bottom.equalTo(-16)
+        }
+        
+        likeButton.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(16)
+            $0.trailing.bottom.equalTo(-16)
+            $0.width.height.equalTo(24)
         }
     }
 }
