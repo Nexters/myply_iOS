@@ -135,10 +135,15 @@ open class MyPageViewController: UIViewController {
         super.viewDidLoad()
         
         collectionView = .init(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        let serviceInfoCellNib = UINib(nibName: "ServiceInfoCell", bundle: .init(for: ServiceInfoCell.self))
+        collectionView.register(serviceInfoCellNib, forCellWithReuseIdentifier: ServiceInfoCell.identifier)
+        
+        let serviceVersionCellNib = UINib(nibName: "ServiceVersionCell", bundle: .init(for: ServiceInfoCell.self))
+        collectionView.register(serviceVersionCellNib, forCellWithReuseIdentifier: ServiceVersionCell.identifier)
         
         view.addSubview(scrollView)
         view.addSubview(titleLabel)
-        view.addSubview(keywordCollectionView)
+        view.addSubview(collectionView)
         
         scrollView.addSubview(contentView)
         
@@ -212,14 +217,20 @@ open class MyPageViewController: UIViewController {
         dataSource = .init(collectionView: self.collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             let section = MyPageSection(rawValue: indexPath.row)!
             switch section {
-            case .preference:
-                // TODO: cell identifier 수정하기
-                return collectionView.dequeueReusableCell(withReuseIdentifier: "preference", for: indexPath)
-            case .serviceMetadata:
-                return collectionView.dequeueReusableCell(withReuseIdentifier: ServiceInfoCell.identifier, for: indexPath)
-            case .customerService:
-                // TODO: cell identifier 수정하기
-                return collectionView.dequeueReusableCell(withReuseIdentifier: "customerService", for: indexPath)
+//            case .preference:
+//                // TODO: cell identifier 수정하기
+//                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: KeywordCell.identifier, for: indexPath)
+//                return cell
+//            case .serviceMetadata:
+//                return collectionView.dequeueReusableCell(withReuseIdentifier: ServiceInfoCell.identifier, for: indexPath)
+//            case .customerService:
+//                // TODO: cell identifier 수정하기
+//                return collectionView.dequeueReusableCell(withReuseIdentifier: "customerService", for: indexPath)
+            default:
+                let item = ServiceInfoItems.value[indexPath.item]
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ServiceInfoCell.identifier, for: indexPath) as! ServiceInfoCell
+                cell.setTitle(item.title)
+                return cell
             }
         })
         

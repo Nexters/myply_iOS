@@ -12,6 +12,7 @@ enum MyPageItems {
     static let value: [MyPageItem] = ServiceInfoItems.value + CustomerServiceItems.value
 }
 
+
 enum ServiceInfoItems {
     static let value: [MyPageItem] = [
         .init(title: "앱 버전", content: .value("1.0")),
