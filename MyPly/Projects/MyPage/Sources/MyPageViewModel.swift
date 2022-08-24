@@ -14,7 +14,6 @@ class MyPageViewModel {
     var keywords: Keywords? {
         keywordsSubject.value
     }
-q
     let fetchKeywordsUseCase: FetchKeywordsUseCase
     
     init(fetchKeywordsUseCase: FetchKeywordsUseCase) {
