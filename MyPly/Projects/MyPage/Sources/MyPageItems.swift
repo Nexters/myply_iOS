@@ -14,6 +14,7 @@ enum MyPageItems {
 
 
 enum ServiceInfoItems {
+    static let header: String = "서비스 정보"
     static let value: [MyPageItem] = [
         .init(title: "앱 버전", content: .value("1.0")),
         .init(title: "만든 사람들", content: .image),
@@ -22,6 +23,7 @@ enum ServiceInfoItems {
 }
 
 enum CustomerServiceItems {
+    static let header: String = "사용자 지원"
     static let value: [MyPageItem] = [
         .init(title: "닉네임 수정", content: .image),
         .init(title: "문의하기", content: .image)

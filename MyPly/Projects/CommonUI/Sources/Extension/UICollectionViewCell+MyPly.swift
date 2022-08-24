@@ -9,6 +9,4 @@
 import UIKit
 
 extension UICollectionViewCell {
-    public static var identifier: String { String(describing: Self.self) }
-    public static var nibName: String { String(describing: Self.self) }
 }

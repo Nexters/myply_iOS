@@ -11,6 +11,9 @@ import Model
 
 class MyPageViewModel {
     let keywordsSubject = CurrentValueSubject<Keywords?, Never>(nil)
+    var keywords: Keywords? {
+        keywordsSubject.value
+    }
     let fetchKeywordsUseCase: FetchKeywordsUseCase
     
     init(fetchKeywordsUseCase: FetchKeywordsUseCase) {

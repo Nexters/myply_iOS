@@ -31,4 +31,11 @@ open class KeywordCell: UICollectionViewCell {
     open func setBackgroundColor(_ color: UIColor) {
         keywordLabel.backgroundColor = color
     }
+    
+    public static func fittingSize(availableHeight: CGFloat, keyword: Keyword) -> CGSize {
+        let cell = KeywordCell()
+        
+        let targetSize: CGSize = .init(width: UIView.layoutFittingCompressedSize.width, height: availableHeight)
+        return cell.contentView.systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: .fittingSizeLevel, verticalFittingPriority: .required)
+       }
 }

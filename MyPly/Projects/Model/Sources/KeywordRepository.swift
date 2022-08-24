@@ -26,7 +26,9 @@ public struct DummyKeywordRepositoryImpl: KeywordRepository {
             .init("데이식스"),
             .init("수록곡"),
             .init("여름밤"),
-            .init("감성")
+            .init("감성"),
+            .init("하이틴"),
+            .init("힙합")
         ])
         return keywords
     }

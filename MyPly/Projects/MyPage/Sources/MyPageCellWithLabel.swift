@@ -1,5 +1,5 @@
 //
-//  ServiceVersionCell.swift
+//  MyPageCellWithLabel.swift
 //  MyPage
 //
 //  Created by nylah.j on 2022/08/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ServiceVersionCell: UICollectionViewCell {
+class MyPageCellWithLabel: UICollectionViewCell {
 
     @IBOutlet var appVersionTitleLabel: UILabel!
     @IBOutlet var appVersionContentTitle: UILabel!
