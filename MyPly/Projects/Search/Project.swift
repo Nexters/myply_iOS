@@ -24,5 +24,6 @@ let project = Project.frameworkWithDemoApp(name: projectName,
                                            dependencies: [.project(target: "CommonUI", path: .relativeToCurrentFile("../CommonUI")),
                                                           .external(name: "Alamofire"),
                                                           .external(name: "SnapKit"),
-                                                          .external(name: "CombineCocoa")])
+                                                          .external(name: "CombineCocoa"),
+                                                          .project(target: "Model", path: .relativeToCurrentFile("../Model"))])
 
