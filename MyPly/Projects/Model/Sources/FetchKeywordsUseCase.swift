@@ -8,18 +8,18 @@
 
 import Foundation
 
-protocol FetchKeywordsUseCase {
+public protocol FetchKeywordsUseCase {
     func execute() async throws -> Keywords
 }
 
-final class DefaultFetchKeywordsUseCase : FetchKeywordsUseCase {
+public final class DefaultFetchKeywordsUseCase : FetchKeywordsUseCase {
     private let repository: KeywordRepository
     
-    init(repository: KeywordRepository) {
+    public init(repository: KeywordRepository) {
         self.repository = repository
     }
     
-    func execute() async throws -> Keywords {
+    public func execute() async throws -> Keywords {
         return try await repository.getKeywords()
     }
 }
