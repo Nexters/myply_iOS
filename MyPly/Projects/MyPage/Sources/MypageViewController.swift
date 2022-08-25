@@ -38,6 +38,7 @@ open class MyPageViewController: UIViewController {
     let repository = DummyKeywordRepositoryImpl()
     lazy var fetchKeywordUseCase = DefaultFetchKeywordsUseCase(repository: repository)
     lazy var viewModel = MyPageViewModel(fetchKeywordsUseCase: fetchKeywordUseCase)
+    var keywordColors: [UIColor] = []
     
     private var cancellableBag: Set<AnyCancellable> = .init()
     
@@ -134,7 +135,6 @@ open class MyPageViewController: UIViewController {
         super.viewDidLoad()
         
         collectionView = .init(frame: .zero, collectionViewLayout: collectionViewLayout)
-        collectionView.delegate = self
         
         let cellWithButtonNib = UINib(nibName: MyPageCellWithButton.nibName, bundle: .init(for: MyPageCellWithButton.self))
         collectionView.register(cellWithButtonNib, forCellWithReuseIdentifier: MyPageCellWithButton.identifier)
@@ -175,6 +175,7 @@ open class MyPageViewController: UIViewController {
                 }
                 
                 cell.setKeyword(with: keyword)
+                cell.setBackgroundColor(self.keywordColors[indexPath.item])
                 cell.sizeToFit()
                 return cell
                 
@@ -258,8 +259,9 @@ open class MyPageViewController: UIViewController {
                 keywords ?? []
             })
             .sink { keywords in
-            self.refreshKeywords(keywords: keywords)
-        }.store(in: &cancellableBag)
+                self.keywordColors = KeywordColorFactory.create(keywords: keywords)
+                self.refreshKeywords(keywords: keywords)
+            }.store(in: &cancellableBag)
     }
     
     private func refreshKeywords(keywords: Keywords?) {

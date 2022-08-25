@@ -29,7 +29,8 @@ open class KeywordCell: UICollectionViewCell {
     }
     
     open func setBackgroundColor(_ color: UIColor) {
-        keywordLabel.backgroundColor = color
+        contentView.backgroundColor = color
+        keywordLabel.backgroundColor = .clear
     }
     
     public static func fittingSize(availableHeight: CGFloat, keyword: Keyword) -> CGSize {
