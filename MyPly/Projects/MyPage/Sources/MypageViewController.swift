@@ -36,6 +36,7 @@ open class MyPageViewController: UIViewController {
     let repository = DummyKeywordRepositoryImpl()
     lazy var fetchKeywordUseCase = DefaultFetchKeywordsUseCase(repository: repository)
     lazy var viewModel = MyPageViewModel(fetchKeywordsUseCase: fetchKeywordUseCase)
+    var keywordColors: [UIColor] = []
     
     private var cancellableBag: Set<AnyCancellable> = .init()
     
@@ -111,6 +112,7 @@ open class MyPageViewController: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         
+<<<<<<< HEAD
          let cellWithButtonNib = UINib(nibName: MyPageCellWithButton.nibName, bundle: .init(for: MyPageCellWithButton.self))
          collectionView.register(cellWithButtonNib, forCellWithReuseIdentifier: MyPageCellWithButton.identifier)
          
