@@ -60,7 +60,7 @@ private extension Project {
     static func makeFrameworkTargets(name: String, platform: Platform, iOSTargetVersion: String, dependencies: [TargetDependency] = []) -> [Target] {
         let sources = Target(name: name,
                              platform: platform,
-                             product: .stat,
+                             product: .framework,
                              bundleId: "io.cocaine.\(name)",
                              deploymentTarget: .iOS(targetVersion: iOSTargetVersion, devices: [.iphone]),
                              infoPlist: .default,
