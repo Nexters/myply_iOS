@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 import Model
 
-struct KeywordColorFactory {
-    static let colors: [UIColor] = [
-        .blue,
-        .yellow,
-        .red,
-        .greenLight
+public struct KeywordColorFactory {
+    private static let colors: [UIColor] = [
+        CommonUIAsset.blue.color,
+        CommonUIAsset.yellow.color,
+        CommonUIAsset.red.color,
+        CommonUIAsset.greenLight.color
         
     ].compactMap { $0 }
     
@@ -23,7 +23,7 @@ struct KeywordColorFactory {
         colors.count
     }
     
-    static func create(keywords: [Keyword]) -> [UIColor] {
+    public static func create(keywords: [Keyword]) -> [UIColor] {
         keywords.enumerated()
             .map { (index, keyword) in
                 let colorIndex = index % colorCount
