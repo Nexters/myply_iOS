@@ -14,9 +14,9 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oWl-mU-aZU">
-                    <rect key="frame" x="0.0" y="15" width="42" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oWl-mU-aZU">
+                    <rect key="frame" x="0.0" y="14.5" width="48" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
@@ -24,7 +24,7 @@
             <viewLayoutGuide key="safeArea" id="VXr-Tz-HHm"/>
             <constraints>
                 <constraint firstItem="oWl-mU-aZU" firstAttribute="centerY" secondItem="U6b-Vx-4bR" secondAttribute="centerY" id="aih-Mc-iEc"/>
-                <constraint firstItem="VXr-Tz-HHm" firstAttribute="bottom" secondItem="oWl-mU-aZU" secondAttribute="bottom" constant="14" id="gyF-Ja-Hia"/>
+                <constraint firstItem="oWl-mU-aZU" firstAttribute="height" secondItem="VXr-Tz-HHm" secondAttribute="height" multiplier="3.5" id="wae-ff-XwR"/>
                 <constraint firstItem="oWl-mU-aZU" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" id="yyB-La-fLZ"/>
             </constraints>
             <connections>

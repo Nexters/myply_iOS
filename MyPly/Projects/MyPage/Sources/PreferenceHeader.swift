@@ -9,7 +9,7 @@
 import UIKit
 
 class PreferenceHeader: UICollectionReusableView {
-    private static let titleConstant = "%s의 취향 키워드"
+    private static let titleConstant = "%@의 취향 키워드"
 
     
     @IBOutlet weak var titleLabel: UILabel!

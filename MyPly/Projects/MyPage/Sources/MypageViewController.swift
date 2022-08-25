@@ -56,9 +56,8 @@ open class MyPageViewController: UIViewController {
 
         switch Section(rawValue: sectionIndex) {
         case .preference:
-            let headerAnchor = NSCollectionLayoutAnchor(edges: [.top])
             let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(32))
-            let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: PreferenceHeader.identifier, containerAnchor: headerAnchor)
+            let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: PreferenceHeader.identifier, alignment: .top)
 
             let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(28), heightDimension: .absolute(14))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -73,10 +72,9 @@ open class MyPageViewController: UIViewController {
             return section
             
         case .serviceInfo, .customerService, .none:
-            let headerAnchor = NSCollectionLayoutAnchor(edges: [.top])
             let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(32))
-            let header = 
-            NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: MyPageSectionHeader.identifier, containerAnchor: headerAnchor)
+            let header =
+            NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: MyPageSectionHeader.identifier, alignment: .top)
             
             
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
