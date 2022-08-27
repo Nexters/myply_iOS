@@ -37,6 +37,14 @@ open class SignUpViewController: UIViewController {
     private let textField = UITextField().then {
         $0.placeholder = "한글 혹은 영어 8자"
         $0.borderStyle = .none
+        $0.textColor = CommonUIAsset.gray80.color
+    }
+    
+    private let warningLabel = UILabel().then {
+        $0.text = "8글자 이상 입력할 수 없어요."
+        $0.textColor = CommonUIAsset.red.color
+        $0.font = .systemFont(ofSize: 14)
+        $0.isHidden = true
     }
     
     private let countLabel = UILabel().then {
@@ -50,13 +58,11 @@ open class SignUpViewController: UIViewController {
         $0.setTitle("다음", for: .normal)
         $0.titleLabel?.textColor = .white
         $0.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
-        $0.setBackgroundColor(.systemGreen, for: .normal)
+        $0.setBackgroundColor(CommonUIAsset.greenDark.color, for: .normal)
         $0.setBackgroundColor(CommonUIAsset.gray50.color, for: .disabled)
     }
     
     // MARK: Property
-    
-    private let nicknameMaxCount: Int = 8
     
     private let viewModel: SignUpViewModel
     
@@ -110,6 +116,7 @@ extension SignUpViewController {
         view.addSubview(descLabel)
         view.addSubview(textFieldView)
         textFieldView.addSubview(textField)
+        view.addSubview(warningLabel)
         view.addSubview(countLabel)
         view.addSubview(nextButton)
     }
@@ -142,6 +149,11 @@ extension SignUpViewController {
         textField.snp.makeConstraints {
             $0.top.leading.equalTo(16)
             $0.bottom.trailing.equalTo(-16)
+        }
+        
+        warningLabel.snp.makeConstraints {
+            $0.top.equalTo(textFieldView.snp.bottom).offset(4)
+            $0.leading.equalTo(20)
         }
         
         countLabel.snp.makeConstraints {
@@ -197,6 +209,9 @@ extension SignUpViewController {
                 self.countLabel.text = "\(text.count)/8"
                 
                 self.nextButton.isEnabled = text.count > 0
+                
+                self.textFieldView.layer.borderColor = text.count >= 8 ? CommonUIAsset.red.color.cgColor : CommonUIAsset.gray30.color.cgColor
+                self.warningLabel.isHidden = !(text.count >= 8)
                 
             }).store(in: &cancellables)
             
