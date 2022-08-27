@@ -24,13 +24,14 @@ open class SignUpViewController: UIViewController {
     private let descLabel = UILabel().then {
         $0.text = "닉네임은 언제든지 바꿀 수 있어요."
         $0.font = .systemFont(ofSize: 14, weight: .bold)
-        $0.textColor = CommonUIAsset.gray50.color // 변경하기
+        $0.textColor = CommonUIAsset.gray60.color
     }
     
     private let textFieldView = UIView().then {
         $0.layer.borderWidth = 1
         $0.layer.cornerRadius = 2
-        $0.layer.borderColor = CommonUIAsset.gray50.color.cgColor // 변경하기
+        $0.layer.borderColor = CommonUIAsset.gray30.color.cgColor
+        $0.backgroundColor = .white
     }
     
     private let textField = UITextField().then {
@@ -79,6 +80,13 @@ open class SignUpViewController: UIViewController {
 }
 
 extension SignUpViewController {
+    private func setNavigationBar(){
+        let closeButton = UIBarButtonItem(image: CommonUIAsset.closeIcon.image, style: .plain, target: self, action: nil)
+        
+        navigationController?.navigationBar.tintColor = CommonUIAsset.gray90.color
+        navigationItem.rightBarButtonItem = closeButton
+    }
+    
     private func addViews(){
         view.addSubview(nickNameLabel)
         view.addSubview(descLabel)
@@ -89,7 +97,10 @@ extension SignUpViewController {
     }
     
     private func initLayout(){
+        setNavigationBar()
         addViews()
+        
+        view.backgroundColor = CommonUIAsset.begie.color
         
         nickNameLabel.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(24)

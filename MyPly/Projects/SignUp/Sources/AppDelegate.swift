@@ -20,9 +20,14 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
+        
+        let navigationController = UINavigationController()
         let viewController = SignUpViewController()
-        window?.rootViewController = viewController
+        
+        navigationController.pushViewController(viewController, animated: false)
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
+        
         return true
     }
 
