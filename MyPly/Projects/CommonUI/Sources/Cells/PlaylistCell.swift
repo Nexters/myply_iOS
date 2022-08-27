@@ -17,6 +17,7 @@ public protocol HomePlaylistPresentable {
     var isMemoed: Bool { get }
     var thumbnailURL: String { get }
     var youtubeTags: [String] { get }
+    var videoDeepLink: String { get }
 }
 
 open class PlaylistCell: UICollectionViewCell {
@@ -38,7 +39,7 @@ open class PlaylistCell: UICollectionViewCell {
         tagCollectionView.dataSource = self
         tagCollectionView.delegate = self
         imageView.contentMode = .scaleAspectFill
-        titleLabel.textColor = .gray70
+        titleLabel.textColor = CommonUI.CommonUIAsset.gray70.color
     }
 
     open func bind(to playlist: HomePlaylistPresentable) {

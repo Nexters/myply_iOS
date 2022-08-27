@@ -34,7 +34,7 @@ struct RecentlyPlaylistUsecase: PlaylistUsecase {
                     do {
                         let decoder = JSONDecoder()
                         let playlists = try decoder.decode([Playlist].self, from: response.data, keyPath: "data.musics")
-                        let nextPageToken = try decoder.decode(String?.self, from: response.data, keyPath: "data.nextPageToken")
+                        let nextPageToken = try? decoder.decode(String?.self, from: response.data, keyPath: "data.nextPageToken")
                         promise(.success((playlists, nextPageToken)))
 
                     }
@@ -63,7 +63,7 @@ struct PopularPlaylistUsecase: PlaylistUsecase {
                     do {
                         let decoder = JSONDecoder()
                         let playlists = try decoder.decode([Playlist].self, from: response.data, keyPath: "data.musics")
-                        let nextPageToken = try decoder.decode(String?.self, from: response.data, keyPath: "data.nextPageToken")
+                        let nextPageToken = try? decoder.decode(String?.self, from: response.data, keyPath: "data.nextPageToken")
                         promise(.success((playlists, nextPageToken)))
 
                     }
@@ -92,7 +92,7 @@ struct FavoritePlaylistUsecase: PlaylistUsecase {
                     do {
                         let decoder = JSONDecoder()
                         let playlists = try decoder.decode([Playlist].self, from: response.data, keyPath: "data.musics")
-                        let nextPageToken = try decoder.decode(String?.self, from: response.data, keyPath: "data.nextPageToken")
+                        let nextPageToken = try? decoder.decode(String?.self, from: response.data, keyPath: "data.nextPageToken")
                         promise(.success((playlists, nextPageToken)))
 
                     }
