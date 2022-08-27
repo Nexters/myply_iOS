@@ -39,8 +39,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let searchVC = SearchViewController()
         searchVC.tabBarItem = UITabBarItem(title: nil, image: AppAsset.search.image, selectedImage: nil)
 
-        let libraryVC = LibraryViewController()
-        libraryVC.tabBarItem = UITabBarItem(title: nil, image: AppAsset.keep.image, selectedImage: nil)
+        let libraryVC = LibraryViewController.create()
+        libraryVC?.tabBarItem = UITabBarItem(title: nil, image: AppAsset.keep.image, selectedImage: nil)
 
         let myPageVC = MyPageViewController()
         myPageVC.tabBarItem = UITabBarItem(title: nil, image: AppAsset.myPage.image, selectedImage: nil)

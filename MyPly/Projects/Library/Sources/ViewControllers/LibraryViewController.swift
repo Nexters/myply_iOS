@@ -8,6 +8,8 @@
 
 open class LibraryViewController: UIViewController {
     
+    // MARK: UI
+    
     private let headerView = UIView().then {
         $0.backgroundColor = CommonUIAsset.begie.color
     }
@@ -26,14 +28,46 @@ open class LibraryViewController: UIViewController {
     
     private var collectionView: UICollectionView!
     
+    // MARK: Property
+    
+    private let viewModel: LibraryViewModel
+    
+    init(viewModel: LibraryViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
         
         initLayout()
     }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    open override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
 }
 
 extension LibraryViewController {
+    public static func create() -> LibraryViewController? {
+        let viewModel = LibraryViewModel()
+        let libraryVC = LibraryViewController(viewModel: viewModel)
+        
+        return libraryVC
+    }
+    
     private func addViews(){
         view.addSubview(headerView)
         headerView.addSubview(titleLabel)
@@ -108,5 +142,10 @@ extension LibraryViewController: UICollectionViewDelegateFlowLayout {
         let width: CGFloat = UIScreen.main.bounds.size.width
         let height: CGFloat = 196
         return CGSize(width: width, height: height)
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let detailVC = LibraryDetailViewController.create() ?? UIViewController()
+        self.navigationController?.pushViewController(detailVC, animated: true)
     }
 }
