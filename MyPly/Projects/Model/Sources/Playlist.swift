@@ -10,10 +10,10 @@ import Foundation
 
 public struct Playlist: Codable {
 
-    let isMemoed: Bool
-    let thumbnailURL: String
-    let title: String
-    let videoDeepLink: String
-    let youtubeTags: [String]
-    let youtubeVideoID: String
+    public let isMemoed: Bool
+    public let thumbnailURL: String
+    public let title: String
+    public let videoDeepLink: String
+    public let youtubeTags: [String]
+    public let youtubeVideoID: String
 }

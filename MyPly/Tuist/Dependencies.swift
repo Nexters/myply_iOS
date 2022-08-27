@@ -8,13 +8,15 @@
 import ProjectDescription
 
 let dependencies = Dependencies(
-    carthage: [],
-    swiftPackageManager: [
-        .remote(url: "https://github.com/Alamofire/Alamofire", requirement: .upToNextMajor(from: "5.0.0")),
-        .remote(url: "https://github.com/SnapKit/SnapKit", requirement: .upToNextMajor(from: "5.0.1")),
-        .remote(url: "https://github.com/CombineCommunity/CombineCocoa", requirement: .upToNextMajor(from: "0.4.0")),
-        .remote(url: "https://github.com/devxoul/Then", requirement: .upToNextMajor(from: "3.0.0")),
-        .remote(url: "https://github.com/Moya/Moya.git", requirement: .upToNextMajor(from: "15.0.0"))
-    ],
-    platforms: [.iOS]
-)
+     swiftPackageManager: .init(
+         [
+            .remote(url: "https://github.com/Alamofire/Alamofire", requirement: .upToNextMajor(from: "5.0.0")),
+            .remote(url: "https://github.com/SnapKit/SnapKit", requirement: .upToNextMajor(from: "5.0.1")),
+            .remote(url: "https://github.com/CombineCommunity/CombineCocoa", requirement: .upToNextMajor(from: "0.4.0")),
+            .remote(url: "https://github.com/devxoul/Then", requirement: .upToNextMajor(from: "3.0.0")),
+            .remote(url: "https://github.com/Moya/Moya.git", requirement: .upToNextMajor(from: "15.0.0"))
+         ],
+         productTypes: ["Moya": .framework]
+     ),
+     platforms: [.iOS]
+ )
