@@ -18,6 +18,7 @@ struct MockHomePlaylist: HomePlaylistPresentable {
     var isMemoed: Bool
     var thumbnailURL: String = ""
     var youtubeTags: [String]
+    var videoDeepLink: String = ""
 }
 
 protocol HomeMenu {
@@ -84,7 +85,8 @@ open class HomeViewModel {
                         guard let self = self else { return }
                         var newData = self.playlists.value
                             newData.append(contentsOf: playlists)
-                        self.playlists.send((playlists))
+                        self.playlists.send(newData)
+                        self.nextPageisLoading = false
                         self.nextToken = nextToken
                     })
                     .store(in: &self.cancellables)
