@@ -78,14 +78,7 @@ open class MyPageViewController: UIViewController {
         return $0
     }(UILabel())
     
-    lazy var serviceInfoStackView: UIStackView = {
-        $0.axis = .vertical
-        $0.distribution = .fill
-        $0.addArrangedSubview(appVersionInfoView)
-        
-        return $0
-    }(UIStackView())
-    
+  
     let writeButton: UIButton = {
         $0.setImage(MyPageAsset.edit.image, for: .normal)
         return $0
@@ -97,7 +90,6 @@ open class MyPageViewController: UIViewController {
     var keywordDataSource: KeywordDataSource!
     var keywordColors: [UIColor]? = nil
     
-    let appVersionInfoView: AppVersionInfoView = .init()
     
     let firstDividerLine: UIView = {
         $0.backgroundColor = CommonUIAsset.gray80.color
@@ -106,6 +98,15 @@ open class MyPageViewController: UIViewController {
 
     private var scrollView: UIScrollView!
     private var scrollContentView: UIView!
+    
+    private var keywordTitleLabel: UILabel = {
+        $0.text = "취향키워드"
+        return $0
+    }(UILabel())
+    
+    private var editKeywordButton: UIButton = {
+        return $0
+    }(UIButton())
     
     
     open override func viewDidLoad() {
@@ -135,6 +136,8 @@ open class MyPageViewController: UIViewController {
         scrollContentView.addSubview(keywordCollectionView)
         scrollContentView.addSubview(collectionView)
         scrollContentView.addSubview(firstDividerLine)
+        scrollContentView.addSubview(keywordTitleLabel)
+        scrollContentView.addSubview(editKeywordButton)
         
         scrollView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom)
@@ -151,10 +154,21 @@ open class MyPageViewController: UIViewController {
             make.height.greaterThanOrEqualToSuperview()
         }
         
-        keywordCollectionView.snp.makeConstraints { make in
+        keywordTitleLabel.snp.makeConstraints { make in
             make.top.equalTo(scrollContentView.snp.top).offset(30)
             make.width.equalToSuperview().offset(-40)
             make.centerX.equalToSuperview()
+        }
+        
+        keywordCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(keywordTitleLabel.snp.bottom).offset(16)
+            make.width.equalToSuperview().offset(-40)
+            make.centerX.equalToSuperview()
+        }
+        
+        editKeywordButton.snp.makeConstraints { make in
+            make.leading.equalTo(keywordTitleLabel.snp.trailing).offset(11)
+            make.centerY.equalTo(keywordTitleLabel.snp.centerY)
         }
         
         keywordCollectionView.setContentHuggingPriority(.defaultHigh, for: .vertical)
