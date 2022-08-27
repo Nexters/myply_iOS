@@ -19,9 +19,9 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bh9-yL-fmy">
-                        <rect key="frame" x="0.0" y="36" width="334" height="95"/>
+                        <rect key="frame" x="8" y="25.5" width="318" height="116"/>
                         <color key="backgroundColor" name="red"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -29,12 +29,10 @@
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
-                <constraint firstItem="ZTg-uK-7eu" firstAttribute="trailing" secondItem="bh9-yL-fmy" secondAttribute="trailing" id="Fv1-Ec-rsY"/>
-                <constraint firstItem="bh9-yL-fmy" firstAttribute="leading" secondItem="ZTg-uK-7eu" secondAttribute="leading" id="Wd2-en-b8C"/>
-                <constraint firstItem="bh9-yL-fmy" firstAttribute="bottom" secondItem="ZTg-uK-7eu" secondAttribute="bottom" constant="8" id="ZUG-bu-wza"/>
-                <constraint firstItem="bh9-yL-fmy" firstAttribute="height" secondItem="ZTg-uK-7eu" secondAttribute="height" constant="16" id="dNV-Op-RXA" userLabel="Keyword Label.height + 16 = Safe Area.height"/>
-                <constraint firstItem="bh9-yL-fmy" firstAttribute="width" secondItem="ZTg-uK-7eu" secondAttribute="width" id="odS-XX-dxj" userLabel="Keyword Label.width + 7 = Safe Area.width"/>
-                <constraint firstItem="ZTg-uK-7eu" firstAttribute="top" secondItem="bh9-yL-fmy" secondAttribute="top" constant="8" id="zvg-P1-scg"/>
+                <constraint firstItem="bh9-yL-fmy" firstAttribute="centerY" secondItem="ZTg-uK-7eu" secondAttribute="centerY" id="Tkh-yE-MyD"/>
+                <constraint firstItem="bh9-yL-fmy" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="g66-s3-z6e"/>
+                <constraint firstAttribute="width" secondItem="bh9-yL-fmy" secondAttribute="width" constant="16" id="pEY-5G-ybK"/>
+                <constraint firstAttribute="height" secondItem="bh9-yL-fmy" secondAttribute="height" constant="7" id="v4d-n6-0LS"/>
             </constraints>
             <size key="customSize" width="334" height="141"/>
             <connections>

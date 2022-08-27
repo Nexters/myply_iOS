@@ -18,14 +18,10 @@ open class KeywordCell: UICollectionViewCell {
     
     open override func awakeFromNib() {
         super.awakeFromNib()
-        keywordLabel.font = .systemFont(ofSize: 14)
-        // Initialization code
     }
     
     open func setKeyword(with keyword: Keyword) {
         keywordLabel.text = KeywordText(keyword: keyword).value
-        self.sizeToFit()
-        layoutIfNeeded()
     }
     
     open func setBackgroundColor(_ color: UIColor) {

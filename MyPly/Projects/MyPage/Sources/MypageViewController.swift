@@ -53,20 +53,17 @@ open class MyPageViewController: UIViewController {
     
     let sectionProvider =  { (sectionIndex: Int,
                               layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
-        print("layoutEnvironment.container.contentInsets: \(layoutEnvironment.container.contentInsets)")
-
+        
         switch Section(rawValue: sectionIndex) {
         case .preference:
             let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(32))
             let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: PreferenceHeader.identifier, alignment: .top)
 
-            let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(28), heightDimension: .absolute(14))
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            item.contentInsets.trailing = 8
             
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: itemSize.heightDimension)
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(192))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-            group.interItemSpacing = .fixed(5)
             
             let section = NSCollectionLayoutSection(group: group)
             section.boundarySupplementaryItems = [header]
@@ -142,8 +139,6 @@ open class MyPageViewController: UIViewController {
         let cellWithLabelNib = UINib(nibName: MyPageCellWithLabel.nibName, bundle: .init(for: MyPageCellWithLabel.self))
         collectionView.register(cellWithLabelNib, forCellWithReuseIdentifier: MyPageCellWithLabel.identifier)
         
-        let keywordCellNib = UINib(nibName: KeywordCell.nibName, bundle: .init(for: KeywordCell.self))
-        collectionView.register(keywordCellNib, forCellWithReuseIdentifier: KeywordCell.identifier)
         
         view.addSubview(titleLabel)
         view.addSubview(collectionView)
@@ -159,6 +154,50 @@ open class MyPageViewController: UIViewController {
         }
         
         initDataSource()
+        initKeywordCollectionView()
+    }
+    
+    private func initKeywordCollectionView() {
+        let layout = LeftAlignedCollectionViewFlowLayout()
+        keywordCollectionView = .init(frame: .zero, collectionViewLayout: layout)
+        keywordCollectionView.delegate = self
+        keywordCollectionView.dataSource = keywordDataSource
+        keywordCollectionView.backgroundColor = .clear
+        
+        let nibName = UINib(nibName: "KeywordCell", bundle: .init(for: KeywordCell.self))
+        keywordCollectionView.register(nibName, forCellWithReuseIdentifier: KeywordCell.Constants.reuseIdentifier)
+        
+        initKeywordDataSource()
+    }
+    
+    private func initKeywordDataSource() {
+        let keywordListCell = UICollectionView.CellRegistration<KeywordListCell, String> {
+            cell, indexPath, itemIdentifier in
+            guard let keywords = self.viewModel.keywords else { return }
+            
+            cell.setKeywords(keywords: keywords)
+            cell.sizeToFit()
+        }
+       
+        keywordDataSource = .init(collectionView: keywordCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+            
+            
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: KeywordCell.Constants.reuseIdentifier, for: indexPath)
+            
+            guard let keywordCell = cell as? KeywordCell else {
+                return cell
+            }
+            
+            let index = indexPath.row
+            if let keyword = self.viewModel.keywords?[index] {
+                keywordCell.setKeyword(with: keyword)
+            }
+            
+            if let backgroundColor = self.keywordColors[safe: index]  {
+                keywordCell.setBackgroundColor(backgroundColor)
+            }
+            return keywordCell
+        })
     }
     
     // MARK: DataSource
@@ -167,18 +206,8 @@ open class MyPageViewController: UIViewController {
             let section = MyPageSection(rawValue: indexPath.section)!
             switch section {
             case .preference:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: KeywordCell
-                    .identifier, for: indexPath) as! KeywordCell
-                
-                guard let keyword = self.viewModel.keywords?[indexPath.item] else {
-                    return cell
-                }
-                
-                cell.setKeyword(with: keyword)
-                cell.setBackgroundColor(self.keywordColors[indexPath.item])
-                cell.sizeToFit()
-                return cell
-                
+             
+               
             case .serviceMetadata:
                 let item = ServiceInfoItems.value[indexPath.row]
                 switch item.content {
@@ -266,9 +295,8 @@ open class MyPageViewController: UIViewController {
     
     private func refreshKeywords(keywords: Keywords?) {
         var snapShot = MyPageSnapShot()
-        let ids = keywords?.map { $0.value } ?? []
         snapShot.appendSections(MyPageSection.allCases.map { $0.rawValue })
-        snapShot.appendItems(ids, toSection: MyPageSection.preference.rawValue)
+        snapShot.appendItems([KeywordListCell.identifier], toSection: MyPageSection.preference.rawValue)
         snapShot.appendItems(ServiceInfoItems.value.map({ $0.title }), toSection: MyPageSection.serviceMetadata.rawValue)
         snapShot.appendItems(CustomerServiceItems.value.map({ $0.title }), toSection: MyPageSection.customerService.rawValue)
         dataSource.apply(snapShot)
@@ -287,37 +315,6 @@ extension MyPageViewController {
 extension MyPageViewController {
     private func initUI() {
         
-    }
-}
-
-// MARK: - UICollectionViewDelegateFlowLayout : KeywordCell 크기 설정
-extension MyPageViewController: UICollectionViewDelegate {
-    
-    static func keywordCellSize(keyword: Keyword) -> CGSize {
-        let label = UILabel()
-        label.text = KeywordText(keyword: keyword).value
-        label.font = .init(name: "Pretendard", size: 14)
-        label.sizeToFit()
-        return .init(width: label.frame.width + 24, height: label.frame.height + 11)
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        let section = MyPageSection(rawValue: indexPath.section)!
-        guard let keyword = viewModel.keywords?[indexPath.row] else {
-            return .zero
-        }
-        
-        switch section {
-        case .preference:
-            return MyPageViewController.keywordCellSize(keyword: keyword)
-            
-        case .serviceMetadata:
-            return .init(width: collectionView.frame.width, height: 48)
-            
-        case .customerService:
-            return .init(width: collectionView.frame.width, height: 48)
-        }
     }
 }
 
