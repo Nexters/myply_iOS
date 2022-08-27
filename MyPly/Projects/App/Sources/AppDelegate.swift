@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Alamofire
 import CommonUI
 import Home
 import Search
@@ -31,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if UserDefaults.standard.string(forKey: "device-token") == nil {
             UserDefaults.standard.set(UUID().uuidString, forKey: "device-token")
         }
-        MyPlyTarget.deviceToken = UserDefaults.standard.string(forKey: "device-token") ?? ""
+        MyPlyTarget.deviceToken = "1234" //UserDefaults.standard.string(forKey: "device-token") ?? ""
 
         let homeVC = HomeViewController.create()
         homeVC?.tabBarItem = UITabBarItem(title: nil, image: AppAsset.home.image, selectedImage: nil)
@@ -39,8 +38,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let searchVC = SearchViewController()
         searchVC.tabBarItem = UITabBarItem(title: nil, image: AppAsset.search.image, selectedImage: nil)
 
-        let libraryVC = LibraryViewController()
-        libraryVC.tabBarItem = UITabBarItem(title: nil, image: AppAsset.keep.image, selectedImage: nil)
+        let libraryVC = LibraryViewController.create()
+        libraryVC?.tabBarItem = UITabBarItem(title: nil, image: AppAsset.keep.image, selectedImage: nil)
 
         let myPageVC = MyPageViewController()
         myPageVC.tabBarItem = UITabBarItem(title: nil, image: AppAsset.myPage.image, selectedImage: nil)

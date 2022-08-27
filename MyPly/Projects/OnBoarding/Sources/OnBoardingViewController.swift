@@ -6,6 +6,8 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
+import SignUp
+
 open class OnBoardingViewController: UIViewController {
     
     // MARK: UI
@@ -14,30 +16,57 @@ open class OnBoardingViewController: UIViewController {
 
     private let nextButton = UIButton().then {
         $0.setTitle("다음", for: .normal)
-        $0.backgroundColor = .systemGreen
+        $0.backgroundColor = CommonUIAsset.greenDark.color
         $0.setTitleColor(.white, for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
     }
     
-    private let pageControl = UIPageControl().then {
-        $0.numberOfPages = 3
+    private lazy var pageControl = UIPageControl().then {
+        $0.numberOfPages = onBoardingModels.count
         $0.currentPage = 0
-        $0.pageIndicatorTintColor = .lightGray
-        $0.currentPageIndicatorTintColor = .systemGreen
+        $0.pageIndicatorTintColor = CommonUIAsset.gray50.color
+        $0.currentPageIndicatorTintColor = CommonUIAsset.greenLight.color
     }
     
     // MARK: Property
     
+    private let onBoardingModels: [OnBoardingModel] = OnBoardingModel.modelList()
+    
+    private var currentIndex: Int = 0 {
+        didSet {
+            setButtonTitle()
+        }
+    }
+    
+    private let viewModel: OnBoardingViewModel
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(viewModel: OnBoardingViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.backgroundColor = .white
-        
         initLayout()
+        configureNextButton()
     }
 }
 
 extension OnBoardingViewController {
+    public static func create() -> OnBoardingViewController? {
+        let viewModel = OnBoardingViewModel()
+        let onBoardingVC = OnBoardingViewController(viewModel: viewModel)
+        
+        return onBoardingVC
+    }
+    
     private func addViews(){
         view.addSubview(collectionView)
         view.addSubview(nextButton)
@@ -47,7 +76,9 @@ extension OnBoardingViewController {
     private func initLayout(){
         initCollectionView()
         addViews()
-
+        
+        self.view.backgroundColor = CommonUIAsset.begie.color
+        
         collectionView.snp.makeConstraints {
             $0.top.equalTo(132)
             $0.leading.equalToSuperview()
@@ -76,7 +107,6 @@ extension OnBoardingViewController {
         }
 
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout).then {
-            $0.backgroundColor = .systemGreen
             $0.showsVerticalScrollIndicator = false
             $0.showsHorizontalScrollIndicator = false
             $0.isPagingEnabled = true
@@ -86,15 +116,51 @@ extension OnBoardingViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
     }
+    
+    private func setButtonTitle(){
+        nextButton.setTitle(currentIndex == onBoardingModels.count - 1 ? "시작하기" : "다음", for: .normal)
+    }
+}
+
+extension OnBoardingViewController {
+    private func configureNextButton() {
+        nextButton.tapPublisher
+            .sink(receiveValue: { [weak self] _ in
+                guard let self = self else { return }
+                
+                if self.currentIndex != self.onBoardingModels.count-1 {
+                    self.scrollToIndex(index: self.currentIndex+1)
+                } else {
+                    guard let signUpVC = SignUpViewController.create() else { return }
+                    
+                    let navigationController = UINavigationController()
+                    navigationController.pushViewController(signUpVC, animated: false)
+                    navigationController.modalPresentationStyle = .fullScreen
+                    
+                    self.present(navigationController, animated: true)
+                }
+            })
+            .store(in: &cancellables)
+    }
+    
+    func scrollToIndex(index:Int) {
+        let rect = self.collectionView.layoutAttributesForItem(at:IndexPath(row: index, section: 0))?.frame
+        self.collectionView.scrollRectToVisible(rect!, animated: true)
+        self.pageControl.currentPage = index
+        self.currentIndex += 1
+    }
 }
 
 extension OnBoardingViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return onBoardingModels.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "onBoardingCell", for: indexPath) as! OnBoardingCell
+        
+        cell.desc = onBoardingModels[indexPath.row].desc
+        cell.image = onBoardingModels[indexPath.row].imageName
         
         return cell
     }
@@ -116,6 +182,7 @@ extension OnBoardingViewController: UICollectionViewDelegateFlowLayout {
         let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
         
         guard let indexPath = self.collectionView.indexPathForItem(at: visiblePoint) else { return }
-        self.pageControl.currentPage = indexPath.row
+        self.currentIndex = indexPath.row
+        self.pageControl.currentPage = currentIndex
     }
 }

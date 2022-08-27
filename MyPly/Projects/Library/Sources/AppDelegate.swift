@@ -7,7 +7,9 @@
 //
 
 @_exported import CommonUI
+@_exported import Model
 @_exported import UIKit
+@_exported import Combine
 @_exported import SnapKit
 @_exported import Then
 
@@ -21,9 +23,14 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let viewController = LibraryViewController()
-        window?.rootViewController = viewController
+        
+        let navigationController = UINavigationController()
+        let viewController = LibraryViewController.create() ?? UIViewController()
+        
+        navigationController.pushViewController(viewController, animated: false)
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
+        
         return true
     }
 

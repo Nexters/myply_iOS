@@ -10,17 +10,28 @@ final class OnBoardingCell: UICollectionViewCell {
     
     // MARK: UI
     
-    private let imageView = UIImageView().then {
-        $0.backgroundColor = .systemBlue
-    }
+    private let imageView = UIImageView()
     
     private let descLabel = UILabel().then {
         $0.numberOfLines = 0
         $0.textAlignment = .center
-        $0.text = "테스트테스트테스ㅡ트트ㅡ트테테테네네네ㅔ테테텡ㅇㅇㅇㅇㅇㅇ"
+        $0.font = .systemFont(ofSize: 18, weight: .semibold)
+        $0.textColor = CommonUIAsset.gray80.color
     }
     
     // MARK: Property
+    
+    var desc: String = "" {
+        didSet {
+            setContent()
+        }
+    }
+    
+    var image: String = "" {
+        didSet {
+            setContent()
+        }
+    }
     
     private let identifier = "onBoardingCell"
     
@@ -42,6 +53,8 @@ extension OnBoardingCell {
     }
     
     private func initLayout(){
+        backgroundColor = CommonUIAsset.begie.color
+        
         addViews()
         
         imageView.snp.makeConstraints {
@@ -51,9 +64,14 @@ extension OnBoardingCell {
         }
         
         descLabel.snp.makeConstraints {
-            $0.top.equalTo(imageView.snp.bottom).offset(41)
-            $0.leading.equalTo(21)
-            $0.trailing.equalTo(-21)
+            $0.top.equalTo(imageView.snp.bottom).offset(48)
+            $0.leading.equalTo(20)
+            $0.trailing.equalTo(-20)
         }
+    }
+    
+    private func setContent(){
+        descLabel.text = desc
+        imageView.image = UIImage(named: image)
     }
 }
