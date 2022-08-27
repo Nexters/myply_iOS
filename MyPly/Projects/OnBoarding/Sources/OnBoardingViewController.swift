@@ -6,6 +6,8 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
+import SignUp
+
 open class OnBoardingViewController: UIViewController {
     
     // MARK: UI
@@ -30,7 +32,11 @@ open class OnBoardingViewController: UIViewController {
     
     private let onBoardingModels: [OnBoardingModel] = OnBoardingModel.modelList()
     
-    private var currentIndex: Int = 0
+    private var currentIndex: Int = 0 {
+        didSet {
+            setButtonTitle()
+        }
+    }
     
     private let viewModel: OnBoardingViewModel
     
@@ -110,17 +116,35 @@ extension OnBoardingViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
     }
+    
+    private func setButtonTitle(){
+        nextButton.setTitle(currentIndex == onBoardingModels.count - 1 ? "시작하기" : "다음", for: .normal)
+    }
 }
 
 extension OnBoardingViewController {
     private func configureNextButton() {
         nextButton.tapPublisher
             .sink(receiveValue: { [weak self] _ in
+                guard let self = self else { return }
                 
+                if self.currentIndex != self.onBoardingModels.count-1 {
+                    self.scrollToIndex(index: self.currentIndex+1)
+                } else {
+                    let signUpVC = SignUpViewController()
+                    signUpVC.modalPresentationStyle = .fullScreen
+                    
+                    self.present(signUpVC, animated: true)
+                }
             })
             .store(in: &cancellables)
-        
-        
+    }
+    
+    func scrollToIndex(index:Int) {
+        let rect = self.collectionView.layoutAttributesForItem(at:IndexPath(row: index, section: 0))?.frame
+        self.collectionView.scrollRectToVisible(rect!, animated: true)
+        self.pageControl.currentPage = index
+        self.currentIndex += 1
     }
 }
 
@@ -157,7 +181,5 @@ extension OnBoardingViewController: UICollectionViewDelegateFlowLayout {
         guard let indexPath = self.collectionView.indexPathForItem(at: visiblePoint) else { return }
         self.currentIndex = indexPath.row
         self.pageControl.currentPage = currentIndex
-        
-        nextButton.setTitle(currentIndex == onBoardingModels.count - 1 ? "시작하기" : "다음", for: .normal)
     }
 }

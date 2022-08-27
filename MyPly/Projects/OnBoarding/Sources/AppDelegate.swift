@@ -7,8 +7,6 @@
 //
 
 @_exported import CommonUI
-
-
 @_exported import UIKit
 @_exported import Combine
 @_exported import SnapKit
@@ -25,15 +23,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        let navigationController = UINavigationController()
+        window = UIWindow(frame: UIScreen.main.bounds)
         let viewController = OnBoardingViewController.create() ?? UIViewController()
         
-        navigationController.pushViewController(viewController, animated: false)
-        window?.rootViewController = navigationController
+        window?.rootViewController = viewController
         window?.makeKeyAndVisible()
-        
         return true
     }
-
 }
-
