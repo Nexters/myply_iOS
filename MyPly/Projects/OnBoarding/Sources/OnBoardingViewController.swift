@@ -6,6 +6,8 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
+import CommonUI
+
 open class OnBoardingViewController: UIViewController {
     
     // MARK: UI
@@ -14,24 +16,24 @@ open class OnBoardingViewController: UIViewController {
 
     private let nextButton = UIButton().then {
         $0.setTitle("다음", for: .normal)
-        $0.backgroundColor = .systemGreen
+        $0.backgroundColor = CommonUIAsset.greenDark.color
         $0.setTitleColor(.white, for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
     }
     
-    private let pageControl = UIPageControl().then {
-        $0.numberOfPages = 3
+    private lazy var pageControl = UIPageControl().then {
+        $0.numberOfPages = onBoardingModels.count
         $0.currentPage = 0
-        $0.pageIndicatorTintColor = .lightGray
-        $0.currentPageIndicatorTintColor = .systemGreen
+        $0.pageIndicatorTintColor = CommonUIAsset.gray50.color
+        $0.currentPageIndicatorTintColor = CommonUIAsset.greenLight.color
     }
     
     // MARK: Property
     
+    private let onBoardingModels: [OnBoardingModel] = OnBoardingModel.modelList()
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.view.backgroundColor = .white
         
         initLayout()
     }
@@ -47,7 +49,9 @@ extension OnBoardingViewController {
     private func initLayout(){
         initCollectionView()
         addViews()
-
+        
+        self.view.backgroundColor = CommonUIAsset.begie.color
+        
         collectionView.snp.makeConstraints {
             $0.top.equalTo(132)
             $0.leading.equalToSuperview()
@@ -76,7 +80,6 @@ extension OnBoardingViewController {
         }
 
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout).then {
-            $0.backgroundColor = .systemGreen
             $0.showsVerticalScrollIndicator = false
             $0.showsHorizontalScrollIndicator = false
             $0.isPagingEnabled = true
@@ -90,11 +93,14 @@ extension OnBoardingViewController {
 
 extension OnBoardingViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return onBoardingModels.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "onBoardingCell", for: indexPath) as! OnBoardingCell
+        
+        cell.desc = onBoardingModels[indexPath.row].desc
+        cell.image = onBoardingModels[indexPath.row].imageName
         
         return cell
     }
