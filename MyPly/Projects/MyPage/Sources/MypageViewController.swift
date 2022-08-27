@@ -175,6 +175,7 @@ open class MyPageViewController: UIViewController {
         
         initDataSource()
         collectionView.dataSource = dataSource
+        collectionView.isScrollEnabled = false
         
         
         var snapShot = MyPageSnapShot()
@@ -231,11 +232,15 @@ open class MyPageViewController: UIViewController {
                 case .image:
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyPageCellWithButton.identifier, for: indexPath) as! MyPageCellWithButton
                     cell.setTitle(item.title)
+                    let underlineVisible = ServiceInfoItems.isLast(item: item) == false
+                    cell.makeUnderLine(visible: underlineVisible)
                     return cell
                     
                 case .value(let value):
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyPageCellWithLabel.identifier, for: indexPath) as! MyPageCellWithLabel
                     cell.setVersionNumber(CGFloat(Float(value)!))
+                    let underlineVisible = ServiceInfoItems.isLast(item: item) == false
+                    cell.makeUnderLine(visible: underlineVisible)
                     return cell
                 }
                 
@@ -243,6 +248,8 @@ open class MyPageViewController: UIViewController {
                 let item = CustomerServiceItems.value[indexPath.row]
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyPageCellWithButton.identifier, for: indexPath) as! MyPageCellWithButton
                 cell.setTitle(item.title)
+                let underlineVisible = CustomerServiceItems.isLast(item: item) == false
+                cell.makeUnderLine(visible: underlineVisible)
                 return cell
             }
         })

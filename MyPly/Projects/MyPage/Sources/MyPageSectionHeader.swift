@@ -10,7 +10,8 @@ import UIKit
 
 class MyPageSectionHeader: UICollectionReusableView {
     @IBOutlet weak var titleLabel: UILabel!
-    
+    @IBOutlet weak var underline: UIView!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -18,5 +19,9 @@ class MyPageSectionHeader: UICollectionReusableView {
     
     func setTitle(_ text: String) {
         titleLabel.text = text
+    }
+    
+    func makeUnderLine(visible: Bool) {
+        underline.isHidden = !visible
     }
 }

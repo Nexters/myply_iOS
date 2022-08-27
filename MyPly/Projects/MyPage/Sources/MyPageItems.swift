@@ -20,6 +20,10 @@ enum ServiceInfoItems {
         .init(title: "만든 사람들", content: .image),
         .init(title: "Open Source License", content: .image)
     ]
+    
+    static func isLast(item: MyPageItem) -> Bool {
+        value.last == item
+    }
 }
 
 enum CustomerServiceItems {
@@ -28,14 +32,18 @@ enum CustomerServiceItems {
         .init(title: "닉네임 수정", content: .image),
         .init(title: "문의하기", content: .image)
     ]
+    
+    static func isLast(item: MyPageItem) -> Bool {
+        value.last == item
+    }
 }
 
-enum Content {
+enum Content: Equatable {
     case image
     case value(String)
 }
 
-struct MyPageItem {
+struct MyPageItem: Equatable {
     let title: String
     let content: Content
 }

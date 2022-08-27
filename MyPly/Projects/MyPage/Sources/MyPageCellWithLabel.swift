@@ -13,11 +13,16 @@ class MyPageCellWithLabel: UICollectionViewCell {
     @IBOutlet var appVersionTitleLabel: UILabel!
     @IBOutlet var appVersionContentTitle: UILabel!
 
+    @IBOutlet weak var underline: UIView!
     override func awakeFromNib() {
         super.awakeFromNib()
     }
     
     func setVersionNumber(_ version: CGFloat) {
         appVersionContentTitle.text = "\(version)"
+    }
+    
+    func makeUnderLine(visible: Bool) {
+        underline.isHidden = !visible
     }
 }

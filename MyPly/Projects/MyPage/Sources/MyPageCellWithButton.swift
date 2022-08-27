@@ -10,6 +10,8 @@ import UIKit
 
 class MyPageCellWithButton: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var underline: UIView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -17,5 +19,9 @@ class MyPageCellWithButton: UICollectionViewCell {
 
     func setTitle(_ text: String) {
         titleLabel.text = text
+    }
+    
+    func makeUnderLine(visible: Bool) {
+        underline.isHidden = !visible
     }
 }
