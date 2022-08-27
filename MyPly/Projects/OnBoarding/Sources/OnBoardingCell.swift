@@ -6,9 +6,6 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
-import CommonUI
-import UIKit
-
 final class OnBoardingCell: UICollectionViewCell {
     
     // MARK: UI

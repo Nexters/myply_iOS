@@ -6,8 +6,6 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
-import CommonUI
-
 open class OnBoardingViewController: UIViewController {
     
     // MARK: UI
@@ -32,14 +30,37 @@ open class OnBoardingViewController: UIViewController {
     
     private let onBoardingModels: [OnBoardingModel] = OnBoardingModel.modelList()
     
+    private var currentIndex: Int = 0
+    
+    private let viewModel: OnBoardingViewModel
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(viewModel: OnBoardingViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
         
         initLayout()
+        configureNextButton()
     }
 }
 
 extension OnBoardingViewController {
+    public static func create() -> OnBoardingViewController? {
+        let viewModel = OnBoardingViewModel()
+        let onBoardingVC = OnBoardingViewController(viewModel: viewModel)
+        
+        return onBoardingVC
+    }
+    
     private func addViews(){
         view.addSubview(collectionView)
         view.addSubview(nextButton)
@@ -91,6 +112,18 @@ extension OnBoardingViewController {
     }
 }
 
+extension OnBoardingViewController {
+    private func configureNextButton() {
+        nextButton.tapPublisher
+            .sink(receiveValue: { [weak self] _ in
+                
+            })
+            .store(in: &cancellables)
+        
+        
+    }
+}
+
 extension OnBoardingViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return onBoardingModels.count
@@ -122,6 +155,9 @@ extension OnBoardingViewController: UICollectionViewDelegateFlowLayout {
         let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
         
         guard let indexPath = self.collectionView.indexPathForItem(at: visiblePoint) else { return }
-        self.pageControl.currentPage = indexPath.row
+        self.currentIndex = indexPath.row
+        self.pageControl.currentPage = currentIndex
+        
+        nextButton.setTitle(currentIndex == onBoardingModels.count - 1 ? "시작하기" : "다음", for: .normal)
     }
 }
