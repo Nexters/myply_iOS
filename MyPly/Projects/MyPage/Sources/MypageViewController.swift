@@ -112,7 +112,6 @@ open class MyPageViewController: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-<<<<<<< HEAD
          let cellWithButtonNib = UINib(nibName: MyPageCellWithButton.nibName, bundle: .init(for: MyPageCellWithButton.self))
          collectionView.register(cellWithButtonNib, forCellWithReuseIdentifier: MyPageCellWithButton.identifier)
          
