@@ -22,16 +22,14 @@ typealias MyPageDataSource = UICollectionViewDiffableDataSource<Int, String>
 typealias MyPageSnapShot = NSDiffableDataSourceSnapshot<Int, String>
 
 enum MyPageSection: Int, CaseIterable {
-    case preference = 0
-    case serviceMetadata = 1
-    case customerService = 2
+    case serviceMetadata = 0
+    case customerService = 1
 }
 
 open class MyPageViewController: UIViewController {
     enum Section: Int {
-        case preference = 0
-        case serviceInfo = 1
-        case customerService = 2
+        case serviceInfo = 0
+        case customerService = 1
     }
     
     // TODO: repository 교체
@@ -55,19 +53,19 @@ open class MyPageViewController: UIViewController {
                               layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
         
         switch Section(rawValue: sectionIndex) {
-        case .preference:
-            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(32))
-            let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: PreferenceHeader.identifier, alignment: .top)
-
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(192))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-            
-            let section = NSCollectionLayoutSection(group: group)
-            section.boundarySupplementaryItems = [header]
-            return section
+//        case .preference:
+//            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(32))
+//            let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: PreferenceHeader.identifier, alignment: .top)
+//
+//            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+//            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+//
+//            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(192))
+//            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+//
+//            let section = NSCollectionLayoutSection(group: group)
+//            section.boundarySupplementaryItems = [header]
+//            return section
             
         case .serviceInfo, .customerService, .none:
             let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(32))
@@ -109,6 +107,8 @@ open class MyPageViewController: UIViewController {
     
     lazy var keywordCollectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: keywordCollectionViewLayout)
     let keywordCollectionViewLayout: UICollectionViewFlowLayout = .init()
+    var keywordCollectionViewHeight: NSLayoutConstraint?
+    var keywordDataSource: KeywordDataSource!
     
     let appVersionInfoView: AppVersionInfoView = .init()
     
@@ -139,64 +139,67 @@ open class MyPageViewController: UIViewController {
         let cellWithLabelNib = UINib(nibName: MyPageCellWithLabel.nibName, bundle: .init(for: MyPageCellWithLabel.self))
         collectionView.register(cellWithLabelNib, forCellWithReuseIdentifier: MyPageCellWithLabel.identifier)
         
+        initKeywordCollectionView()
+        initDataSource()
         
         view.addSubview(titleLabel)
+        view.addSubview(keywordCollectionView)
         view.addSubview(collectionView)
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
         }
-
-        collectionView.snp.makeConstraints { make in
+        
+        keywordCollectionView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(30)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
         }
         
-        initDataSource()
-        initKeywordCollectionView()
+        keywordCollectionView.setContentHuggingPriority(.defaultHigh, for: .vertical)
+
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(keywordCollectionView.snp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+    }
+    
+    private func sizeToKeywordCollectionViewFit() {
+        let contentHeight = keywordCollectionView.collectionViewLayout.collectionViewContentSize.height
+        if contentHeight == .zero { return }
+        keywordCollectionViewHeight = keywordCollectionView.heightAnchor.constraint(equalToConstant: contentHeight)
+        keywordCollectionViewHeight?.isActive = true
+        keywordCollectionView.layoutIfNeeded()
     }
     
     private func initKeywordCollectionView() {
         let layout = LeftAlignedCollectionViewFlowLayout()
         keywordCollectionView = .init(frame: .zero, collectionViewLayout: layout)
         keywordCollectionView.delegate = self
-        keywordCollectionView.dataSource = keywordDataSource
+        
         keywordCollectionView.backgroundColor = .clear
         
         let nibName = UINib(nibName: "KeywordCell", bundle: .init(for: KeywordCell.self))
         keywordCollectionView.register(nibName, forCellWithReuseIdentifier: KeywordCell.Constants.reuseIdentifier)
         
         initKeywordDataSource()
+        keywordCollectionView.dataSource = keywordDataSource
+        keywordCollectionView.delegate = self
     }
     
     private func initKeywordDataSource() {
-        let keywordListCell = UICollectionView.CellRegistration<KeywordListCell, String> {
-            cell, indexPath, itemIdentifier in
-            guard let keywords = self.viewModel.keywords else { return }
-            
-            cell.setKeywords(keywords: keywords)
-            cell.sizeToFit()
+        let keywordCellNib = UINib(nibName: KeywordCell.nibName, bundle: .init(for: KeywordCell.self))
+        let keywordCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, String>(cellNib: keywordCellNib) { cell, indexPath, item in
+            guard let keywordCell = cell as? KeywordCell else { return }
+            let index = indexPath.item
+
+            guard let keyword = self.viewModel.keywords?[index] else { return }
+            keywordCell.setKeyword(with: keyword)
         }
-       
+     
+        
         keywordDataSource = .init(collectionView: keywordCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
-            
-            
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: KeywordCell.Constants.reuseIdentifier, for: indexPath)
-            
-            guard let keywordCell = cell as? KeywordCell else {
-                return cell
-            }
-            
-            let index = indexPath.row
-            if let keyword = self.viewModel.keywords?[index] {
-                keywordCell.setKeyword(with: keyword)
-            }
-            
-            if let backgroundColor = self.keywordColors[safe: index]  {
-                keywordCell.setBackgroundColor(backgroundColor)
-            }
-            return keywordCell
+            return collectionView.dequeueConfiguredReusableCell(using: keywordCellRegistration, for: indexPath, item: itemIdentifier)
         })
     }
     
@@ -205,9 +208,6 @@ open class MyPageViewController: UIViewController {
         dataSource = .init(collectionView: self.collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             let section = MyPageSection(rawValue: indexPath.section)!
             switch section {
-            case .preference:
-             
-               
             case .serviceMetadata:
                 let item = ServiceInfoItems.value[indexPath.row]
                 switch item.content {
@@ -251,8 +251,6 @@ open class MyPageViewController: UIViewController {
             }
             
             switch MyPageSection(rawValue: indexPath.row)! {
-            case .preference:
-                break
             case .serviceMetadata:
                 myPageSectionHeader.setTitle(ServiceInfoItems.header)
             case .customerService:
@@ -262,18 +260,11 @@ open class MyPageViewController: UIViewController {
         
         
         dataSource.supplementaryViewProvider = { (collectionView, kind, indexPath) in
-            let section = indexPath.section
-            switch MyPageSection(rawValue: section)! {
-            case .preference:
-                return collectionView.dequeueConfiguredReusableSupplementary(using: preferenceHeader, for: indexPath)
-            case .serviceMetadata, .customerService:
-                return collectionView.dequeueConfiguredReusableSupplementary(using: myPageSectionHeader, for: indexPath)
-            }
+            return collectionView.dequeueConfiguredReusableSupplementary(using: myPageSectionHeader, for: indexPath)
         }
         
         var snapShot = MyPageSnapShot()
         snapShot.appendSections(MyPageSection.allCases.map { $0.rawValue })
-        snapShot.appendItems([], toSection: MyPageSection.preference.rawValue)
         snapShot.appendItems(ServiceInfoItems.value.map({ $0.title }), toSection: MyPageSection.serviceMetadata.rawValue)
         snapShot.appendItems(CustomerServiceItems.value.map({ $0.title }), toSection: MyPageSection.customerService.rawValue)
         dataSource.apply(snapShot)
@@ -289,17 +280,15 @@ open class MyPageViewController: UIViewController {
             })
             .sink { keywords in
                 self.keywordColors = KeywordColorFactory.create(keywords: keywords)
-                self.refreshKeywords(keywords: keywords)
+                self.refreshKeywordCollectionView(with: keywords)
             }.store(in: &cancellableBag)
     }
     
-    private func refreshKeywords(keywords: Keywords?) {
-        var snapShot = MyPageSnapShot()
-        snapShot.appendSections(MyPageSection.allCases.map { $0.rawValue })
-        snapShot.appendItems([KeywordListCell.identifier], toSection: MyPageSection.preference.rawValue)
-        snapShot.appendItems(ServiceInfoItems.value.map({ $0.title }), toSection: MyPageSection.serviceMetadata.rawValue)
-        snapShot.appendItems(CustomerServiceItems.value.map({ $0.title }), toSection: MyPageSection.customerService.rawValue)
-        dataSource.apply(snapShot)
+    private func refreshKeywordCollectionView(with keywords: [Keyword]) {
+        var snapShot = KeywordSnapShot()
+        snapShot.appendSections([0])
+        snapShot.appendItems(keywords.map({ $0.value }), toSection: 0)
+        keywordDataSource.apply(snapShot, animatingDifferences: false, completion: nil)
     }
 }
 
@@ -315,6 +304,26 @@ extension MyPageViewController {
 extension MyPageViewController {
     private func initUI() {
         
+    }
+}
+
+extension MyPageViewController: UICollectionViewDelegateFlowLayout {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        guard let keyword = viewModel.keywords?[indexPath.row]
+        else { return .zero }
+        
+        let label = UILabel()
+        label.text = KeywordText(keyword: keyword).value
+        label.font = .init(name: "Pretendard", size: 14)
+        label.sizeToFit()
+        return .init(width: label.frame.width + 24, height: label.frame.height + 11)
+    }
+}
+
+extension MyPageViewController: UICollectionViewDelegate {
+    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        sizeToKeywordCollectionViewFit()
     }
 }
 
