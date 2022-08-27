@@ -29,6 +29,11 @@ open class KeywordCell: UICollectionViewCell {
         keywordLabel.backgroundColor = .clear
     }
     
+    open func setWidth(_ width: CGFloat) {
+        let originHeight = self.frame.size.height
+        self.frame = .init(origin: .zero, size: .init(width: width, height: originHeight))
+    }
+    
     public static func fittingSize(availableHeight: CGFloat, keyword: Keyword) -> CGSize {
         let cell = KeywordCell()
         

@@ -36,12 +36,12 @@ open class MyPageViewController: UIViewController {
     let repository = DummyKeywordRepositoryImpl()
     lazy var fetchKeywordUseCase = DefaultFetchKeywordsUseCase(repository: repository)
     lazy var viewModel = MyPageViewModel(fetchKeywordsUseCase: fetchKeywordUseCase)
-    var keywordColors: [UIColor] = []
     
     private var cancellableBag: Set<AnyCancellable> = .init()
     
-    private var collectionView: UICollectionView!
+    private lazy var collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: collectionViewLayout)
     private lazy var collectionViewLayout: UICollectionViewCompositionalLayout = .init(sectionProvider: sectionProvider, configuration: config)
+    private var collectionViewHeight: NSLayoutConstraint?
     
     let config: UICollectionViewCompositionalLayoutConfiguration = {
         $0.interSectionSpacing = 20
@@ -53,20 +53,6 @@ open class MyPageViewController: UIViewController {
                               layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
         
         switch Section(rawValue: sectionIndex) {
-//        case .preference:
-//            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(32))
-//            let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: PreferenceHeader.identifier, alignment: .top)
-//
-//            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
-//            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-//
-//            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(192))
-//            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-//
-//            let section = NSCollectionLayoutSection(group: group)
-//            section.boundarySupplementaryItems = [header]
-//            return section
-            
         case .serviceInfo, .customerService, .none:
             let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(32))
             let header =
@@ -105,10 +91,11 @@ open class MyPageViewController: UIViewController {
         return $0
     }(UIButton())
     
-    lazy var keywordCollectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: keywordCollectionViewLayout)
+    private lazy var keywordCollectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: keywordCollectionViewLayout)
     let keywordCollectionViewLayout: UICollectionViewFlowLayout = .init()
     var keywordCollectionViewHeight: NSLayoutConstraint?
     var keywordDataSource: KeywordDataSource!
+    var keywordColors: [UIColor]? = nil
     
     let appVersionInfoView: AppVersionInfoView = .init()
     
@@ -127,64 +114,94 @@ open class MyPageViewController: UIViewController {
         return $0
     }(UIView())
     
+    private var scrollView: UIScrollView!
+    private var scrollContentView: UIView!
+    
     
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView = .init(frame: .zero, collectionViewLayout: collectionViewLayout)
+         let cellWithButtonNib = UINib(nibName: MyPageCellWithButton.nibName, bundle: .init(for: MyPageCellWithButton.self))
+         collectionView.register(cellWithButtonNib, forCellWithReuseIdentifier: MyPageCellWithButton.identifier)
+         
+         let cellWithLabelNib = UINib(nibName: MyPageCellWithLabel.nibName, bundle: .init(for: MyPageCellWithLabel.self))
+         collectionView.register(cellWithLabelNib, forCellWithReuseIdentifier: MyPageCellWithLabel.identifier)
+         
+        scrollView = .init(frame: .zero)
+        scrollContentView = .init(frame: .zero)
         
-        let cellWithButtonNib = UINib(nibName: MyPageCellWithButton.nibName, bundle: .init(for: MyPageCellWithButton.self))
-        collectionView.register(cellWithButtonNib, forCellWithReuseIdentifier: MyPageCellWithButton.identifier)
-        
-        let cellWithLabelNib = UINib(nibName: MyPageCellWithLabel.nibName, bundle: .init(for: MyPageCellWithLabel.self))
-        collectionView.register(cellWithLabelNib, forCellWithReuseIdentifier: MyPageCellWithLabel.identifier)
-        
-        initKeywordCollectionView()
-        initDataSource()
-        
+        view.addSubview(scrollView)
+        scrollView.addSubview(scrollContentView)
+       
         view.addSubview(titleLabel)
-        view.addSubview(keywordCollectionView)
-        view.addSubview(collectionView)
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
         }
         
+        titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        
+        scrollContentView.addSubview(keywordCollectionView)
+        scrollContentView.addSubview(collectionView)
+        
+        scrollView.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo((tabBarController?.tabBar.frame.origin.y ?? .zero) -  (titleLabel.frame.origin.y + titleLabel.frame.size.height))
+        }
+        
+        scrollContentView.snp.makeConstraints { make in
+            make.leading.equalTo(scrollView.contentLayoutGuide.snp.leading)
+            make.trailing.equalTo(scrollView.contentLayoutGuide.snp.trailing)
+            make.top.equalTo(scrollView.contentLayoutGuide.snp.top)
+            make.bottom.equalTo(scrollView.contentLayoutGuide.snp.bottom)
+            make.width.equalTo(scrollView.frameLayoutGuide.snp.width)
+            make.height.greaterThanOrEqualToSuperview()
+        }
+        
         keywordCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(30)
-            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(scrollContentView.snp.top).offset(30)
+            make.width.equalToSuperview().offset(-40)
+            make.centerX.equalToSuperview()
         }
         
         keywordCollectionView.setContentHuggingPriority(.defaultHigh, for: .vertical)
 
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(keywordCollectionView.snp.bottom)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.leading.equalTo(scrollContentView.snp.leading)
+            make.trailing.equalTo(scrollContentView.snp.trailing)
+            make.bottom.equalTo(scrollContentView.snp.bottom)
         }
-    }
-    
-    private func sizeToKeywordCollectionViewFit() {
-        let contentHeight = keywordCollectionView.collectionViewLayout.collectionViewContentSize.height
-        if contentHeight == .zero { return }
-        keywordCollectionViewHeight = keywordCollectionView.heightAnchor.constraint(equalToConstant: contentHeight)
-        keywordCollectionViewHeight?.isActive = true
-        keywordCollectionView.layoutIfNeeded()
+        
+        initDataSource()
+        collectionView.dataSource = dataSource
+        
+        
+        var snapShot = MyPageSnapShot()
+        snapShot.appendSections(MyPageSection.allCases.map { $0.rawValue })
+        snapShot.appendItems(ServiceInfoItems.value.map({ $0.title }), toSection: MyPageSection.serviceMetadata.rawValue)
+        snapShot.appendItems(CustomerServiceItems.value.map({ $0.title }), toSection: MyPageSection.customerService.rawValue)
+        dataSource.apply(snapShot)
+        
+        
+        initKeywordCollectionView()
+        initKeywordDataSource()
+        keywordCollectionView.dataSource = keywordDataSource
+        
+        
+        bindViewModel()
+        viewModel.fetchKeywords()
     }
     
     private func initKeywordCollectionView() {
-        let layout = LeftAlignedCollectionViewFlowLayout()
-        keywordCollectionView = .init(frame: .zero, collectionViewLayout: layout)
         keywordCollectionView.delegate = self
-        
+        keywordCollectionView.isScrollEnabled = false
         keywordCollectionView.backgroundColor = .clear
         
         let nibName = UINib(nibName: "KeywordCell", bundle: .init(for: KeywordCell.self))
         keywordCollectionView.register(nibName, forCellWithReuseIdentifier: KeywordCell.Constants.reuseIdentifier)
-        
-        initKeywordDataSource()
-        keywordCollectionView.dataSource = keywordDataSource
-        keywordCollectionView.delegate = self
     }
     
     private func initKeywordDataSource() {
@@ -192,9 +209,11 @@ open class MyPageViewController: UIViewController {
         let keywordCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, String>(cellNib: keywordCellNib) { cell, indexPath, item in
             guard let keywordCell = cell as? KeywordCell else { return }
             let index = indexPath.item
-
             guard let keyword = self.viewModel.keywords?[index] else { return }
+            guard let backgroundColor = self.keywordColors?[index] else { return }
+            
             keywordCell.setKeyword(with: keyword)
+            keywordCell.setBackgroundColor(backgroundColor)
         }
      
         
@@ -230,19 +249,7 @@ open class MyPageViewController: UIViewController {
             }
         })
         
-        collectionView.dataSource = dataSource
-        
 //         TODO: supplementaryViewProvider 구현하기
-        let preferenceHeaderNib = UINib(nibName: PreferenceHeader.nibName, bundle: .init(for: PreferenceHeader.self))
-        let preferenceHeader = UICollectionView.SupplementaryRegistration(supplementaryNib: preferenceHeaderNib, elementKind: PreferenceHeader.identifier) { supplementaryView, elementKind, indexPath in
-            
-            let name = "마이플리"
-            guard let preferenceHeader = supplementaryView as? PreferenceHeader else {
-                return
-            }
-            preferenceHeader.setUserName(name: name)
-        }
-        
         let myPageSectionHeaderNib = UINib(nibName: MyPageSectionHeader.nibName, bundle: .init(for: MyPageSectionHeader.self))
         let myPageSectionHeader = UICollectionView.SupplementaryRegistration(supplementaryNib: myPageSectionHeaderNib, elementKind: MyPageSectionHeader.identifier) { supplementaryView, elementKind, indexPath in
             
@@ -262,15 +269,6 @@ open class MyPageViewController: UIViewController {
         dataSource.supplementaryViewProvider = { (collectionView, kind, indexPath) in
             return collectionView.dequeueConfiguredReusableSupplementary(using: myPageSectionHeader, for: indexPath)
         }
-        
-        var snapShot = MyPageSnapShot()
-        snapShot.appendSections(MyPageSection.allCases.map { $0.rawValue })
-        snapShot.appendItems(ServiceInfoItems.value.map({ $0.title }), toSection: MyPageSection.serviceMetadata.rawValue)
-        snapShot.appendItems(CustomerServiceItems.value.map({ $0.title }), toSection: MyPageSection.customerService.rawValue)
-        dataSource.apply(snapShot)
-        
-        bindViewModel()
-        viewModel.fetchKeywords()
     }
     
     private func bindViewModel() {
@@ -323,7 +321,28 @@ extension MyPageViewController: UICollectionViewDelegateFlowLayout {
 
 extension MyPageViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        sizeToKeywordCollectionViewFit()
+        if keywordCollectionView == collectionView {
+            sizeToKeywordCollectionViewFit()
+        }
+        if self.collectionView == collectionView {
+            sizeToCollectionViewFit()
+        }
+    }
+    
+    private func sizeToKeywordCollectionViewFit() {
+        let contentHeight = keywordCollectionView.collectionViewLayout.collectionViewContentSize.height
+        if contentHeight == .zero || keywordCollectionViewHeight?.constant == contentHeight { return }
+        keywordCollectionViewHeight = keywordCollectionView.heightAnchor.constraint(equalToConstant: contentHeight)
+        keywordCollectionViewHeight?.isActive = true
+        keywordCollectionView.layoutIfNeeded()
+    }
+    
+    private  func sizeToCollectionViewFit() {
+        let contentHeight = collectionView.collectionViewLayout.collectionViewContentSize.height
+        if contentHeight == .zero || collectionViewHeight?.constant == contentHeight { return }
+        collectionViewHeight = collectionView.heightAnchor.constraint(equalToConstant: contentHeight)
+        collectionViewHeight?.isActive = true
+        collectionView.layoutIfNeeded()
     }
 }
 
