@@ -6,5 +6,11 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
-import Combine
-
+open class SignUpViewModel {
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    init() {
+        
+    }
+}

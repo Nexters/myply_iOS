@@ -58,7 +58,18 @@ open class SignUpViewController: UIViewController {
     
     private let nicknameMaxCount: Int = 8
     
+    private let viewModel: SignUpViewModel
+    
     private var cancellables = Set<AnyCancellable>()
+    
+    init(viewModel: SignUpViewModel){
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     open override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,8 +91,15 @@ open class SignUpViewController: UIViewController {
 }
 
 extension SignUpViewController {
+    public static func create() -> SignUpViewController? {
+        let viewModel = SignUpViewModel()
+        let signUpVC = SignUpViewController(viewModel: viewModel)
+        
+        return signUpVC
+    }
+    
     private func setNavigationBar(){
-        let closeButton = UIBarButtonItem(image: CommonUIAsset.closeIcon.image, style: .plain, target: self, action: nil)
+        let closeButton = UIBarButtonItem(image: CommonUIAsset.closeIcon.image, style: .plain, target: self, action: #selector(dismissVC))
         
         navigationController?.navigationBar.tintColor = CommonUIAsset.gray90.color
         navigationItem.rightBarButtonItem = closeButton
@@ -162,6 +180,10 @@ extension SignUpViewController {
     
     @objc func dismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    @objc func dismissVC(){
+        self.dismiss(animated: true, completion: nil)
     }
 }
 

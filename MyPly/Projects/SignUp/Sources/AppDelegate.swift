@@ -6,7 +6,10 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
+@_exported import CommonUI
+
 @_exported import UIKit
+@_exported import Combine
 @_exported import SnapKit
 @_exported import Then
 
@@ -22,7 +25,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         
         let navigationController = UINavigationController()
-        let viewController = SignUpViewController()
+        let viewController = SignUpViewController.create() ?? UIViewController()
         
         navigationController.pushViewController(viewController, animated: false)
         window?.rootViewController = navigationController
