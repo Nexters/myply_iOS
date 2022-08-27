@@ -16,6 +16,7 @@ import Model
 struct MockHomePlaylist: HomePlaylistPresentable {
     var title: String
     var isMemoed: Bool
+    var thumbnailURL: String = ""
     var youtubeTags: [String]
 }
 
@@ -23,59 +24,6 @@ protocol HomeMenu {
 
     var title: String { get }
     var usecase: PlaylistUsecase { get }
-}
-
-protocol PlaylistUsecase {
-    func loadPlaylist() -> AnyPublisher<[HomePlaylistPresentable], Error>
-}
-
-extension Playlist: HomePlaylistPresentable {
-
-
-}
-
-
-
-struct RecentlyPlaylistUsecase: PlaylistUsecase {
-
-    let provider = MoyaProvider<MyPlyTarget>()
-    func loadPlaylist() -> AnyPublisher<[HomePlaylistPresentable], Error> {
-        return Future({ promise in
-//            provider.request(.musics(nextToken: nil, order: "recent")) { result in
-//                switch result {
-//                case .success(let response):
-//                    let myplyResponse = try? response.map(APIResponse<[Playlist]>.self)
-//                    promise(.success(myplyResponse?.data ?? []))
-//
-//                    case .failure(let error):
-//                    promise(.failure(error))
-//                }
-//            }
-            promise(.success([MockHomePlaylist(title: "최근 플레이리스트 1", isMemoed: false, youtubeTags: ["태그테스트 태그테스트", "태그테스트", "태그"]),
-                              MockHomePlaylist(title: "최근 플레이리스트 1", isMemoed: true, youtubeTags: []),
-                              MockHomePlaylist(title: "최근 플레이리스트 1", isMemoed: false, youtubeTags: [])]))
-        }) .eraseToAnyPublisher()
-    }
-}
-
-struct PopularPlaylistUsecase: PlaylistUsecase {
-    func loadPlaylist() -> AnyPublisher<[HomePlaylistPresentable], Error> {
-        return Future({ promise in
-            promise(.success([MockHomePlaylist(title: "인기 플레이리스트 1", isMemoed: false, youtubeTags: []),
-                              MockHomePlaylist(title: "인기 플레이리스트 2", isMemoed: false, youtubeTags: ["태그테스트 태그테스트", "태그테스트", "태그"]),
-                              MockHomePlaylist(title: "인기 플레이리스트 3", isMemoed: false, youtubeTags: [])]))
-        }) .eraseToAnyPublisher()
-    }
-}
-
-struct FavoritePlaylistUsecase: PlaylistUsecase {
-    func loadPlaylist() -> AnyPublisher<[HomePlaylistPresentable], Error> {
-        return Future({ promise in
-            promise(.success([MockHomePlaylist(title: "취향 플레이리스트 1", isMemoed: false, youtubeTags: []),
-                              MockHomePlaylist(title: "취향 플레이리스트 2", isMemoed: false, youtubeTags: []),
-                              MockHomePlaylist(title: "취향 플레이리스트 3", isMemoed: false, youtubeTags: ["태그테스트 태그테스트", "태그테스트", "태그"])]))
-        }) .eraseToAnyPublisher()
-    }
 }
 
 struct RecentlyHomeMenu: HomeMenu {
@@ -106,7 +54,9 @@ open class HomeViewModel {
 
     var refresh = PassthroughSubject<Void, Never>()
     private var cancellables = Set<AnyCancellable>()
-
+    var fetch = PassthroughSubject<Void, Never>()
+    var nextPageisLoading: Bool = false
+    var nextToken: String? = nil
 
     init(menus: [HomeMenu]) {
         self.menus = menus
@@ -114,14 +64,28 @@ open class HomeViewModel {
 
         refresh
             .sink(receiveValue: { [weak self] in
+                guard let self = self else { return }
+                self.playlists.send([])
+                self.nextToken = nil
+                self.fetch.send(())
+            })
+            .store(in: &cancellables)
+
+        fetch
+            .throttle(for: 1, scheduler: DispatchQueue.main, latest: false)
+            .sink(receiveValue: { [weak self] in
                 guard let self = self, let menu = self.currentMenu.value else { return }
-                menu.usecase.loadPlaylist()
+                menu.usecase.loadPlaylist(nextToken: self.nextToken)
                     .sink(receiveCompletion: { [weak self] completion in
                         guard case let .failure(error) = completion else { return }
                         self?.playlists.send([])
                         print(error)
-                    }, receiveValue: { [weak self] playlists in
-                        self?.playlists.send(playlists)
+                    }, receiveValue: { [weak self] (playlists, nextToken) in
+                        guard let self = self else { return }
+                        var newData = self.playlists.value
+                            newData.append(contentsOf: playlists)
+                        self.playlists.send((playlists))
+                        self.nextToken = nextToken
                     })
                     .store(in: &self.cancellables)
             })

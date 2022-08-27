@@ -12,6 +12,7 @@ import Moya
 public enum MyPlyTarget {
     public static var deviceToken = ""
     case musics(nextToken: String?, order: String)
+    case preferredMusics(nextToken: String?)
     case search(query: String, nextToken: String?, order: String)
 }
 
@@ -23,6 +24,7 @@ extension MyPlyTarget: TargetType {
     public var path: String {
         switch self {
         case .musics: return "/musics"
+        case .preferredMusics: return "/musics/preference"
         case .search: return "/musics/search"
         }
     }
@@ -30,23 +32,40 @@ extension MyPlyTarget: TargetType {
     public var method: Moya.Method {
         switch self {
         case .musics: return .get
+        case .preferredMusics: return .get
         case .search: return .get
         }
     }
 
     public var task: Task {
+
+        var parameters: [String: Any] = [:]
         switch self {
-        case .musics(nextToken: let nextToken, order: let order):
-            return .requestParameters(parameters: ["nextToken": nextToken, "order": order], encoding: URLEncoding.default)
+        case .musics(let nextToken, let order):
+            if let nextToken = nextToken {
+                parameters["nextToken"] = nextToken
+            }
+            parameters["order"] = order
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case .preferredMusics(let nextToken):
+            if let nextToken = nextToken {
+                parameters["nextToken"] = nextToken
+            }
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         case .search(let query, let nextToken, let order):
-            return .requestParameters(parameters: ["query": query, "nextToken": nextToken, "order": order], encoding: URLEncoding.default)
+            if let nextToken = nextToken {
+                parameters["nextToken"] = nextToken
+            }
+            parameters["order"] = order
+            parameters["query"] = query
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         }
     }
 
     public var headers: [String: String]? {
         switch self {
         default:
-            return ["device-token": MyPlyTarget.deviceToken, "Content-Type": "application/json"]
+            return ["Device-token": MyPlyTarget.deviceToken, "Content-Type": "application/json"]
         }
     }
 
@@ -54,4 +73,20 @@ extension MyPlyTarget: TargetType {
       return .successCodes
     }
 
+}
+
+public extension JSONDecoder {
+    public func decode<T: Decodable>(_ type: T.Type, from data: Data, keyPath: String) throws -> T {
+        let toplevel = try JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)
+        if let nestedJson = (toplevel as AnyObject).value(forKeyPath: keyPath) {
+            let nestedJsonData = try JSONSerialization.data(withJSONObject: nestedJson, options: .fragmentsAllowed)
+            return try decode(type, from: nestedJsonData)
+        } else {
+            throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Nested json not found for key path \"\(keyPath)\""))
+        }
+    }
+}
+
+public enum MyPlyAPIError: LocalizedError {
+    case parseError
 }

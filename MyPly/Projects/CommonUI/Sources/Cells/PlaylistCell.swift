@@ -9,11 +9,13 @@
 import UIKit
 import Combine
 import CombineCocoa
+import Kingfisher
 import Model
 
 public protocol HomePlaylistPresentable {
     var title: String { get }
     var isMemoed: Bool { get }
+    var thumbnailURL: String { get }
     var youtubeTags: [String] { get }
 }
 
@@ -35,11 +37,14 @@ open class PlaylistCell: UICollectionViewCell {
         tagCollectionView.register(nibName, forCellWithReuseIdentifier: KeywordCell.Constants.reuseIdentifier)
         tagCollectionView.dataSource = self
         tagCollectionView.delegate = self
+        imageView.contentMode = .scaleAspectFill
+        titleLabel.textColor = .gray70
     }
 
     open func bind(to playlist: HomePlaylistPresentable) {
         backgroundColor = .white
         likeButton.isSelected = playlist.isMemoed
+        imageView.kf.setImage(with: URL(string: playlist.thumbnailURL))
         titleLabel.text = playlist.title
         tags = playlist.youtubeTags
         tagCollectionView.reloadData()

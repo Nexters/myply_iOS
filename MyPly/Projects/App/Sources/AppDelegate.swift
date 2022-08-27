@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if UserDefaults.standard.string(forKey: "device-token") == nil {
             UserDefaults.standard.set(UUID().uuidString, forKey: "device-token")
         }
-        MyPlyTarget.deviceToken = UserDefaults.standard.string(forKey: "device-token") ?? ""
+        MyPlyTarget.deviceToken = "1234" //UserDefaults.standard.string(forKey: "device-token") ?? ""
 
         let homeVC = HomeViewController.create()
         homeVC?.tabBarItem = UITabBarItem(title: nil, image: AppAsset.home.image, selectedImage: nil)
