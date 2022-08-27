@@ -144,6 +144,7 @@ open class MyPageViewController: UIViewController {
         
         scrollContentView.addSubview(keywordCollectionView)
         scrollContentView.addSubview(collectionView)
+        scrollContentView.addSubview(firstDividerLine)
         
         scrollView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom)
@@ -167,9 +168,16 @@ open class MyPageViewController: UIViewController {
         }
         
         keywordCollectionView.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        
+        firstDividerLine.snp.makeConstraints { make in
+            make.top.equalTo(keywordCollectionView.snp.bottom).offset(40)
+            make.width.equalToSuperview()
+            make.height.equalTo(1)
+            make.centerX.equalToSuperview()
+        }
 
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(keywordCollectionView.snp.bottom)
+            make.top.equalTo(firstDividerLine.snp.bottom).offset(32)
             make.leading.equalTo(scrollContentView.snp.leading)
             make.trailing.equalTo(scrollContentView.snp.trailing)
             make.bottom.equalTo(scrollContentView.snp.bottom)

@@ -15,7 +15,7 @@
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gDm-x8-xgn">
-                    <rect key="frame" x="8" y="36.5" width="42" height="21"/>
+                    <rect key="frame" x="0.0" y="36.5" width="42" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
@@ -24,7 +24,7 @@
             <viewLayoutGuide key="safeArea" id="VXr-Tz-HHm"/>
             <constraints>
                 <constraint firstItem="gDm-x8-xgn" firstAttribute="centerY" secondItem="VXr-Tz-HHm" secondAttribute="centerY" id="2xE-qw-mD5"/>
-                <constraint firstItem="gDm-x8-xgn" firstAttribute="leading" secondItem="VXr-Tz-HHm" secondAttribute="leading" constant="8" id="amA-R8-yyk"/>
+                <constraint firstItem="gDm-x8-xgn" firstAttribute="leading" secondItem="VXr-Tz-HHm" secondAttribute="leading" id="amA-R8-yyk"/>
             </constraints>
             <connections>
                 <outlet property="titleLabel" destination="gDm-x8-xgn" id="Ig9-0y-Ua6"/>
