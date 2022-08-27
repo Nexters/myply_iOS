@@ -81,8 +81,11 @@ open class HomeViewModel {
                         self?.playlists.send([])
                         print(error)
                     }, receiveValue: { [weak self] (playlists, nextToken) in
-                        self?.playlists.send((playlists))
-                        self?.nextToken = nextToken
+                        guard let self = self else { return }
+                        var newData = self.playlists.value
+                            newData.append(contentsOf: playlists)
+                        self.playlists.send((playlists))
+                        self.nextToken = nextToken
                     })
                     .store(in: &self.cancellables)
             })
