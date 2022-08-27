@@ -6,7 +6,9 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
+@_exported import CommonUI
 @_exported import UIKit
+@_exported import Combine
 @_exported import SnapKit
 @_exported import Then
 
@@ -20,11 +22,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let viewController = OnBoardingViewController()
+        
+        window = UIWindow(frame: UIScreen.main.bounds)
+        let viewController = OnBoardingViewController.create() ?? UIViewController()
+        
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
         return true
     }
-
 }
-

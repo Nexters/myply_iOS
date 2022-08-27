@@ -31,10 +31,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
         
-        
-//        let viewController = LibraryViewController.create() ?? UIViewController()
-//        window?.rootViewController = viewController
-//        window?.makeKeyAndVisible()
         return true
     }
 
