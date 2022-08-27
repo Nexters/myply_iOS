@@ -36,7 +36,6 @@ open class MyPageViewController: UIViewController {
     let repository = DummyKeywordRepositoryImpl()
     lazy var fetchKeywordUseCase = DefaultFetchKeywordsUseCase(repository: repository)
     lazy var viewModel = MyPageViewModel(fetchKeywordsUseCase: fetchKeywordUseCase)
-    var keywordColors: [UIColor] = []
     
     private var cancellableBag: Set<AnyCancellable> = .init()
     
