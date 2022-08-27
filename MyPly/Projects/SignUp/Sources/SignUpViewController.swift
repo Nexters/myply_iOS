@@ -24,18 +24,27 @@ open class SignUpViewController: UIViewController {
     private let descLabel = UILabel().then {
         $0.text = "닉네임은 언제든지 바꿀 수 있어요."
         $0.font = .systemFont(ofSize: 14, weight: .bold)
-        $0.textColor = CommonUIAsset.gray50.color // 변경하기
+        $0.textColor = CommonUIAsset.gray60.color
     }
     
     private let textFieldView = UIView().then {
         $0.layer.borderWidth = 1
         $0.layer.cornerRadius = 2
-        $0.layer.borderColor = CommonUIAsset.gray50.color.cgColor // 변경하기
+        $0.layer.borderColor = CommonUIAsset.gray30.color.cgColor
+        $0.backgroundColor = .white
     }
     
     private let textField = UITextField().then {
         $0.placeholder = "한글 혹은 영어 8자"
         $0.borderStyle = .none
+        $0.textColor = CommonUIAsset.gray80.color
+    }
+    
+    private let warningLabel = UILabel().then {
+        $0.text = "8글자 이상 입력할 수 없어요."
+        $0.textColor = CommonUIAsset.red.color
+        $0.font = .systemFont(ofSize: 14)
+        $0.isHidden = true
     }
     
     private let countLabel = UILabel().then {
@@ -49,15 +58,24 @@ open class SignUpViewController: UIViewController {
         $0.setTitle("다음", for: .normal)
         $0.titleLabel?.textColor = .white
         $0.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
-        $0.setBackgroundColor(.systemGreen, for: .normal)
+        $0.setBackgroundColor(CommonUIAsset.greenDark.color, for: .normal)
         $0.setBackgroundColor(CommonUIAsset.gray50.color, for: .disabled)
     }
     
     // MARK: Property
     
-    private let nicknameMaxCount: Int = 8
+    private let viewModel: SignUpViewModel
     
     private var cancellables = Set<AnyCancellable>()
+    
+    init(viewModel: SignUpViewModel){
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     open override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,17 +97,35 @@ open class SignUpViewController: UIViewController {
 }
 
 extension SignUpViewController {
+    public static func create() -> SignUpViewController? {
+        let viewModel = SignUpViewModel()
+        let signUpVC = SignUpViewController(viewModel: viewModel)
+        
+        return signUpVC
+    }
+    
+    private func setNavigationBar(){
+        let closeButton = UIBarButtonItem(image: CommonUIAsset.closeIcon.image, style: .plain, target: self, action: #selector(dismissVC))
+        
+        navigationController?.navigationBar.tintColor = CommonUIAsset.gray90.color
+        navigationItem.rightBarButtonItem = closeButton
+    }
+    
     private func addViews(){
         view.addSubview(nickNameLabel)
         view.addSubview(descLabel)
         view.addSubview(textFieldView)
         textFieldView.addSubview(textField)
+        view.addSubview(warningLabel)
         view.addSubview(countLabel)
         view.addSubview(nextButton)
     }
     
     private func initLayout(){
+        setNavigationBar()
         addViews()
+        
+        view.backgroundColor = CommonUIAsset.begie.color
         
         nickNameLabel.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(24)
@@ -113,6 +149,11 @@ extension SignUpViewController {
         textField.snp.makeConstraints {
             $0.top.leading.equalTo(16)
             $0.bottom.trailing.equalTo(-16)
+        }
+        
+        warningLabel.snp.makeConstraints {
+            $0.top.equalTo(textFieldView.snp.bottom).offset(4)
+            $0.leading.equalTo(20)
         }
         
         countLabel.snp.makeConstraints {
@@ -152,6 +193,10 @@ extension SignUpViewController {
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
+    
+    @objc func dismissVC(){
+        self.dismiss(animated: true, completion: nil)
+    }
 }
 
 extension SignUpViewController {
@@ -164,6 +209,9 @@ extension SignUpViewController {
                 self.countLabel.text = "\(text.count)/8"
                 
                 self.nextButton.isEnabled = text.count > 0
+                
+                self.textFieldView.layer.borderColor = text.count >= 8 ? CommonUIAsset.red.color.cgColor : CommonUIAsset.gray30.color.cgColor
+                self.warningLabel.isHidden = !(text.count >= 8)
                 
             }).store(in: &cancellables)
             

@@ -131,10 +131,13 @@ extension OnBoardingViewController {
                 if self.currentIndex != self.onBoardingModels.count-1 {
                     self.scrollToIndex(index: self.currentIndex+1)
                 } else {
-                    let signUpVC = SignUpViewController()
-                    signUpVC.modalPresentationStyle = .fullScreen
+                    guard let signUpVC = SignUpViewController.create() else { return }
                     
-                    self.present(signUpVC, animated: true)
+                    let navigationController = UINavigationController()
+                    navigationController.pushViewController(signUpVC, animated: false)
+                    navigationController.modalPresentationStyle = .fullScreen
+                    
+                    self.present(navigationController, animated: true)
                 }
             })
             .store(in: &cancellables)
