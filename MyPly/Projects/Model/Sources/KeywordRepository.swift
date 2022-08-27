@@ -7,25 +7,28 @@
 //
 
 import Foundation
-import Model
 
 enum KeywordResponse {
     case success(keywords: [Keyword])
 }
 
-protocol KeywordRepository {
+public protocol KeywordRepository {
     func getKeywords() async throws -> Keywords
 }
 
-struct DummyKeywordRepositoryImpl: KeywordRepository {
-    func getKeywords() async throws -> Keywords {
+public struct DummyKeywordRepositoryImpl: KeywordRepository {
+    public init() {}
+    
+    public func getKeywords() async throws -> Keywords {
         let keywords: [Keyword] = .init([
             .init("케이팝"),
             .init("청량"),
             .init("데이식스"),
             .init("수록곡"),
             .init("여름밤"),
-            .init("감성")
+            .init("감성"),
+            .init("하이틴"),
+            .init("힙합")
         ])
         return keywords
     }

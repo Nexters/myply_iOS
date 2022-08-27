@@ -6,6 +6,7 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
+import Model
 
 protocol SearchPlaylistUseCase {
     func execute(param: String) async throws -> [Playlist]

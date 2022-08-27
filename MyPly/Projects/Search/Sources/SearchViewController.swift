@@ -222,7 +222,7 @@ extension SearchViewController {
     private func refreshSearchResultCollectionView(with playlists: [Playlist]) {
         var snapShot = SearchResultSnapShot()
         snapShot.appendSections([0])
-        snapShot.appendItems(playlists.map({ $0.youtubeVideoId }))
+        snapShot.appendItems(playlists.map({ $0.youtubeVideoID }))
         searchResultDataSource.apply(snapShot, animatingDifferences: false, completion: nil)
     }
 }

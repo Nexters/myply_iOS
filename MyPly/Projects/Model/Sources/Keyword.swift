@@ -8,6 +8,8 @@
 
 import Foundation
 
+public typealias Keywords = [Keyword]
+
 public struct Keyword {
     public let value: String
 

@@ -16,6 +16,7 @@ let infoPlist: [String: InfoPlist.Value] = [
     "CFBundleVersion": "1",
     "UILaunchStoryboardName": "LaunchScreen"
 ]
+
 let project = Project.frameworkWithDemoApp(name: projectName,
                                            platform: .iOS,
                                            iOSTargetVersion: iOSTargetVersion,
@@ -23,4 +24,6 @@ let project = Project.frameworkWithDemoApp(name: projectName,
                                            dependencies: [.project(target: "CommonUI", path: .relativeToCurrentFile("../CommonUI")),
                                                           .external(name: "Alamofire"),
                                                           .external(name: "SnapKit"),
-                                                          .external(name: "CombineCocoa")])
+                                                          .external(name: "CombineCocoa"),
+                                                          .project(target: "Model", path: .relativeToCurrentFile("../Model"))])
+

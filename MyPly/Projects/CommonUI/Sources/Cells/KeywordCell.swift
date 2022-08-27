@@ -18,17 +18,26 @@ open class KeywordCell: UICollectionViewCell {
     
     open override func awakeFromNib() {
         super.awakeFromNib()
-        keywordLabel.font = .systemFont(ofSize: 14)
-        // Initialization code
     }
     
     open func setKeyword(with keyword: Keyword) {
         keywordLabel.text = KeywordText(keyword: keyword).value
-        self.sizeToFit()
-        layoutIfNeeded()
     }
     
     open func setBackgroundColor(_ color: UIColor) {
-        keywordLabel.backgroundColor = color
+        contentView.backgroundColor = color
+        keywordLabel.backgroundColor = .clear
     }
+    
+    open func setWidth(_ width: CGFloat) {
+        let originHeight = self.frame.size.height
+        self.frame = .init(origin: .zero, size: .init(width: width, height: originHeight))
+    }
+    
+    public static func fittingSize(availableHeight: CGFloat, keyword: Keyword) -> CGSize {
+        let cell = KeywordCell()
+        
+        let targetSize: CGSize = .init(width: UIView.layoutFittingCompressedSize.width, height: availableHeight)
+        return cell.contentView.systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: .fittingSizeLevel, verticalFittingPriority: .required)
+       }
 }
