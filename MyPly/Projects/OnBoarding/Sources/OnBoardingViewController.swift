@@ -160,7 +160,7 @@ extension OnBoardingViewController: UICollectionViewDelegate, UICollectionViewDa
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "onBoardingCell", for: indexPath) as! OnBoardingCell
         
         cell.desc = onBoardingModels[indexPath.row].desc
-        cell.image = onBoardingModels[indexPath.row].imageName
+        cell.image = onBoardingModels[indexPath.row].image
         
         return cell
     }

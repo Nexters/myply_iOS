@@ -6,6 +6,8 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
+import UIKit
+
 final class OnBoardingCell: UICollectionViewCell {
     
     // MARK: UI
@@ -27,7 +29,7 @@ final class OnBoardingCell: UICollectionViewCell {
         }
     }
     
-    var image: String = "" {
+    var image: UIImage = UIImage() {
         didSet {
             setContent()
         }
@@ -72,6 +74,6 @@ extension OnBoardingCell {
     
     private func setContent(){
         descLabel.text = desc
-        imageView.image = UIImage(named: image)
+        imageView.image = image
     }
 }

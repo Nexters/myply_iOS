@@ -8,7 +8,7 @@
 
 struct OnBoardingModel {
     let desc: String
-    let imageName: String
+    let image: UIImage
     
     static func modelList() -> [OnBoardingModel] {
         var modelLists: [OnBoardingModel] = []
@@ -18,9 +18,9 @@ struct OnBoardingModel {
             "내 취향에 맞는 플레이리스트를\n키워드 검색을 통해 찾을 수 있어요.",
             "플레이리스트에 대한 내 생각을\n기록하고 공유할 수 있어요."
         ]
-        
+
         for (index, element) in descriptions.enumerated() {
-            modelLists.append(OnBoardingModel(desc: element, imageName: "onBoarding\(index+1)"))
+            modelLists.append(OnBoardingModel(desc: element, image: UIImage(named: "onBoarding\(index+1)", in: OnBoardingResources.bundle, with: nil) ?? UIImage()))
         }
         
         return modelLists
