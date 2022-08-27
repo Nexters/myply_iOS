@@ -131,6 +131,11 @@ extension HomeViewController: UICollectionViewDataSource {
         guard let url = URL(string: item.videoDeepLink) else { return }
         if UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url)
+        } else {
+            let url = "itms-apps://itunes.apple.com/app/id544007664"
+              if let url = URL(string: url), UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:])
+              }
         }
 //        let viewModel = PopupViewModel(title: "플레이리스트를 보관함에서 삭제할까요?", description: "작성된 감상 기록이 함께 삭제됩니다.", firstButtonModel: .init(title: "취소", style: .cancel), secondButtonModel: .init(title: "삭제", action: {  }))
 //        guard let vc = PopupViewController.create(viewModel: viewModel) else { return }
