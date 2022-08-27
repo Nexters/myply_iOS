@@ -10,4 +10,4 @@ import ProjectDescription
 
 private let projectName = "CommonUI"
 private let iOSTargetVersion = "14.0"
-let project = Project.framework(name: projectName, platform: .iOS, iOSTargetVersion: iOSTargetVersion, dependencies: [.external(name: "CombineCocoa"), .project(target: "Model", path: .relativeToCurrentFile("../Model"))])
+let project = Project.framework(name: projectName, platform: .iOS, iOSTargetVersion: iOSTargetVersion, dependencies: [.external(name: "CombineCocoa"), .project(target: "Model", path: .relativeToCurrentFile("../Model")), .external(name: "Kingfisher")])

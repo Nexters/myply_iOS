@@ -16,4 +16,23 @@ public struct Playlist: Codable {
     public let videoDeepLink: String
     public let youtubeTags: [String]
     public let youtubeVideoID: String
+
+    enum CodingKeys: String, CodingKey {
+        case isMemoed
+        case thumbnailURL
+        case title
+        case videoDeepLink
+        case youtubeTags
+        case youtubeVideoID
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        isMemoed = (try? container.decode(Bool.self, forKey: .isMemoed)) ?? false
+        thumbnailURL = (try? container.decode(String.self, forKey: .thumbnailURL)) ?? ""
+        title = (try? container.decode(String.self, forKey: .title)) ?? ""
+        videoDeepLink = (try? container.decode(String.self, forKey: .videoDeepLink)) ?? ""
+        youtubeTags = (try? container.decode([String].self, forKey: .youtubeTags)) ?? []
+        youtubeVideoID = (try? container.decode(String.self, forKey: .youtubeVideoID)) ?? ""
+    }
 }

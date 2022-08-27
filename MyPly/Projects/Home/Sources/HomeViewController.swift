@@ -35,6 +35,7 @@ open class HomeViewController: UIViewController {
         collectionView.register(xib, forCellWithReuseIdentifier: PlaylistCell.identifier)
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.refreshControl = UIRefreshControl()
         view.backgroundColor = CommonUIAsset.begie.color
         configureMenuButtons()
         configurePublisher()
@@ -82,6 +83,23 @@ private extension HomeViewController {
             .sink { [weak self] _ in
                 self?.collectionView.reloadData()
             }.store(in: &cancellables)
+
+        collectionView.refreshControl?.isRefreshingPublisher
+            .sink(receiveValue: { [weak self] isRefreshing in
+                guard isRefreshing else { return }
+                self?.viewModel.refresh.send(())
+            })
+            .store(in: &cancellables)
+
+        collectionView.didScrollPublisher
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                if self.collectionView.contentOffset.y > self.collectionView.contentSize.height - (self.collectionView.bounds.height + 100) && !self.viewModel.nextPageisLoading {
+                    self.viewModel.fetch.send()
+                    self.viewModel.nextPageisLoading = true
+                }
+            }.store(in: &cancellables)
+
     }
 }
 
