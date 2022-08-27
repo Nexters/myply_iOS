@@ -54,7 +54,7 @@ open class MyPageViewController: UIViewController {
         
         switch Section(rawValue: sectionIndex) {
         case .serviceInfo, .customerService, .none:
-            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(32))
+            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(32 + 22))
             let header =
             NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: MyPageSectionHeader.identifier, alignment: .top)
             
@@ -103,17 +103,7 @@ open class MyPageViewController: UIViewController {
         $0.backgroundColor = CommonUIAsset.gray80.color
         return $0
     }(UIView())
-    
-    let secondDividerLine: UIView = {
-        $0.backgroundColor = CommonUIAsset.gray80.color
-        return $0
-    }(UIView())
-    
-    let thirdDividerLine: UIView = {
-        $0.backgroundColor = CommonUIAsset.gray80.color
-        return $0
-    }(UIView())
-    
+
     private var scrollView: UIScrollView!
     private var scrollContentView: UIView!
     
@@ -177,10 +167,10 @@ open class MyPageViewController: UIViewController {
         }
 
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(firstDividerLine.snp.bottom).offset(32)
-            make.leading.equalTo(scrollContentView.snp.leading)
-            make.trailing.equalTo(scrollContentView.snp.trailing)
+            make.top.equalTo(firstDividerLine.snp.bottom)
             make.bottom.equalTo(scrollContentView.snp.bottom)
+            make.width.equalToSuperview().offset(-40)
+            make.centerX.equalToSuperview()
         }
         
         initDataSource()
