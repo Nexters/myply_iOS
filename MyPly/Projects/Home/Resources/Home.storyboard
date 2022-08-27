@@ -67,9 +67,9 @@
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="PjM-ov-JmO" customClass="TouchPassedCollectionView" customModule="CommonUI">
-                                <rect key="frame" x="20" y="180" width="374" height="682"/>
+                                <rect key="frame" x="0.0" y="180" width="414" height="682"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="C6N-MJ-9ym">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="16" minimumInteritemSpacing="0.0" id="C6N-MJ-9ym">
                                     <size key="itemSize" width="128" height="128"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -81,11 +81,11 @@
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemGray5Color"/>
                         <constraints>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="PjM-ov-JmO" secondAttribute="trailing" constant="20" id="1Rz-Ma-wOC"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="PjM-ov-JmO" secondAttribute="trailing" id="1Rz-Ma-wOC"/>
                             <constraint firstItem="PjM-ov-JmO" firstAttribute="top" secondItem="l3z-5L-7Fz" secondAttribute="bottom" constant="16" id="4SY-Z4-Zls"/>
                             <constraint firstItem="l3z-5L-7Fz" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="7b4-Y2-9e3"/>
                             <constraint firstItem="ibz-Qs-3SL" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="QVK-3b-SCG"/>
-                            <constraint firstItem="PjM-ov-JmO" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="U0e-0e-HNG"/>
+                            <constraint firstItem="PjM-ov-JmO" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="U0e-0e-HNG"/>
                             <constraint firstItem="l3z-5L-7Fz" firstAttribute="top" secondItem="ibz-Qs-3SL" secondAttribute="bottom" id="e9b-0l-rkf"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="ibz-Qs-3SL" secondAttribute="trailing" id="g69-dT-Inn"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="PjM-ov-JmO" secondAttribute="bottom" id="iZ9-oc-Bda"/>
