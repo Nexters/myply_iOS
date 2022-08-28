@@ -18,6 +18,10 @@ public struct Keyword {
     }
 }
 
+extension Keyword: Hashable {
+    
+}
+
 public struct KeywordText {
     static let keywordFormat = "#%@"
 
