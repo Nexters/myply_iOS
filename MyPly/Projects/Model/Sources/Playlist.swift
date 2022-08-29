@@ -25,7 +25,9 @@ public struct Playlist: Codable {
         case youtubeTags
         case youtubeVideoID
     }
+}
 
+extension Playlist {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         isMemoed = (try? container.decode(Bool.self, forKey: .isMemoed)) ?? false
