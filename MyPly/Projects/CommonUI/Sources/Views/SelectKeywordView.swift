@@ -105,7 +105,7 @@ extension SelectKeywordView {
 }
 
 extension SelectKeywordView: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let keyword = keywordDataSource.itemIdentifier(for: indexPath) else {
             return
         }
