@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Library
 import Alamofire
 import SnapKit
 import MyPage
@@ -163,7 +162,7 @@ open class MyPageViewController: UIViewController {
             make.leading.equalTo(keywordTitleLabel.snp.trailing).offset(11)
             make.centerY.equalTo(keywordTitleLabel.snp.centerY)
         }
-        
+        editKeywordButton.addTarget(self, action: #selector(onEditKeywordTouched), for: .touchUpInside)
         keywordCollectionView.snp.makeConstraints { make in
             make.top.equalTo(keywordTitleLabel.snp.bottom).offset(16)
             make.width.equalToSuperview().offset(-40)
@@ -306,16 +305,17 @@ open class MyPageViewController: UIViewController {
 
 
 extension MyPageViewController {
-    static func create() -> MyPageViewController? {
-        let storyBoard = UIStoryboard(name: "MyPage", bundle: .init(for: self))
-        return storyBoard.instantiateViewController(withIdentifier: "MyPageViewController") as? MyPageViewController
+    static public func create() -> UIViewController {
+        let navigationController = UINavigationController(rootViewController: MyPageViewController())
+        return navigationController
     }
 }
 
 // MARK: View
 extension MyPageViewController {
-    private func initUI() {
-        
+    @objc private func onEditKeywordTouched() {
+        let editKeywordViewController = MyPageEditKeywordViewController()
+        self.navigationController?.pushViewController(editKeywordViewController, animated: false)
     }
 }
 
