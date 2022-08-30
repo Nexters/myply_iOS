@@ -21,5 +21,6 @@ let project = Project.frameworkWithDemoApp(name: projectName,
                                            platform: .iOS,
                                            iOSTargetVersion: iOSTargetVersion, infoPlist: infoPlist,
                                            dependencies: [.project(target: "CommonUI", path: .relativeToCurrentFile("../CommonUI")),
-                                            .external(name: "Alamofire"),
-                                                          .project(target: "Model", path: .relativeToCurrentFile("../Model"))])
+                                                          .external(name: "Alamofire"),
+                                                          .project(target: "Model", path: .relativeToCurrentFile("../Model")),
+                                                          .external(name: "SnapKit")])
