@@ -13,7 +13,7 @@ import Combine
 typealias KeywordDataSource = UICollectionViewDiffableDataSource<Int, Keyword>
 typealias KeywordSnapShot = NSDiffableDataSourceSnapshot<Int, Keyword>
 
-class SelectKeywordView: UIView {
+open class SelectKeywordView: UIView {
     private var cancellableSet: Set<AnyCancellable> = .init()
     
     @IBOutlet weak var keywordCollectionView: UICollectionView!
@@ -25,11 +25,11 @@ class SelectKeywordView: UIView {
     
     var viewModel: SelectKeywordViewModel!
     
-    override class func awakeFromNib() {
+    open override class func awakeFromNib() {
         super.awakeFromNib()
     }
     
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         let memberRepository = DummyMemberRepository()
         let updateKeywordUsecase = DefaultUpdateKeywordUseCase(repository: memberRepository)
         
