@@ -105,6 +105,7 @@ open class MyPageViewController: UIViewController {
     }(UILabel())
     
     private var editKeywordButton: UIButton = {
+        $0.setImage(MyPageAsset.edit.image, for: .normal)
         return $0
     }(UIButton())
     
@@ -155,19 +156,18 @@ open class MyPageViewController: UIViewController {
         
         keywordTitleLabel.snp.makeConstraints { make in
             make.top.equalTo(scrollContentView.snp.top).offset(30)
-            make.width.equalToSuperview().offset(-40)
-            make.centerX.equalToSuperview()
+            make.leading.equalToSuperview().offset(20)
+        }
+        
+        editKeywordButton.snp.makeConstraints { make in
+            make.leading.equalTo(keywordTitleLabel.snp.trailing).offset(11)
+            make.centerY.equalTo(keywordTitleLabel.snp.centerY)
         }
         
         keywordCollectionView.snp.makeConstraints { make in
             make.top.equalTo(keywordTitleLabel.snp.bottom).offset(16)
             make.width.equalToSuperview().offset(-40)
             make.centerX.equalToSuperview()
-        }
-        
-        editKeywordButton.snp.makeConstraints { make in
-            make.leading.equalTo(keywordTitleLabel.snp.trailing).offset(11)
-            make.centerY.equalTo(keywordTitleLabel.snp.centerY)
         }
         
         keywordCollectionView.setContentHuggingPriority(.defaultHigh, for: .vertical)
