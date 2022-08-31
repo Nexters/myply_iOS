@@ -24,10 +24,6 @@ class MyPageEditKeywordViewController: UIViewController {
     
     override func viewDidLoad() {
         view.addSubview(selectKeywordView)
-        
-        selectKeywordView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.bottom.top.equalToSuperview()
-        }
+        selectKeywordView.frame = view.bounds
     }
 }

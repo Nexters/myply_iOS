@@ -10,6 +10,7 @@ import UIKit
 import Model
 import Combine
 import SwiftUI
+import SnapKit
 
 typealias KeywordDataSource = UICollectionViewDiffableDataSource<Int, Keyword>
 typealias KeywordSnapShot = NSDiffableDataSourceSnapshot<Int, Keyword>
@@ -29,16 +30,15 @@ open class SelectKeywordView: UIView {
     var viewModel: SelectKeywordViewModel!
     
     public override init(frame: CGRect) {
-        super.init(frame: frame)
-        let nibs = Bundle(for: SelectKeywordView.self).loadNibNamed("SelectKeywordView", owner: self, options: nil)
-        let selectKeywordView = nibs?.first as! SelectKeywordView
-        self.addSubview(selectKeywordView)
+        let memberRepository = DummyMemberRepository()
+        let updateKeywordUsecase = DefaultUpdateKeywordUseCase(repository: memberRepository)
         
-        initKeywordDataSource()
-        keywordCollectionView.dataSource = keywordDataSource
-        initSelectedKeywordsDataSource()
-        selectedCollectionView.dataSource = selectedKeywordDataSource
-        self.bindViewModel()
+        let keywordRepository = DummyKeywordRepositoryImpl()
+        let fetchKeywordUseCase = DefaultFetchKeywordsUseCase(repository: keywordRepository)
+        viewModel = SelectKeywordViewModel(fetchKeywordsUseCase: fetchKeywordUseCase, updateKeywordUseCase: updateKeywordUsecase)
+        
+        super.init(frame: frame)
+        
     }
     
     required public init?(coder: NSCoder) {
@@ -51,8 +51,27 @@ open class SelectKeywordView: UIView {
         viewModel = SelectKeywordViewModel(fetchKeywordsUseCase: fetchKeywordUseCase, updateKeywordUseCase: updateKeywordUsecase)
         
         super.init(coder: coder)
+        
+        prepareUI()
     }
-
+    
+    private func prepareUI() {
+        let nibs = Bundle(for: SelectKeywordView.self).loadNibNamed("SelectKeywordView", owner: self, options: nil)
+        
+        let view = nibs?.first as! UIView
+        self.addSubview(view)
+        
+        view.frame = bounds
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        
+        initKeywordDataSource()
+        keywordCollectionView.dataSource = keywordDataSource
+        initSelectedKeywordsDataSource()
+        selectedCollectionView.dataSource = selectedKeywordDataSource
+        self.bindViewModel()
+    }
+    
     private func bindViewModel() {
         viewModel.keywordsSubject
             .map({ $0 ?? [] })
@@ -65,9 +84,9 @@ open class SelectKeywordView: UIView {
         viewModel.selectedKeywordsSubject
             .map({ $0 ?? [] })
             .sink { _ in }
-            receiveValue: { keywords in
-                self.updateSelectedKeywords(with: keywords)
-            }.store(in: &cancellableSet)
+    receiveValue: { keywords in
+        self.updateSelectedKeywords(with: keywords)
+    }.store(in: &cancellableSet)
         
         viewModel.isEmptySelected
             .assign(to: \.isHidden, on: bottomView!)
@@ -130,8 +149,8 @@ extension SelectKeywordView: UICollectionViewDelegate {
 
 // MARK: factory method
 extension SelectKeywordView {
-//    static public func create() -> SelectKeywordView {
-//
-//
-//    }
+    //    static public func create() -> SelectKeywordView {
+    //
+    //
+    //    }
 }
