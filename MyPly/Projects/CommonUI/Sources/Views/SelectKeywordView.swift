@@ -9,6 +9,7 @@
 import UIKit
 import Model
 import Combine
+import SwiftUI
 
 typealias KeywordDataSource = UICollectionViewDiffableDataSource<Int, Keyword>
 typealias KeywordSnapShot = NSDiffableDataSourceSnapshot<Int, Keyword>
@@ -20,16 +21,28 @@ open class SelectKeywordView: UIView {
     @IBOutlet weak var selectedCollectionView: UICollectionView!
     @IBOutlet weak var bottomView: UIView!
     
+    @IBOutlet weak var startButton: UIButton!
+    
     var keywordDataSource: KeywordDataSource!
     var selectedKeywordDataSource: KeywordDataSource!
     
     var viewModel: SelectKeywordViewModel!
     
-    open override class func awakeFromNib() {
-        super.awakeFromNib()
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        let nibs = Bundle(for: SelectKeywordView.self).loadNibNamed("SelectKeywordView", owner: self, options: nil)
+        let selectKeywordView = nibs?.first as! SelectKeywordView
+        self.addSubview(selectKeywordView)
+        
+        initKeywordDataSource()
+        keywordCollectionView.dataSource = keywordDataSource
+        initSelectedKeywordsDataSource()
+        selectedCollectionView.dataSource = selectedKeywordDataSource
+        self.bindViewModel()
     }
     
     required public init?(coder: NSCoder) {
+        // TODO: DefaultMemberRepository로 수정해야public 한다.
         let memberRepository = DummyMemberRepository()
         let updateKeywordUsecase = DefaultUpdateKeywordUseCase(repository: memberRepository)
         
@@ -38,16 +51,16 @@ open class SelectKeywordView: UIView {
         viewModel = SelectKeywordViewModel(fetchKeywordsUseCase: fetchKeywordUseCase, updateKeywordUseCase: updateKeywordUsecase)
         
         super.init(coder: coder)
-        // TODO: DefaultMemberRepository로 수정해야public 한다.
     }
-    
+
     private func bindViewModel() {
         viewModel.keywordsSubject
             .map({ $0 ?? [] })
-            .sink { _ in }
-            receiveValue: { keywords in
-                self.updateKeywords(with: keywords)
-            }.store(in: &cancellableSet)
+            .sink(receiveCompletion: { completion in
+                print("completion: \(completion)")
+            }, receiveValue: { keywords in
+                print("keyword: \(keywords)")
+            }).store(in: &cancellableSet)
         
         viewModel.selectedKeywordsSubject
             .map({ $0 ?? [] })
@@ -104,6 +117,7 @@ extension SelectKeywordView {
     }
 }
 
+// MARK: UICollectionViewDelegate
 extension SelectKeywordView: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let keyword = keywordDataSource.itemIdentifier(for: indexPath) else {
@@ -112,4 +126,12 @@ extension SelectKeywordView: UICollectionViewDelegate {
         
         viewModel.toggle(keyword: keyword)
     }
+}
+
+// MARK: factory method
+extension SelectKeywordView {
+//    static public func create() -> SelectKeywordView {
+//
+//
+//    }
 }

@@ -31,6 +31,11 @@ class SelectKeywordViewModel {
     init(fetchKeywordsUseCase: FetchKeywordsUseCase, updateKeywordUseCase: UpdateKeywordUsecase) {
         self.fetchKeywordsUseCase = fetchKeywordsUseCase
         self.updateKeywordUseCase = updateKeywordUseCase
+        
+        Task {
+            let keywords = try await fetchKeywordsUseCase.execute()
+            selectedKeywordsSubject.send(keywords)
+        }
     }
     
     func toggle(keyword: Keyword) {
