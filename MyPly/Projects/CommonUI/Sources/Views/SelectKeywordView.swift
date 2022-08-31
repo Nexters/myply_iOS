@@ -39,6 +39,7 @@ open class SelectKeywordView: UIView {
         
         super.init(frame: frame)
         
+        prepareUI()
     }
     
     required public init?(coder: NSCoder) {
@@ -118,7 +119,7 @@ extension SelectKeywordView {
         keywordDataSource = .init(collectionView: keywordCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             let index = indexPath.item
             let keyword = self.viewModel.keywords?[index]
-            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: keyword!)
+            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
         })
     }
     
