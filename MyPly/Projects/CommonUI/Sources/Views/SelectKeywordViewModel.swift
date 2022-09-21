@@ -13,7 +13,7 @@ class SelectKeywordViewModel {
     var keywordsSubject: CurrentValueSubject<Keywords?, Error> = .init(nil)
     var keywords: Keywords? { keywordsSubject.value }
 
-    var selectedKeywordsSubject: CurrentValueSubject<Keywords?, Error> = .init(nil)
+    var selectedKeywordsSubject: CurrentValueSubject<Keywords?, Error> = .init([])
     
     var isEmptySelected: AnyPublisher<Bool, Never> {
         selectedKeywordsSubject
@@ -31,20 +31,26 @@ class SelectKeywordViewModel {
     init(fetchKeywordsUseCase: FetchKeywordsUseCase, updateKeywordUseCase: UpdateKeywordUsecase) {
         self.fetchKeywordsUseCase = fetchKeywordsUseCase
         self.updateKeywordUseCase = updateKeywordUseCase
-        
-        Task {
-            let keywords = try await fetchKeywordsUseCase.execute()
-            selectedKeywordsSubject.send(keywords)
-        }
     }
     
-    func toggle(keyword: Keyword) {
-        if selectedKeywords?.contains(keyword) == true {
-            select(keyword: keyword)
+    func toggle(keywordIndex: Int) {
+        guard let keyword = keywords?[keywordIndex] else {
             return
         }
         
-        deselect(keyword: keyword)
+        if selectedKeywords?.contains(keyword) == true {
+            deselect(keyword: keyword)
+            return
+        }
+        
+        select(keyword: keyword)
+    }
+    
+    func fetchKeywords() {
+        Task {
+            let keywords = try? await fetchKeywordsUseCase.execute()
+            keywordsSubject.value = keywords
+        }
     }
     
     private func select(keyword: Keyword) {
