@@ -13,16 +13,15 @@ class SelectKeywordViewModel {
     var keywordsSubject: CurrentValueSubject<Keywords?, Error> = .init(nil)
     var keywords: Keywords? { keywordsSubject.value }
 
-    var selectedKeywordsSubject: CurrentValueSubject<Keywords?, Error> = .init([])
+    var selectedKeywordsSubject: CurrentValueSubject<Keywords, Never> = .init([])
     
     var isEmptySelected: AnyPublisher<Bool, Never> {
         selectedKeywordsSubject
-            .replaceError(with: nil)
-            .map { $0?.isEmpty == true }
+            .map { $0.isEmpty == true }
             .eraseToAnyPublisher()
     }
     
-    var selectedKeywords: Keywords? {
+    var selectedKeywords: Keywords {
         selectedKeywordsSubject.value
     }
     let fetchKeywordsUseCase: FetchKeywordsUseCase

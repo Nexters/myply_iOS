@@ -29,6 +29,7 @@ open class SelectKeywordView: UIView {
     private var keywordColors: [Keyword: UIColor] = .init()
     
     var viewModel: SelectKeywordViewModel!
+    private var completionHandler: ((Keywords) -> Void)!
     
     public override init(frame: CGRect) {
         let memberRepository = DummyMemberRepository()
@@ -74,6 +75,7 @@ open class SelectKeywordView: UIView {
         selectedCollectionView.dataSource = selectedKeywordDataSource
         selectedCollectionView.delegate = self
         viewModel.fetchKeywords()
+        startButton.addTarget(self, action: "startButtonTouched", for: .touchUpInside)
         self.bindViewModel()
     }
     
@@ -85,10 +87,9 @@ open class SelectKeywordView: UIView {
             }, receiveValue: { keywords in
                 self.updateKeywords(with: keywords)
                 zip(keywords, KeywordColorFactory.create(keywords: keywords))
-                    .map { keyword, color in
+                    .forEach { keyword, color in
                         self.keywordColors[keyword] = color
                     }
-                
             }).store(in: &cancellableSet)
         
         viewModel.selectedKeywordsSubject
@@ -174,10 +175,17 @@ extension SelectKeywordView: UICollectionViewDelegateFlowLayout {
     }
 }
 
+extension SelectKeywordView {
+    func startButtonTouched(_ sender: AnyObject?) {
+        self.completionHandler(viewModel.selectedKeywords)
+    }
+}
+
 // MARK: factory method
 extension SelectKeywordView {
-    //    static public func create() -> SelectKeywordView {
-    //
-    //
-    //    }
+    static public func create(completionHandler: @escaping (Keywords) -> Void) -> SelectKeywordView {
+        let view = SelectKeywordView()
+        view.completionHandler = completionHandler
+        return view
+    }
 }
