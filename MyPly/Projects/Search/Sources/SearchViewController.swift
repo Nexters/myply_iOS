@@ -134,10 +134,8 @@ extension SearchViewController {
         
         keywordCollectionView.snp.makeConstraints { make in
             make.width.equalToSuperview().offset(-40)
-            make.top.equalTo(bestSearchKeywordsTitle.snp.bottom).offset(12)
-            let height = view.bounds.height -            bestSearchKeywordsTitle.frame.origin.y
-            make.height.equalTo(height)
             make.centerX.equalToSuperview()
+            make.top.equalTo(bestSearchKeywordsTitle.snp.bottom).offset(12)
         }
         
         searchResultCollectionView.snp.makeConstraints { make in

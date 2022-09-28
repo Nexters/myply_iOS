@@ -16,6 +16,6 @@ public class DummyPlaylistRepositoryImpl : PlaylistRepository {
     public func search(param: String) async throws -> [Playlist] {
         return [
             .init(isMemoed: false, thumbnailURL: "", title: "첫번째 플레이리스트", videoDeepLink: "deep link", youtubeTags: ["tag1", "tag2"], youtubeVideoID: "viedo id")
-        ]
+            ]
     }
 }

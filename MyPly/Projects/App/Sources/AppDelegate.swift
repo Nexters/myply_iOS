@@ -41,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let libraryVC = LibraryViewController.create()
         libraryVC?.tabBarItem = UITabBarItem(title: nil, image: AppAsset.keep.image, selectedImage: nil)
 
-        let myPageVC = MyPageViewController()
+        let myPageVC = MyPageViewController.create()
         myPageVC.tabBarItem = UITabBarItem(title: nil, image: AppAsset.myPage.image, selectedImage: nil)
 
         tabBarController.setViewControllers([homeVC, searchVC, libraryVC, myPageVC].compactMap { $0 }, animated: false)

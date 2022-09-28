@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Library
 import Alamofire
 import SnapKit
 import MyPage
@@ -105,9 +104,9 @@ open class MyPageViewController: UIViewController {
     }(UILabel())
     
     private var editKeywordButton: UIButton = {
+        $0.setImage(MyPageAsset.edit.image, for: .normal)
         return $0
     }(UIButton())
-    
     
     open override func viewDidLoad() {
         super.viewDidLoad()
@@ -156,19 +155,18 @@ open class MyPageViewController: UIViewController {
         
         keywordTitleLabel.snp.makeConstraints { make in
             make.top.equalTo(scrollContentView.snp.top).offset(30)
-            make.width.equalToSuperview().offset(-40)
-            make.centerX.equalToSuperview()
-        }
-        
-        keywordCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(keywordTitleLabel.snp.bottom).offset(16)
-            make.width.equalToSuperview().offset(-40)
-            make.centerX.equalToSuperview()
+            make.leading.equalToSuperview().offset(20)
         }
         
         editKeywordButton.snp.makeConstraints { make in
             make.leading.equalTo(keywordTitleLabel.snp.trailing).offset(11)
             make.centerY.equalTo(keywordTitleLabel.snp.centerY)
+        }
+        editKeywordButton.addTarget(self, action: #selector(onEditKeywordTouched), for: .touchUpInside)
+        keywordCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(keywordTitleLabel.snp.bottom).offset(16)
+            make.width.equalToSuperview().offset(-40)
+            make.centerX.equalToSuperview()
         }
         
         keywordCollectionView.setContentHuggingPriority(.defaultHigh, for: .vertical)
@@ -202,10 +200,6 @@ open class MyPageViewController: UIViewController {
         initKeywordCollectionView()
         initKeywordDataSource()
         keywordCollectionView.dataSource = keywordDataSource
-        
-        
-        bindViewModel()
-        viewModel.fetchKeywords()
     }
     
     private func initKeywordCollectionView() {
@@ -310,17 +304,18 @@ open class MyPageViewController: UIViewController {
 }
 
 
-
 extension MyPageViewController {
-    static func create() -> MyPageViewController? {
-        let storyBoard = UIStoryboard(name: "MyPage", bundle: .init(for: self))
-        return storyBoard.instantiateViewController(withIdentifier: "MyPageViewController") as? MyPageViewController
+    static public func create() -> UIViewController {
+        let navigationController = UINavigationController(rootViewController: MyPageViewController())
+        return navigationController
     }
 }
+
 // MARK: View
 extension MyPageViewController {
-    private func initUI() {
-        
+    @objc private func onEditKeywordTouched() {
+        let editKeywordViewController = MyPageEditKeywordViewController()
+        self.navigationController?.pushViewController(editKeywordViewController, animated: false)
     }
 }
 
@@ -364,5 +359,3 @@ extension MyPageViewController: UICollectionViewDelegate {
         collectionView.layoutIfNeeded()
     }
 }
-
-
