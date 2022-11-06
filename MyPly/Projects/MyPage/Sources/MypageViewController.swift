@@ -38,37 +38,10 @@ open class MyPageViewController: UIViewController {
     
     private var cancellableBag: Set<AnyCancellable> = .init()
     
-    private lazy var collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: collectionViewLayout)
-    private lazy var collectionViewLayout: UICollectionViewCompositionalLayout = .init(sectionProvider: sectionProvider, configuration: config)
+    private lazy var collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: compositionalLayout)
+    
     private var collectionViewHeight: NSLayoutConstraint?
     
-    let config: UICollectionViewCompositionalLayoutConfiguration = {
-        $0.interSectionSpacing = 20
-        return $0
-    }(UICollectionViewCompositionalLayoutConfiguration())
-    
-    
-    let sectionProvider =  { (sectionIndex: Int,
-                              layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
-        
-        switch Section(rawValue: sectionIndex) {
-        case .serviceInfo, .customerService, .none:
-            let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(32 + 22))
-            let header =
-            NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: MyPageSectionHeader.identifier, alignment: .top)
-            
-            
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
-        
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(44))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
-            
-            let section = NSCollectionLayoutSection(group: group)
-            section.boundarySupplementaryItems = [header]
-            return section
-        }
-    }
     
     private var dataSource: MyPageDataSource!
     
@@ -77,7 +50,7 @@ open class MyPageViewController: UIViewController {
         return $0
     }(UILabel())
     
-  
+    
     let writeButton: UIButton = {
         $0.setImage(MyPageAsset.edit.image, for: .normal)
         return $0
@@ -94,7 +67,7 @@ open class MyPageViewController: UIViewController {
         $0.backgroundColor = CommonUIAsset.gray80.color
         return $0
     }(UIView())
-
+    
     private var scrollView: UIScrollView!
     private var scrollContentView: UIView!
     
@@ -111,18 +84,18 @@ open class MyPageViewController: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-         let cellWithButtonNib = UINib(nibName: MyPageCellWithButton.nibName, bundle: .init(for: MyPageCellWithButton.self))
-         collectionView.register(cellWithButtonNib, forCellWithReuseIdentifier: MyPageCellWithButton.identifier)
-         
-         let cellWithLabelNib = UINib(nibName: MyPageCellWithLabel.nibName, bundle: .init(for: MyPageCellWithLabel.self))
-         collectionView.register(cellWithLabelNib, forCellWithReuseIdentifier: MyPageCellWithLabel.identifier)
-         
+        let cellWithButtonNib = UINib(nibName: MyPageCellWithButton.nibName, bundle: .init(for: MyPageCellWithButton.self))
+        collectionView.register(cellWithButtonNib, forCellWithReuseIdentifier: MyPageCellWithButton.identifier)
+        
+        let cellWithLabelNib = UINib(nibName: MyPageCellWithLabel.nibName, bundle: .init(for: MyPageCellWithLabel.self))
+        collectionView.register(cellWithLabelNib, forCellWithReuseIdentifier: MyPageCellWithLabel.identifier)
+        
         scrollView = .init(frame: .zero)
         scrollContentView = .init(frame: .zero)
         
         view.addSubview(scrollView)
         scrollView.addSubview(scrollContentView)
-       
+        
         view.addSubview(titleLabel)
         
         titleLabel.snp.makeConstraints { make in
@@ -177,7 +150,7 @@ open class MyPageViewController: UIViewController {
             make.height.equalTo(1)
             make.centerX.equalToSuperview()
         }
-
+        
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(firstDividerLine.snp.bottom)
             make.bottom.equalTo(scrollContentView.snp.bottom)
@@ -222,7 +195,7 @@ open class MyPageViewController: UIViewController {
             keywordCell.setKeyword(with: keyword)
             keywordCell.setBackgroundColor(backgroundColor)
         }
-     
+        
         
         keywordDataSource = .init(collectionView: keywordCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             return collectionView.dequeueConfiguredReusableCell(using: keywordCellRegistration, for: indexPath, item: itemIdentifier)
@@ -262,7 +235,7 @@ open class MyPageViewController: UIViewController {
             }
         })
         
-//         TODO: supplementaryViewProvider 구현하기
+        //         TODO: supplementaryViewProvider 구현하기
         let myPageSectionHeaderNib = UINib(nibName: MyPageSectionHeader.nibName, bundle: .init(for: MyPageSectionHeader.self))
         let myPageSectionHeader = UICollectionView.SupplementaryRegistration(supplementaryNib: myPageSectionHeaderNib, elementKind: MyPageSectionHeader.identifier) { supplementaryView, elementKind, indexPath in
             
@@ -303,7 +276,7 @@ open class MyPageViewController: UIViewController {
     }
 }
 
-
+// MARK: - FactoryMethod
 extension MyPageViewController {
     static public func create() -> UIViewController {
         let navigationController = UINavigationController(rootViewController: MyPageViewController())
@@ -311,7 +284,7 @@ extension MyPageViewController {
     }
 }
 
-// MARK: View
+// MARK: - View
 extension MyPageViewController {
     @objc private func onEditKeywordTouched() {
         let editKeywordViewController = MyPageEditKeywordViewController()
@@ -319,6 +292,38 @@ extension MyPageViewController {
     }
 }
 
+// MARK: - CollectionView
+extension MyPageViewController {
+    private var config: UICollectionViewCompositionalLayoutConfiguration {
+        let config = UICollectionViewCompositionalLayoutConfiguration()
+        config.interSectionSpacing = 20
+        return config
+    }
+    
+    private var compositionalLayout: UICollectionViewCompositionalLayout {
+        return .init(sectionProvider: { sectionIndex, layoutEnvironment-> NSCollectionLayoutSection? in
+            switch Section(rawValue: sectionIndex) {
+            case .serviceInfo, .customerService, .none:
+                let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(32 + 22))
+                let header =
+                NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: MyPageSectionHeader.identifier, alignment: .top)
+                
+                
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+                
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(44))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.boundarySupplementaryItems = [header]
+                return section
+            }
+        }, configuration: config)
+    }
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
 extension MyPageViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
@@ -333,6 +338,7 @@ extension MyPageViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+// MARK: - UICollectionViewDelegate
 extension MyPageViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if keywordCollectionView == collectionView {
