@@ -7,6 +7,7 @@
 //
 
 import Kingfisher
+import CommonUI
 
 class LibraryCollectionCell: UICollectionViewCell {
     
@@ -165,9 +166,18 @@ extension LibraryCollectionCell {
     
     private func bindInfo(){
         titleLabel.text = title
-        memoLabel.text = memo
         
         let thumnailURL = URL(string: thumbnail)
         imageView.kf.setImage(with: thumnailURL)
+        
+        if memo.count == 0 {
+            editImageView.image = LibraryAsset.editGrayIcon.image
+            memoLabel.text = "나의 기록을 입력해 주세요.\n"
+            memoLabel.textColor = CommonUIAsset.gray50.color
+        } else {
+            editImageView.image = LibraryAsset.editIcon.image
+            memoLabel.text = memo
+            memoLabel.textColor = CommonUIAsset.gray80.color
+        }
     }
 }
