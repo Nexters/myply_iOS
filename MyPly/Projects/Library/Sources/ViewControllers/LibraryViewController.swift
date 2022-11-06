@@ -148,11 +148,16 @@ extension LibraryViewController {
 
 extension LibraryViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5 // test
+        return viewModel.memos.value.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let memo = viewModel.memos.value[indexPath.row]
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "libraryCell", for: indexPath) as! LibraryCollectionCell
+        cell.title = memo.title ?? ""
+        cell.memo = memo.body ?? ""
+        cell.thumbnail = memo.thumbnailURL ?? ""
         
         return cell
     }

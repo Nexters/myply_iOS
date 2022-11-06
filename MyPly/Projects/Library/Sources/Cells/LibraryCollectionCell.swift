@@ -6,14 +6,7 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
-protocol LibraryListPresentable {
-    var body: String { get }
-    var keywords: [String] { get }
-    var memoID: String { get }
-    var thumbnailURL: String { get }
-    var title: String { get }
-    var youtubeVideoID: String { get }
-}
+import Kingfisher
 
 class LibraryCollectionCell: UICollectionViewCell {
     
@@ -32,7 +25,6 @@ class LibraryCollectionCell: UICollectionViewCell {
     }
     
     private let titleLabel = UILabel().then {
-        $0.text = "playlist / 꽃향기를 닮은 음악 (songs scent like flower) 두줄테슽테스트테스트테스트테스트ㅜ"
         $0.numberOfLines = 2
         $0.font = .systemFont(ofSize: 14, weight: .bold)
         $0.textColor = CommonUIAsset.gray80.color
@@ -45,17 +37,34 @@ class LibraryCollectionCell: UICollectionViewCell {
     }
     
     private let editImageView = UIImageView().then {
-        $0.image = UIImage(named: "editIcon")
+        $0.image = LibraryAsset.editIcon.image
     }
     
     private let memoLabel = UILabel().then {
-        $0.text = "단순히 청량하다,청춘같다 라는 말로는 다 못 표현할 그런게 있어 진짜... 테스트테트스틑테ㅔ테테테테ㅔ텥테테"
         $0.numberOfLines = 2
         $0.font = .systemFont(ofSize: 14)
         $0.textColor = CommonUIAsset.gray80.color
     }
     
     // MARK: Property
+    
+    var title: String = "" {
+        didSet {
+            bindInfo()
+        }
+    }
+    
+    var memo: String = "" {
+        didSet {
+            bindInfo()
+        }
+    }
+    
+    var thumbnail: String = "" {
+        didSet {
+            bindInfo()
+        }
+    }
     
     private let identifier = "libraryCell"
     
@@ -152,5 +161,13 @@ extension LibraryCollectionCell {
             $0.showsVerticalScrollIndicator = false
             $0.showsHorizontalScrollIndicator = false
         }
+    }
+    
+    private func bindInfo(){
+        titleLabel.text = title
+        memoLabel.text = memo
+        
+        let thumnailURL = URL(string: thumbnail)
+        imageView.kf.setImage(with: thumnailURL)
     }
 }
