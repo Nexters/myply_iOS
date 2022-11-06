@@ -22,7 +22,7 @@ class MyPageViewModel {
     
     func fetchKeywords() {
         Task {
-            let keywords = await try? fetchKeywordsUseCase.execute()
+            let keywords = try? await fetchKeywordsUseCase.execute()
             keywordsSubject.send(keywords)
         }
     }

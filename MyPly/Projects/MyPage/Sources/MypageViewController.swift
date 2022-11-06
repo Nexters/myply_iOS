@@ -183,6 +183,7 @@ open class MyPageViewController: UIViewController {
         initKeywordCollectionView()
         initKeywordDataSource()
         keywordCollectionView.dataSource = keywordDataSource
+        viewModel.fetchKeywords()
     }
     
     private func initKeywordCollectionView() {
