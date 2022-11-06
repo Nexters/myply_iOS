@@ -22,17 +22,20 @@ public protocol HomePlaylistPresentable {
 
 open class PlaylistCell: UICollectionViewCell {
 
-    @IBOutlet weak var likeButton: UIButton!
+    @IBOutlet public weak var likeButton: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var tagCollectionView: UICollectionView!
     private var tags: [String] = []
+    public var cancellables = Set<AnyCancellable>()
 
     open override func awakeFromNib() {
         super.awakeFromNib()
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        tagCollectionView.isScrollEnabled = false
+        tagCollectionView.isScrollEnabled = true
+        tagCollectionView.showsHorizontalScrollIndicator = false
+
 
         let nibName = UINib(nibName: "KeywordCell", bundle: .init(for: KeywordCell.self))
         tagCollectionView.register(nibName, forCellWithReuseIdentifier: KeywordCell.Constants.reuseIdentifier)
@@ -40,6 +43,11 @@ open class PlaylistCell: UICollectionViewCell {
         tagCollectionView.delegate = self
         imageView.contentMode = .scaleAspectFill
         titleLabel.textColor = CommonUI.CommonUIAsset.gray70.color
+    }
+
+    open override func prepareForReuse() {
+        super.prepareForReuse()
+        cancellables.removeAll()
     }
 
     open func bind(to playlist: HomePlaylistPresentable) {
@@ -56,7 +64,7 @@ extension PlaylistCell: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         let label = UILabel()
-        label.text = Keyword(tags[indexPath.item]).value
+        label.text = KeywordText(keyword: Keyword(tags[indexPath.item])).value
         label.font = .systemFont(ofSize: 14)
         label.sizeToFit()
         return .init(width: label.frame.width + 24, height: label.frame.height + 11)

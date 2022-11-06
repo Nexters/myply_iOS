@@ -9,7 +9,6 @@
 import UIKit
 import Alamofire
 import SnapKit
-import MyPage
 import CommonUI
 import Model
 import Combine
