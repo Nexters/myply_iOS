@@ -32,6 +32,8 @@ open class LibraryViewController: UIViewController {
     
     private let viewModel: LibraryViewModel
     
+    private var cancellables = Set<AnyCancellable>()
+    
     init(viewModel: LibraryViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -45,6 +47,7 @@ open class LibraryViewController: UIViewController {
         super.viewDidLoad()
         
         initLayout()
+        configurePublisher()
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -123,6 +126,23 @@ extension LibraryViewController {
         
         collectionView.delegate = self
         collectionView.dataSource = self
+    }
+    
+    private func configurePublisher(){
+        self.viewModel.refresh.send()
+        
+        viewModel.memos
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.collectionView.reloadData()
+            }.store(in: &cancellables)
+
+        collectionView.refreshControl?.isRefreshingPublisher
+            .sink(receiveValue: { [weak self] isRefreshing in
+                guard isRefreshing else { return }
+                self?.viewModel.refresh.send(())
+            })
+            .store(in: &cancellables)
     }
 }
 

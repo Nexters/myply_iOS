@@ -6,6 +6,15 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
+protocol LibraryListPresentable {
+    var body: String { get }
+    var keywords: [String] { get }
+    var memoID: String { get }
+    var thumbnailURL: String { get }
+    var title: String { get }
+    var youtubeVideoID: String { get }
+}
+
 class LibraryCollectionCell: UICollectionViewCell {
     
     // MARK: UI
