@@ -30,6 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let tabBarController = MainTabBarController()
             window?.rootViewController = tabBarController
         } else {
+            UserDefaults.standard.set(UUID().uuidString, forKey: "device-token")
             let onBoardingViewController = OnBoardingViewController.create() ?? UIViewController()
             window?.rootViewController = onBoardingViewController
         }
