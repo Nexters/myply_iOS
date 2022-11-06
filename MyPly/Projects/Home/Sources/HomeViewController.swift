@@ -33,7 +33,6 @@ open class HomeViewController: UIViewController {
         super.viewDidLoad()
 
         configureMenuButtons()
-        configurePublisher()
 
         let xib = UINib(nibName: PlaylistCell.identifier, bundle: CommonUIResources.bundle)
         collectionView.register(xib, forCellWithReuseIdentifier: PlaylistCell.identifier)
@@ -42,6 +41,8 @@ open class HomeViewController: UIViewController {
         collectionView.indicatorStyle = .black
         collectionView.dataSource = self
         view.backgroundColor = CommonUIAsset.begie.color
+
+        configurePublisher()
 
     }
 }
@@ -86,6 +87,7 @@ private extension HomeViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.collectionView.reloadData()
+                self?.collectionView.refreshControl?.endRefreshing()
             }.store(in: &cancellables)
 
         collectionView.refreshControl?.isRefreshingPublisher
