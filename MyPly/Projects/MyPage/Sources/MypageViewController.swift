@@ -50,6 +50,14 @@ open class MyPageViewController: UIViewController {
         return $0
     }(UILabel())
     
+    var titleLabelMaxY: CGFloat {
+        titleLabel.frame.origin.y + titleLabel.frame.size.height
+    }
+    
+    var bottomTabBarMinY: CGFloat {
+        tabBarController?.tabBar.frame.origin.y ?? .zero
+    }
+    
     
     let writeButton: UIButton = {
         $0.setImage(MyPageAsset.edit.image, for: .normal)
@@ -96,6 +104,7 @@ open class MyPageViewController: UIViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(scrollContentView)
         
+        // titleLabel
         view.addSubview(titleLabel)
         
         titleLabel.snp.makeConstraints { make in
@@ -105,6 +114,7 @@ open class MyPageViewController: UIViewController {
         
         titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
         
+        // scrollContentView
         scrollContentView.addSubview(keywordCollectionView)
         scrollContentView.addSubview(collectionView)
         scrollContentView.addSubview(firstDividerLine)
@@ -114,7 +124,7 @@ open class MyPageViewController: UIViewController {
         scrollView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom)
             make.leading.trailing.bottom.equalToSuperview()
-            make.height.equalTo((tabBarController?.tabBar.frame.origin.y ?? .zero) -  (titleLabel.frame.origin.y + titleLabel.frame.size.height))
+            make.height.equalTo(bottomTabBarMinY - titleLabelMaxY)
         }
         
         scrollContentView.snp.makeConstraints { make in
