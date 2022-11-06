@@ -6,6 +6,9 @@
 //  Copyright © 2022 cocaine.io. All rights reserved.
 //
 
+import UIKit
+import CommonUI
+
 open class LibraryViewController: UIViewController {
     
     // MARK: UI
@@ -23,6 +26,20 @@ open class LibraryViewController: UIViewController {
     private let descLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 14, weight: .bold)
         $0.textColor = CommonUIAsset.gray60.color
+    }
+    
+    private var emptyImageView = UIImageView().then {
+        $0.image = LibraryAsset.emptyIcon.image
+        $0.isHidden = true
+    }
+    
+    private var emptyLabel = UILabel().then {
+        $0.text = "새로운 플레이리스트를\n보관함에 추가해 보세요."
+        $0.numberOfLines = 0
+        $0.textColor = CommonUIAsset.gray50.color
+        $0.font = .systemFont(ofSize: 16, weight: .bold)
+        $0.textAlignment = .center
+        $0.isHidden = true
     }
     
     private var collectionView: UICollectionView!
@@ -76,6 +93,9 @@ extension LibraryViewController {
         headerView.addSubview(descLabel)
         
         view.addSubview(collectionView)
+        
+        view.addSubview(emptyImageView)
+        view.addSubview(emptyLabel)
     }
     
     private func initLayout(){
@@ -107,6 +127,18 @@ extension LibraryViewController {
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(view.safeAreaLayoutGuide)
         }
+        
+        emptyImageView.snp.makeConstraints {
+            $0.width.equalTo(200)
+            $0.height.equalTo(170)
+            $0.centerY.equalToSuperview()
+            $0.centerX.equalToSuperview()
+        }
+        
+        emptyLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(emptyImageView.snp.bottom)
+        }
     }
     
     private func initCollectionView() {
@@ -137,10 +169,12 @@ extension LibraryViewController {
                 
                 self.collectionView.reloadData()
                 
-                let count = memos.count
-                let description = count == 0 ? "플레이리스트가 아직 없어요." : "플레이리스트 \(count)개"
+                let isMemoEmpty = memos.count == 0
+                let description = isMemoEmpty ? "플레이리스트가 아직 없어요." : "플레이리스트 \(memos.count)개"
                 
                 self.descLabel.text = description
+                self.emptyImageView.isHidden = !(isMemoEmpty)
+                self.emptyLabel.isHidden = !(isMemoEmpty)
             }.store(in: &cancellables)
 
         collectionView.refreshControl?.isRefreshingPublisher
