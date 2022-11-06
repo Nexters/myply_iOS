@@ -10,4 +10,4 @@ import ProjectDescription
 
 private let projectName = "Model"
 private let iOSTargetVersion = "14.0"
-let project = Project.framework(name: projectName, platform: .iOS, iOSTargetVersion: iOSTargetVersion, dependencies: [])
+let project = Project.framework(name: projectName, platform: .iOS, iOSTargetVersion: iOSTargetVersion, dependencies: [.project(target: "MyPlyAPI", path: .relativeToCurrentFile("../MyPlyAPI"))])

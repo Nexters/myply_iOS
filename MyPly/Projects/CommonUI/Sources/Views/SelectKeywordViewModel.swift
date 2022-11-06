@@ -37,7 +37,7 @@ class SelectKeywordViewModel {
             return
         }
         
-        if selectedKeywords?.contains(keyword) == true {
+        if selectedKeywords.contains(keyword) == true {
             deselect(keyword: keyword)
             return
         }
@@ -54,13 +54,13 @@ class SelectKeywordViewModel {
     
     private func select(keyword: Keyword) {
         var keywords = selectedKeywordsSubject.value
-        keywords?.append(keyword)
+        keywords.append(keyword)
         selectedKeywordsSubject.send(keywords)
     }
     
     
     private func deselect(keyword: Keyword) {
-        let index = selectedKeywordsSubject.value?.enumerated()
+        let index = selectedKeywordsSubject.value.enumerated()
             .filter({ (_, originKeyword) in
                 originKeyword.value == keyword.value
             })
@@ -70,7 +70,7 @@ class SelectKeywordViewModel {
         guard let index = index else { return }
         
         var keywords = selectedKeywordsSubject.value
-        keywords?.remove(at: index)
+        keywords.remove(at: index)
         
         selectedKeywordsSubject.send(keywords)
     }

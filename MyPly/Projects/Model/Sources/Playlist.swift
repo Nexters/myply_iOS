@@ -10,7 +10,7 @@ import Foundation
 
 public struct Playlist: Codable {
 
-    public let isMemoed: Bool
+    public var isMemoed: Bool
     public let thumbnailURL: String
     public let title: String
     public let videoDeepLink: String

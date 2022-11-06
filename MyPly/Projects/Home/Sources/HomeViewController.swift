@@ -11,6 +11,7 @@ import UIKit
 import Combine
 import ModelIO
 import CombineCocoa
+import Model
 
 open class HomeViewController: UIViewController {
 
@@ -122,7 +123,16 @@ extension HomeViewController: UICollectionViewDataSource {
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaylistCell.identifier, for: indexPath) as? PlaylistCell else { return UICollectionViewCell() }
+        let item = viewModel.playlists.value[indexPath.item]
         cell.bind(to: viewModel.playlists.value[indexPath.item])
+
+        cell.likeButton.tapPublisher
+            .sink { [weak self] _ in
+                guard let self = self,
+                      let playlistModel = item as? Playlist else { return }
+                playlistModel.isMemoed ? self.viewModel.unMemo.send(playlistModel.youtubeVideoID) : self.viewModel.memo.send(playlistModel.youtubeVideoID)
+
+            }.store(in: &cell.cancellables)
         return cell
     }
 
