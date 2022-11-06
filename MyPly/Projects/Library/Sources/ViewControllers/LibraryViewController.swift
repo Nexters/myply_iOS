@@ -21,7 +21,6 @@ open class LibraryViewController: UIViewController {
     }
     
     private let descLabel = UILabel().then {
-        $0.text = "플레이리스트가 아직 없어요."
         $0.font = .systemFont(ofSize: 14, weight: .bold)
         $0.textColor = CommonUIAsset.gray60.color
     }
@@ -133,8 +132,15 @@ extension LibraryViewController {
         
         viewModel.memos
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.collectionView.reloadData()
+            .sink { [weak self] memos in
+                guard let self = self else { return }
+                
+                self.collectionView.reloadData()
+                
+                let count = memos.count
+                let description = count == 0 ? "플레이리스트가 아직 없어요." : "플레이리스트 \(count)개"
+                
+                self.descLabel.text = description
             }.store(in: &cancellables)
 
         collectionView.refreshControl?.isRefreshingPublisher
