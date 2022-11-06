@@ -147,7 +147,7 @@ open class MyPageViewController: UIViewController {
         }
         editKeywordButton.addTarget(self, action: #selector(onEditKeywordTouched), for: .touchUpInside)
         keywordCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(keywordTitleLabel.snp.bottom).offset(16)
+            make.top.equalTo(keywordTitleLabel.snp.lastBaseline).offset(16)
             make.width.equalToSuperview().offset(-40)
             make.centerX.equalToSuperview()
         }
