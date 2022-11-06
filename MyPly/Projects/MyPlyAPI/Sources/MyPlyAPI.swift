@@ -18,6 +18,7 @@ public enum MyPlyTarget {
     case search(query: String, nextToken: String?, order: String)
     case memo(youtubeVideoID: String,  body: String?)
     case unMemo(youtubeVideoID: String)
+    case getMemoList
 }
 
 extension MyPlyTarget: TargetType {
@@ -33,6 +34,7 @@ extension MyPlyTarget: TargetType {
         case .search: return "/musics/search"
         case .memo: return "/memos"
         case .unMemo(let youtubeVideoID): return "/memos/\(youtubeVideoID)"
+        case .getMemoList: return "/memos"
         }
     }
 
@@ -44,6 +46,7 @@ extension MyPlyTarget: TargetType {
         case .search: return .get
         case .memo: return .post
         case .unMemo: return .delete
+        case .getMemoList: return .get
         }
     }
 
@@ -78,6 +81,8 @@ extension MyPlyTarget: TargetType {
             parameters["youtubeVideoID"] = youtubeVideoID
             return .requestCompositeParameters(bodyParameters: parameters, bodyEncoding: JSONEncoding.default, urlParameters: [:])
         case .unMemo:
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case .getMemoList:
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         }
     }

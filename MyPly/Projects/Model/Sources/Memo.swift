@@ -7,9 +7,10 @@
 //
 
 public struct Memo: Codable {
-    let memoId: String
-    let thumbnailURL: String
-    let title: String
-    let keywords: [String]
-    let body: String
+    public var body: String?
+    public var keywords: [String]?
+    public var memoID: String?
+    public var thumbnailURL: String?
+    public var title: String?
+    public var youtubeVideoID: String?
 }
