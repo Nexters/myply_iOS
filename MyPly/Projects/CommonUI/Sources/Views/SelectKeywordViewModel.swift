@@ -40,8 +40,8 @@ class SelectKeywordViewModel {
         if selectedKeywords.contains(keyword) == true {
             deselect(keyword: keyword)
             return
-        }
-        
+        }        
+
         select(keyword: keyword)
     }
     
