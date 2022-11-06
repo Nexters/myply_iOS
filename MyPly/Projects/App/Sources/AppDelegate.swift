@@ -12,6 +12,7 @@ import Search
 import MyPlyAPI
 import Library
 import MyPage
+import OnBoarding
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -23,30 +24,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
+        
         let tabBarController = MainTabBarController()
-        tabBarController.tabBar.tintColor = .darkGray
-        tabBarController.view.backgroundColor = .white
-
+        
         if UserDefaults.standard.string(forKey: "device-token") == nil {
             UserDefaults.standard.set(UUID().uuidString, forKey: "device-token")
         }
-        MyPlyTarget.deviceToken = "1234" //UserDefaults.standard.string(forKey: "device-token") ?? ""
-
-        let homeVC = HomeViewController.create()
-        homeVC?.tabBarItem = UITabBarItem(title: nil, image: AppAsset.home.image, selectedImage: nil)
-
-        let searchVC = SearchViewController()
-        searchVC.tabBarItem = UITabBarItem(title: nil, image: AppAsset.search.image, selectedImage: nil)
-
-        let libraryVC = LibraryViewController.create()
-        libraryVC?.tabBarItem = UITabBarItem(title: nil, image: AppAsset.keep.image, selectedImage: nil)
-
-        let myPageVC = MyPageViewController.create()
-        myPageVC.tabBarItem = UITabBarItem(title: nil, image: AppAsset.myPage.image, selectedImage: nil)
-
-        tabBarController.setViewControllers([homeVC, searchVC, libraryVC, myPageVC].compactMap { $0 }, animated: false)
+        MyPlyTarget.deviceToken = "1234" // UserDefaults.standard.string(forKey: "device-token") ?? "" // test
+        
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
+        
         return true
     }
 }
