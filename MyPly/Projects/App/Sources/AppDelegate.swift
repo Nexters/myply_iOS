@@ -25,16 +25,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        if let token = UserDefaults.standard.string(forKey: "device-token") {
-            MyPlyTarget.deviceToken = "1234" // token
-            let tabBarController = MainTabBarController()
-            window?.rootViewController = tabBarController
-        } else {
-            UserDefaults.standard.set(UUID().uuidString, forKey: "device-token")
-            let onBoardingViewController = OnBoardingViewController.create() ?? UIViewController()
-            window?.rootViewController = onBoardingViewController
-        }
+        let tabBarController = MainTabBarController()
         
+        if UserDefaults.standard.string(forKey: "device-token") == nil {
+            UserDefaults.standard.set(UUID().uuidString, forKey: "device-token")
+        }
+        MyPlyTarget.deviceToken = "1234" // UserDefaults.standard.string(forKey: "device-token") ?? "" // test
+        
+        window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
         
         return true

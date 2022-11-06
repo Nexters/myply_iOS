@@ -11,6 +11,8 @@ import Moya
 
 public enum MyPlyTarget {
     public static var deviceToken = ""
+    
+    case getUserInfo
     case musics(nextToken: String?, order: String)
     case preferredMusics(nextToken: String?)
     case search(query: String, nextToken: String?, order: String)
@@ -23,6 +25,7 @@ extension MyPlyTarget: TargetType {
 
     public var path: String {
         switch self {
+        case .getUserInfo: return "/members"
         case .musics: return "/musics"
         case .preferredMusics: return "/musics/preference"
         case .search: return "/musics/search"
@@ -31,6 +34,7 @@ extension MyPlyTarget: TargetType {
 
     public var method: Moya.Method {
         switch self {
+        case .getUserInfo: return .get
         case .musics: return .get
         case .preferredMusics: return .get
         case .search: return .get
@@ -41,6 +45,8 @@ extension MyPlyTarget: TargetType {
 
         var parameters: [String: Any] = [:]
         switch self {
+        case .getUserInfo:
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
         case .musics(let nextToken, let order):
             if let nextToken = nextToken {
                 parameters["nextToken"] = nextToken
